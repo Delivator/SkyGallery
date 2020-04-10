@@ -1,16 +1,17 @@
 <template>
   <v-app>
     <v-app-bar app color="secondary">
-      <v-img
-        alt="Skynet Logo"
-        class="shrink mr-2"
-        contain
-        :src="require('./assets/skynet-logo.svg')"
-        transition="scale-transition"
-        width="40"
-      />
-
-      <v-toolbar-title>SkyGallery</v-toolbar-title>
+      <router-link to="/" class="white--text title-link">
+        <v-img
+          alt="Skynet Logo"
+          class="shrink mr-2"
+          contain
+          :src="require('./assets/skynet-logo.svg')"
+          transition="scale-transition"
+          width="40"
+        />
+        <v-toolbar-title>SkyGallery</v-toolbar-title>
+      </router-link>
 
       <v-spacer></v-spacer>
 
@@ -22,12 +23,13 @@
         label="Change Skynet Portal"
         @change="changePortal"
         return-object
-        style="max-width: 300px; top: 5px"
+        style="max-width: 12rem; top: 5px"
+        single-line
       ></v-select>
     </v-app-bar>
 
     <v-content>
-      <HelloWorld />
+      <router-view :portals="portals" />
     </v-content>
     <v-footer>
       <v-row justify="center">
@@ -56,20 +58,35 @@
   </v-app>
 </template>
 
-<style lang="scss">
-@import "assets/css/main.css";
+<style>
+/* Remove persistent scrollbar */
+html,
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  background: transparent;
+}
+
+.version-tag {
+  font-family: monospace;
+}
+
+.title-link {
+  display: contents;
+  text-decoration: none;
+}
 </style>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
 import version from "../package.json";
 
 export default {
   name: "App",
-
-  components: {
-    HelloWorld
-  },
 
   data: () => ({
     version: version.version,
