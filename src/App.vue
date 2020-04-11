@@ -29,7 +29,7 @@
     </v-app-bar>
 
     <v-content>
-      <router-view :portals="portals" />
+      <router-view :portals="portals" :version="version" />
     </v-content>
     <v-footer>
       <v-row justify="center">
@@ -97,7 +97,7 @@ export default {
       }
     ]
   }),
-  mounted: function() {
+  beforeMount: function() {
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
     fetch(trustedPortals)
       .then(response => {
