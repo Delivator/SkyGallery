@@ -29,7 +29,11 @@
     </v-app-bar>
 
     <v-content>
-      <router-view :portals="portals" :version="version" />
+      <router-view
+        :portals="portals"
+        :skylinkRegex="skylinkRegex"
+        :version="version"
+      />
     </v-content>
     <v-footer>
       <v-row justify="center">
@@ -95,7 +99,8 @@ export default {
         name: "SiaSky.net",
         link: "https://siasky.net"
       }
-    ]
+    ],
+    skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)/gm
   }),
   beforeMount: function() {
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";

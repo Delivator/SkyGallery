@@ -1,8 +1,15 @@
 <template>
-  <v-container class="text-center" fluid>
+  <v-container :class="loading ? 'fill-height' : ''" class="text-center" fluid>
     <v-row justify="center">
       <v-col cols="12">
-        <h1 class="display-2">{{ albumTitle }}</h1>
+        <v-progress-circular
+          v-if="loading"
+          indeterminate
+          color="success"
+          size="100"
+          width="7"
+        ></v-progress-circular>
+        <h1 v-else class="display-2">{{ albumTitle }}</h1>
       </v-col>
     </v-row>
     <v-row justify="center" v-if="files.length > 0">
@@ -14,9 +21,9 @@
         lg="4"
         md="6"
       >
-        <v-card>
+        <v-card @click="openImage(index)">
           <v-img
-            :src="`/${file.skylink}`"
+            :src="`/${imageSource(file)}`"
             :aspect-ratio="4 / 3"
             class="align-end"
           >
@@ -41,16 +48,19 @@ export default {
     return {
       albumId: "",
       files: [],
-      albumTitle: "Album Title"
+      albumTitle: "Album Title",
+      loading: true
     };
   },
 
   methods: {
-    //
-  },
-
-  mounted: function() {
-    //
+    imageSource: function(file) {
+      return file.thumbnail ? file.thumbnail : file.skylink;
+    },
+    openImage: function(index) {
+      let win = window.open(`/${this.files[index].skylink}`);
+      win.focus();
+    }
   },
 
   beforeMount: function() {
@@ -65,8 +75,10 @@ export default {
               fetch(`/${this.albumId}`)
                 .then(res2 => res2.json())
                 .then(albumData => {
+                  this.loading = false;
                   this.files = albumData.files;
                   this.albumTitle = albumData.title;
+                  if (albumData.version !== "0.0.3") return;
                 })
                 .catch(console.error);
           }

@@ -1,6 +1,6 @@
 {
   "name": "skygallery",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "## Project setup ``` npm install ```",
   "author": "Delivator",
@@ -28,8 +28,6 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.2.2",
-    "express": "^4.17.1",
-    "got": "^10.7.0",
     "prettier": "^1.19.1",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",

@@ -29,7 +29,11 @@
         md="6"
       >
         <v-card :loading="upload.status === 'sending'">
-          <v-img :src="upload.src" :aspect-ratio="4 / 3" class="align-end">
+          <v-img
+            :src="upload.thumbnail"
+            :aspect-ratio="4 / 3"
+            class="align-end"
+          >
             <v-btn
               class="remove-btn"
               fab
@@ -110,9 +114,18 @@ import { MD5 } from "crypto-js";
 
 let inputTimeout = null;
 
+function dataUri2Blob(uri) {
+  return new Promise((resolve, reject) => {
+    if (!uri) reject(false);
+    fetch(uri)
+      .then(res => resolve(res.blob()))
+      .catch(reject);
+  });
+}
+
 export default {
-  name: "Create",
-  props: ["version"],
+  name: "New",
+  props: ["version", "skylinkRegex"],
   data() {
     return {
       uploads: [],
@@ -133,7 +146,7 @@ export default {
             console.error(message);
           }
 
-          let id = Math.floor(Math.random() * 1 * 1e17).toString(16);
+          let id = MD5(Math.random());
 
           this.alerts.push({
             id,
@@ -156,7 +169,6 @@ export default {
     },
 
     changeName: function(index, newName) {
-      console.log(event);
       if (inputTimeout !== null) clearTimeout(inputTimeout);
       inputTimeout = setTimeout(() => {
         this.uploads[index].name = newName;
@@ -173,8 +185,10 @@ export default {
       this.uploads
         .filter(file => file.status === "success")
         .forEach(file => {
+          let thumbnail = file.thumbnail.replace(/\//g, "");
           jsonData.files.push({
             skylink: file.skylink,
+            thumbnail: this.skylinkRegex.test(thumbnail) ? thumbnail : "",
             name: file.name
           });
         });
@@ -191,7 +205,9 @@ export default {
           return resp.json();
         })
         .then(data => {
-          this.$router.push("/a/" + data.skylink);
+          setTimeout(() => {
+            this.$router.push("/a/" + data.skylink);
+          }, 250);
         })
         .catch(err => this.alertBox.send("error", err));
     }
@@ -202,6 +218,7 @@ export default {
       url: "/skynet/skyfile",
       acceptedFiles: "image/*",
       dictDefaultMessage: "Drop files here or click to upload.",
+      maxThumbnailFilesize: 20,
       thumbnailWidth: 400,
       thumbnailHeight: 300
     });
@@ -210,36 +227,50 @@ export default {
       this.alertBox.send("error", `Error while uploading ${file.name}`, 999999);
     });
 
-    this.myDropzone.on("processing", file => {
-      console.log("processing", file);
-    });
-
     this.myDropzone.on("sending", file => {
-      console.log("sending", file);
       this.uploads.push({
         file,
         name: file.name,
         uuid: file.upload.uuid,
         status: "sending",
-        src: require("../assets/insert_photo.svg")
+        thumbnail: require("../assets/insert_photo.svg")
       });
     });
 
     this.myDropzone.on("thumbnail", (file, dataUri) => {
-      console.log("thumbnail", file);
       this.uploads.forEach((upload, index) => {
-        if (upload.uuid === file.upload.uuid) this.uploads[index].src = dataUri;
+        if (upload.uuid === file.upload.uuid) {
+          this.uploads[index].thumbnail = dataUri;
+          dataUri2Blob(dataUri)
+            .then(blob => {
+              const formData = new FormData();
+              let fileName = file.name.split(".").reverse();
+              fileName[1] += "-thumbnail";
+              formData.append("file", blob, fileName.reverse().join("."));
+              fetch("/skynet/skyfile", {
+                method: "POST",
+                body: formData
+              })
+                .then(resp => resp.json())
+                .then(data => {
+                  setTimeout(() => {
+                    this.uploads[index].thumbnail = `/${data.skylink}`;
+                  }, 500);
+                })
+                .catch(err => this.alertBox.send("error", err));
+            })
+            .catch(console.error);
+        }
       });
       this.$forceUpdate();
     });
 
     this.myDropzone.on("success", (file, resp) => {
-      console.log(file);
       this.uploads.forEach((upload, index) => {
         if (upload.uuid === file.upload.uuid) {
           this.uploads[index].status = "success";
-          this.uploads[index].src = `/${resp.skylink}`;
           this.uploads[index].skylink = `${resp.skylink}`;
+          this.myDropzone.removeFile(file);
         }
       });
       this.$forceUpdate();
