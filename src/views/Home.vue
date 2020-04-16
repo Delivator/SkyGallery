@@ -24,7 +24,7 @@
       <v-col cols="12" class="subtext">
         <span class="display-1">
           Start by creating a
-          <v-btn color="primary" to="create" outlined
+          <v-btn color="primary" to="new" outlined
             ><v-icon left>add</v-icon>new album</v-btn
           >
           or open an existing one
