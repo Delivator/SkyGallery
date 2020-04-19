@@ -100,7 +100,7 @@ export default {
         link: "https://siasky.net"
       }
     ],
-    skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)/gm
+    skylinkRegex: /^[a-zA-Z0-9-_]{46}/gm
   }),
   beforeMount: function() {
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
