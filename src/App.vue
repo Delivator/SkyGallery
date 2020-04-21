@@ -143,7 +143,7 @@ export default {
         type: "info",
         text: "",
         send: (type, message, timeout) => {
-          if (!timeout || isNaN(timeout) || timeout < 1) timeout = 7500 * 1000;
+          if (!timeout || isNaN(timeout) || timeout < 1) timeout = 7500;
           if (!message || message === "") message = "Unknown error";
           if (!type || !/success|info|warning|error/.test(type)) type = "info";
           if (type === "error") {
