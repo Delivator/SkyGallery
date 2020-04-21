@@ -67,7 +67,7 @@ let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "skylinkRegex"],
+  props: ["portals", "skylinkRegex", "alertBox"],
   mixins: [getAlbum],
   data: () => ({
     linkInput: "",
@@ -100,7 +100,7 @@ export default {
             this.$router.push("/a/" + skylink);
           })
           .catch(error => {
-            console.error(error);
+            this.alertBox.send("error", error);
             this.inputError = "Error fetching album";
             this.loading = false;
           });

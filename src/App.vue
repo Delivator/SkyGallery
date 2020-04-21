@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="secondary">
+    <v-app-bar v-if="!isEmbed" app color="secondary">
       <router-link to="/" class="white--text title-link">
         <v-img
           alt="Skynet Logo"
@@ -27,15 +27,32 @@
         single-line
       ></v-select>
     </v-app-bar>
+    <v-container fluid class="absolute">
+      <v-row class="alerts absolute">
+        <v-col md="4" sm="6" xs="12">
+          <v-alert
+            v-for="alert in alerts"
+            :key="alert.id"
+            v-model="alert.show"
+            :type="alert.type"
+            dismissible
+            transition="slide-y-transition"
+            >{{ alert.text }}</v-alert
+          >
+        </v-col>
+      </v-row>
+    </v-container>
 
     <v-content>
       <router-view
         :portals="portals"
         :skylinkRegex="skylinkRegex"
         :version="version"
+        :alertBox="alertBox"
+        :showShare="showShare"
       />
     </v-content>
-    <v-footer>
+    <v-footer v-if="!isEmbed">
       <v-row justify="center">
         <v-col class="py-3 text-center" cols="12">
           Made with 💚 by
@@ -86,22 +103,71 @@ body::-webkit-scrollbar {
 }
 </style>
 
+<style scoped>
+.absolute {
+  position: absolute;
+}
+
+.alerts {
+  top: 4rem;
+  width: 100%;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.v-alert {
+  pointer-events: all;
+}
+</style>
+
 <script>
+import { MD5 } from "crypto-js";
 import version from "../package.json";
 
 export default {
   name: "App",
 
-  data: () => ({
-    version: version.version,
-    portals: [
-      {
-        name: "SiaSky.net",
-        link: "https://siasky.net"
-      }
-    ],
-    skylinkRegex: /^[a-zA-Z0-9-_]{46}/gm
-  }),
+  data() {
+    return {
+      version: version.version,
+      portals: [
+        {
+          name: "SiaSky.net",
+          link: "https://siasky.net"
+        }
+      ],
+      skylinkRegex: /^[a-zA-Z0-9-_]{46}/gm,
+      alerts: [],
+      alertBox: {
+        show: false,
+        type: "info",
+        text: "",
+        send: (type, message, timeout) => {
+          if (!timeout || isNaN(timeout) || timeout < 1) timeout = 7500 * 1000;
+          if (!message || message === "") message = "Unknown error";
+          if (!type || !/success|info|warning|error/.test(type)) type = "info";
+          if (type === "error") {
+            if (message instanceof Error) message = message.message;
+            console.error(message);
+          }
+
+          let id = MD5(Math.random().toString()).toString();
+
+          this.alerts.push({
+            id,
+            show: true,
+            type,
+            text: message,
+            timeout: setTimeout(() => {
+              this.alerts.find(alert => alert.id === id).show = false;
+            }, timeout)
+          });
+        }
+      },
+      showShare: false,
+      isEmbed: false
+    };
+  },
   beforeMount: function() {
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
     fetch(trustedPortals)
@@ -118,7 +184,7 @@ export default {
         });
         this.portals = data;
       })
-      .catch(console.error);
+      .catch(error => this.alertBox.send("error", error));
   },
   methods: {
     changePortal: function(portal) {

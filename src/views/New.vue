@@ -11,6 +11,8 @@
           single-line
           :loading="loading"
           :disabled="loading"
+          @focus="selectTitle($event, 'Untitled Album')"
+          ref="titleInput"
         >
           <template v-slot:append-outer>
             <v-btn x-large text icon color="success" @click="publishAlbum">
@@ -77,25 +79,13 @@
               <v-text-field
                 single-line
                 dense
-                :value="upload.name"
+                :value="upload.newName"
                 @input="changeName(index, $event)"
+                @focus="selectTitle($event, upload.newName)"
               ></v-text-field>
             </v-card-title>
           </v-img>
         </v-card>
-      </v-col>
-    </v-row>
-    <v-row class="alerts">
-      <v-col md="4" sm="6" xs="12">
-        <v-alert
-          v-for="alert in alerts"
-          :key="alert.id"
-          v-model="alert.show"
-          :type="alert.type"
-          dismissible
-          transition="slide-y-transition"
-          >{{ alert.text }}</v-alert
-        >
       </v-col>
     </v-row>
   </v-container>
@@ -107,18 +97,6 @@
   top: 1rem;
   right: 1rem;
   z-index: 1;
-}
-
-.alerts {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  pointer-events: none;
-}
-
-.v-alert {
-  pointer-events: all;
 }
 
 .file-log {
@@ -177,45 +155,19 @@ label[for="file"] {
 
 <script>
 import { MD5 } from "crypto-js";
+import imageCompression from "browser-image-compression";
 
 let inputTimeout = null;
 
 export default {
   name: "New",
-  props: ["version", "skylinkRegex"],
+  props: ["version", "skylinkRegex", "alertBox", "showShare"],
   data() {
     return {
       uploads: [],
-      albumTitle: "New Album",
-      alerts: [],
+      albumTitle: "Untitled Album",
       isDragOver: false,
-      loading: false,
-      alertBox: {
-        show: false,
-        type: "info",
-        text: "",
-        send: (type, message, timeout) => {
-          if (!timeout || isNaN(timeout) || timeout < 1) timeout = 7500;
-          if (!message || message === "") message = "Unknown error";
-          if (!type || !/success|info|warning|error/.test(type)) type = "info";
-          if (type === "error") {
-            if (message instanceof Error) message = message.message;
-            console.error(message);
-          }
-
-          let id = MD5(Math.random());
-
-          this.alerts.push({
-            id,
-            show: true,
-            type,
-            text: message,
-            timeout: setTimeout(() => {
-              this.alerts.filter(alert => alert.id === id)[0].show = false;
-            }, timeout)
-          });
-        }
-      }
+      loading: false
     };
   },
 
@@ -269,6 +221,7 @@ export default {
       this.uploadBlob(blob, `skygallery-${MD5(Math.random())}.json`)
         .then(skylink => {
           this.loading = false;
+          this.showShare = true;
           this.$router.push("/a/" + skylink);
         })
         .catch(err => {
@@ -329,60 +282,37 @@ export default {
       this.uploads[index].status = "processing";
       this.uploads[index].log += "Generating thumbnail... ";
       let file = this.uploads[index];
-      let img = document.createElement("img");
+      let options = {
+        maxWidthOrHeight: 400
+      };
 
-      img.src = URL.createObjectURL(file);
-      img.onload = () => {
-        let canvas = document.createElement("canvas");
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        if (canvas.width > 400) {
-          canvas.height = img.naturalHeight * (400 / canvas.width);
-          canvas.width = 400;
-        }
-        if (canvas.height > 300) {
-          canvas.width = canvas.width * (300 / canvas.height);
-          canvas.height = canvas.height * (300 / canvas.height);
-        }
-        canvas
-          .getContext("2d")
-          .drawImage(
-            img,
-            0,
-            0,
-            img.naturalWidth,
-            img.naturalHeight,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
-        this.uploads.forEach(upload => {
-          if (upload.id === file.id) {
-            canvas.toBlob(async blob => {
+      this.uploads.forEach(upload => {
+        if (upload.id === file.id) {
+          imageCompression(file, options)
+            .then(blob => {
               upload.thumbnailBlob = blob;
               upload.thumbnail = URL.createObjectURL(upload.thumbnailBlob);
               upload.status = "processed";
               this.uploads[index].log += "done.\n";
-              img.remove();
-              canvas.remove();
               this.$forceUpdate();
               this.generateThumbnails();
               this.uploadFiles();
-            });
-          }
-        });
-      };
+            })
+            .catch(console.error);
+        }
+      });
     },
 
     processFiles(files) {
       files.forEach(file => {
         const imageType = /^image\//;
         if (!imageType.test(file.type)) return;
-        file.id = MD5(file.name + Date.now() + Math.random());
+        file.id = MD5(Math.random().toString()).toString();
         file.status = "queued";
         file.log = "Added\n";
-        file.newName = file.name;
+        file.newName = file.name.split(".");
+        file.newName.pop();
+        file.newName = file.newName.join(".");
         this.uploads.push(file);
         this.generateThumbnails();
       });
@@ -404,11 +334,10 @@ export default {
     onFile(e) {
       this.preventEvent(e);
       this.processFiles(e.target.files);
+    },
+    selectTitle(e, test) {
+      if (e.target.value === test) e.target.select();
     }
-  },
-
-  mounted: function() {
-    //
   }
 };
 </script>

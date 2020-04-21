@@ -1,6 +1,6 @@
 {
   "name": "skygallery",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "description": "## Project setup ``` npm install ```",
   "author": "Delivator",
@@ -11,6 +11,7 @@
   },
   "main": "src/main.js",
   "dependencies": {
+    "browser-image-compression": "^1.0.9",
     "core-js": "^3.6.4",
     "crypto-js": "^4.0.0",
     "vue": "^2.6.11",
