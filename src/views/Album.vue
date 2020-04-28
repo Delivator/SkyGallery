@@ -10,7 +10,15 @@
         ></v-progress-circular>
       </v-col>
       <v-col v-else cols="12">
-        <span class="display-2">
+        <a
+          v-if="isEmbed"
+          class="display-2 title-link white--text"
+          :href="directLink"
+          target="_blank"
+          rel="noopener noreferrer"
+          >{{ albumTitle }}</a
+        >
+        <span v-else class="display-2">
           {{ albumTitle }}
           <v-menu offset-y v-model="showShare">
             <template v-slot:activator="{ on }">
@@ -26,18 +34,18 @@
                     @click="copyLink($event, directLink)"
                     @mouseover="selectLink($event)"
                   >
-                    <v-list-item-title
+                    <v-list-item-title @click="copyLink($event)"
                       >Direct Link:
                       <a
                         class="share-link"
                         :href="directLink"
-                        @click="$event.preventDefault()"
+                        @click="copyLink($event)"
                         >{{ directLink }}</a
                       ></v-list-item-title
                     >
                   </v-list-item>
                 </template>
-                <span>Click to copy to clipboard</span>
+                <span>{{ tooltipText }}</span>
               </v-tooltip>
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
@@ -46,18 +54,35 @@
                     @click="copyLink($event, `sia://${albumId}`)"
                     @mouseover="selectLink($event)"
                   >
-                    <v-list-item-title
+                    <v-list-item-title @click="copyLink($event)"
                       >Sia Link:
                       <a
                         class="share-link"
                         :href="`sia://${albumId}`"
-                        @click="$event.preventDefault()"
+                        @click="copyLink($event)"
                         >sia://{{ albumId }}</a
                       ></v-list-item-title
                     >
                   </v-list-item>
                 </template>
-                <span>Click to copy to clipboard</span>
+                <span>{{ tooltipText }}</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-list-item
+                    v-on="on"
+                    @click="copyLink($event, embedCode)"
+                    @mouseover="selectLink($event)"
+                  >
+                    <v-list-item-title @click="copyLink($event)"
+                      >Embed:
+                      <span class="embed-code">{{
+                        embedCode
+                      }}</span></v-list-item-title
+                    >
+                  </v-list-item>
+                </template>
+                <span>{{ tooltipText }}</span>
               </v-tooltip>
             </v-list>
           </v-menu>
@@ -73,7 +98,7 @@
         lg="4"
         md="6"
       >
-        <v-card @click="openImage(index)">
+        <v-card @click="openLink(`/${file.skylink}`)">
           <v-img
             :src="`/${imageSource(file)}`"
             :aspect-ratio="4 / 3"
@@ -83,6 +108,7 @@
           </v-img>
         </v-card>
       </v-col>
+      <v-col v-if="isEmbed" cols="12"></v-col>
     </v-row>
   </v-container>
 </template>
@@ -96,11 +122,22 @@
   max-width: 30rem;
 }
 
-.share-link {
+.share-link,
+.embed-code {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   -webkit-user-select: text;
+}
+
+.embed-code {
+  font-family: monospace;
+  background-color: rgba(128, 128, 128, 0.5);
+  border-radius: 5px;
+}
+
+.title-link {
+  text-decoration: none;
 }
 </style>
 
@@ -117,13 +154,14 @@ function selectText(node) {
 export default {
   name: "Album",
   mixins: [getAlbum],
-  props: ["showShare", "alertBox"],
+  props: ["showShare", "alertBox", "isEmbed"],
   data() {
     return {
       albumId: "",
       files: [],
       albumTitle: "Album Title",
-      loading: true
+      loading: true,
+      tooltipText: "Click to copy to clipboard"
     };
   },
 
@@ -131,19 +169,22 @@ export default {
     imageSource: function(file) {
       return file.thumbnail ? file.thumbnail : file.skylink;
     },
-    openImage: function(index) {
-      let win = window.open(`/${this.files[index].skylink}`);
+    openLink: function(link) {
+      let win = window.open(link);
       win.focus();
     },
     selectLink: function(event) {
-      let node = event.target.querySelector(".share-link");
+      this.tooltipText = "Click to copy to clipboard";
+      let node = event.target.querySelector(".share-link, .embed-code");
       if (node) selectText(node);
     },
-    copyLink: function(event, link) {
+    copyLink: function(event, copyText) {
       event.preventDefault();
       event.stopPropagation();
+      if (!copyText) return;
       navigator.clipboard
-        .writeText(link)
+        .writeText(copyText)
+        .then(() => (this.tooltipText = "Copied to clipboard"))
         .catch(error => this.alertBox.send("error", error));
     }
   },
@@ -161,9 +202,14 @@ export default {
       })
       .catch(error => this.alertBox.send("error", error));
   },
+
   computed: {
     directLink: () => {
       return document.location.href;
+    },
+
+    embedCode: () => {
+      return `<iframe src="${document.location}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
     }
   }
 };

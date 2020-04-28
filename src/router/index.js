@@ -19,11 +19,6 @@ const routes = [
     path: "/a/:id",
     name: "Album",
     component: () => import("../views/Album.vue")
-  },
-  {
-    path: "/a/:id/embed",
-    name: "Embed",
-    component: () => import("../views/Embed.vue")
   }
 ];
 
