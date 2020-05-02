@@ -8,9 +8,10 @@ export const processFiles = {
         if (!imageType.test(file.type)) return;
         let item = {
           file,
-          id: MD5(Math.random()).toString(),
+          id: MD5(Math.random().toString()).toString(),
           status: "queued",
-          log: "Added\n"
+          log: "Added\n",
+          type: "image"
         };
         item.newName = file.name.split(".");
         item.newName.pop();

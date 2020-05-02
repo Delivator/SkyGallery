@@ -26,7 +26,6 @@ export const generateThumbnails = {
           item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
           item.status = "processed";
           item.log += "done.\n";
-          console.log(this.items);
           this.$forceUpdate();
           this.uploadFiles();
           this.generateThumbnails();

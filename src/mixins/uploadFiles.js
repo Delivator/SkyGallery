@@ -2,38 +2,31 @@ export const uploadFiles = {
   methods: {
     async uploadFiles() {
       // Max three uploads at once
-      if (this.items.filter(upload => upload.status === "uploading").length > 2)
+      if (this.items.filter(item => item.status === "uploading").length > 2)
         return;
 
-      let index = this.items.findIndex(upload => upload.status === "processed");
+      let index = this.items.findIndex(item => item.status === "processed");
 
       if (index < 0) return;
 
       let id = this.items[index].id;
-      let item = this.items.find(item => item.id === id);
+      let item = this.items.find(el => el.id === id);
+
+      console.log("uploading", index, id);
 
       item.status = "uploading";
+      item.log += "Uploading files... ";
+      let files = [[item.file, item.file.name]];
       if (item.thumbnailBlob) {
-        item.log += "Uploading thumbnail... ";
-
         let fileName = item.file.name.split(".").reverse();
         fileName[1] += "-thumbnail";
-        await this.uploadBlob(item.thumbnailBlob, fileName.reverse().join("."))
-          .then(skylink => {
-            item.thumbnail = `/${skylink}`;
-            item.log += "done.\n";
-            this.uploadFiles();
-          })
-          .catch(error => {
-            this.alertBox.send("error", error);
-            item.log += "Error.\n";
-            this.uploadFiles();
-          });
+        fileName = fileName.reverse().join(".");
+        files.push([item.thumbnailBlob, fileName]);
       }
-      item.log += "Uploading image... ";
-      await this.uploadBlob(item.file, item.name)
-        .then(skylink => {
-          item.skylink = skylink;
+      await this.uploadBlobs(files, item.id)
+        .then(skylinks => {
+          if (skylinks.thumbnail) item.thumbnail = skylinks.thumbnail;
+          item.skylinks = skylinks;
           item.status = "finished";
           item.log += "done.\n";
           this.uploadFiles();

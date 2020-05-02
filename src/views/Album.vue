@@ -26,7 +26,7 @@
                 <v-icon>share</v-icon>
               </v-btn>
             </template>
-            <v-list class="link-list">
+            <v-list class="link-list" @click="copyLink($event)">
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
                   <v-list-item
@@ -34,14 +34,11 @@
                     @click="copyLink($event, directLink)"
                     @mouseover="selectLink($event)"
                   >
-                    <v-list-item-title @click="copyLink($event)"
+                    <v-list-item-title @click="copyLink($event, directLink)"
                       >Direct Link:
-                      <a
-                        class="share-link"
-                        :href="directLink"
-                        @click="copyLink($event)"
-                        >{{ directLink }}</a
-                      ></v-list-item-title
+                      <a class="share-link" :href="directLink">{{
+                        directLink
+                      }}</a></v-list-item-title
                     >
                   </v-list-item>
                 </template>
@@ -54,12 +51,10 @@
                     @click="copyLink($event, `sia://${albumId}`)"
                     @mouseover="selectLink($event)"
                   >
-                    <v-list-item-title @click="copyLink($event)"
+                    <v-list-item-title
+                      @click="copyLink($event, `sia://${albumId}`)"
                       >Sia Link:
-                      <a
-                        class="share-link"
-                        :href="`sia://${albumId}`"
-                        @click="copyLink($event)"
+                      <a class="share-link" :href="`sia://${albumId}`"
                         >sia://{{ albumId }}</a
                       ></v-list-item-title
                     >
@@ -74,7 +69,7 @@
                     @click="copyLink($event, embedCode)"
                     @mouseover="selectLink($event)"
                   >
-                    <v-list-item-title @click="copyLink($event)"
+                    <v-list-item-title @click="copyLink($event, embedCode)"
                       >Embed:
                       <span class="embed-code">{{
                         embedCode
@@ -98,7 +93,7 @@
         lg="4"
         md="6"
       >
-        <v-card @click="openLink(`/${file.skylink}`)">
+        <v-card @click="openLink(`/${file.skylinks.source}`)">
           <v-img
             :src="`/${imageSource(file)}`"
             :aspect-ratio="4 / 3"
@@ -108,7 +103,7 @@
           </v-img>
         </v-card>
       </v-col>
-      <v-col v-if="isEmbed" cols="12"></v-col>
+      <v-col v-if="isEmbed" cols="12"><div></div></v-col>
     </v-row>
   </v-container>
 </template>
@@ -167,7 +162,9 @@ export default {
 
   methods: {
     imageSource: function(file) {
-      return file.thumbnail ? file.thumbnail : file.skylink;
+      return file.skylinks.thumbnail
+        ? file.skylinks.thumbnail
+        : file.skylinks.source;
     },
     openLink: function(link) {
       let win = window.open(link);

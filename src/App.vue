@@ -221,7 +221,7 @@ export default {
           link: "https://siasky.net"
         }
       ],
-      skylinkRegex: /^[a-zA-Z0-9-_]{46}/gm,
+      skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
       showShare: false,
       isEmbed: false,
       refHover: false,
@@ -260,6 +260,7 @@ export default {
   beforeMount: function() {
     this.isEmbed = inIframe();
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
+
     fetch(trustedPortals)
       .then(response => {
         if (response.status === 200) return response.json();

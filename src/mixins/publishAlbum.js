@@ -14,8 +14,8 @@ export const publishAlbum = {
         .filter(file => file.status === "finished")
         .forEach(file => {
           jsonData.files.push({
-            skylink: file.skylink,
-            thumbnail: file.thumbnail.replace(/\//g, ""),
+            type: file.type,
+            skylinks: file.skylinks,
             name: file.newName
           });
         });
@@ -23,7 +23,7 @@ export const publishAlbum = {
         type: "application/json"
       });
       this.loading = true;
-      this.uploadBlob(blob, `skygallery-${MD5(Math.random())}.json`)
+      this.uploadBlob(blob, `skygallery-${MD5(Math.random().toString())}.json`)
         .then(skylink => {
           this.loading = false;
           this.showShare = true;

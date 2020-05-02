@@ -2,7 +2,7 @@
   <draggable
     v-model="items"
     @start="drag = true"
-    @end="drag = false"
+    @end="endDrag"
     class="row justify-center"
     handle=".drag-handle"
   >
@@ -15,7 +15,11 @@
       md="6"
     >
       <v-card :loading="item.status !== 'finished'">
-        <v-img :src="item.thumbnail" :aspect-ratio="4 / 3" class="align-end">
+        <v-img
+          :src="thumbnailUrl(item.thumbnail)"
+          :aspect-ratio="4 / 3"
+          class="align-end"
+        >
           <v-btn
             class="remove-btn"
             fab
@@ -32,7 +36,7 @@
               single-line
               dense
               :value="item.newName"
-              @input="changeName(index, $event)"
+              @input="changeName(item.id, $event)"
               @focus="selectTitle($event, item.newName)"
             ></v-text-field>
           </v-card-title>
@@ -88,12 +92,38 @@
 <script>
 import draggable from "vuedraggable";
 
+let inputTimeout = null;
+
 export default {
   name: "items",
   components: { draggable },
-  props: ["items"],
-  data: () => ({
-    //
-  })
+  props: ["items", "skylinkRegex", "setItems", "selectTitle"],
+  data() {
+    return {
+      drag: false
+    };
+  },
+
+  methods: {
+    thumbnailUrl: function(url) {
+      if (this.skylinkRegex.test(url)) {
+        return `/${url}`;
+      } else {
+        return url;
+      }
+    },
+
+    changeName: function(id, newName) {
+      if (inputTimeout !== null) clearTimeout(inputTimeout);
+      inputTimeout = setTimeout(() => {
+        this.items.find(item => item.id === id).newName = newName;
+      }, 250);
+    },
+
+    endDrag() {
+      this.drag = false;
+      this.setItems(this.items);
+    }
+  }
 };
 </script>

@@ -60,7 +60,12 @@
         <div class="previews"></div>
       </v-col>
     </v-row>
-    <uploads :items="items" />
+    <uploads
+      :items="items"
+      :skylinkRegex="skylinkRegex"
+      :setItems="setItems"
+      :selectTitle="selectTitle"
+    />
     <v-row v-if="items.length > 0">
       <v-col cols="12">
         <h1 class="headline bottom-text">Done uploading?</h1>
@@ -121,8 +126,6 @@ import { uploadFiles } from "../mixins/uploadFiles";
 import { processFiles } from "../mixins/processFiles";
 import uploads from "@/components/Uploads.vue";
 
-let inputTimeout = null;
-
 export default {
   name: "New",
   components: { uploads },
@@ -139,19 +142,14 @@ export default {
       items: [],
       albumTitle: "Untitled Album",
       isDragOver: false,
-      loading: false,
-      drag: false
+      loading: false
     };
   },
 
   methods: {
-    changeName: function(index, newName) {
-      if (inputTimeout !== null) clearTimeout(inputTimeout);
-      inputTimeout = setTimeout(() => {
-        this.items[index].newName = newName;
-      }, 250);
+    setItems(newItems) {
+      this.items = newItems;
     },
-
     preventEvent(e) {
       e.stopPropagation();
       e.preventDefault();
