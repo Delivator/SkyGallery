@@ -12,8 +12,6 @@ export const uploadFiles = {
       let id = this.items[index].id;
       let item = this.items.find(el => el.id === id);
 
-      console.log("uploading", index, id);
-
       item.status = "uploading";
       item.log += "Uploading files... ";
       let files = [[item.file, item.file.name]];

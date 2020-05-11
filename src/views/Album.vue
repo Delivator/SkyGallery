@@ -26,7 +26,7 @@
                 <v-icon>share</v-icon>
               </v-btn>
             </template>
-            <v-list class="link-list" @click="copyLink($event)">
+            <v-list class="link-list">
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
                   <v-list-item

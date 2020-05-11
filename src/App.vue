@@ -283,11 +283,12 @@ export default {
       .catch(error => this.alertBox.send("error", error));
   },
 
-  mounted: function() {
-    setTimeout(() => {
-      this.showRefTooltip = true;
-    }, 5000);
-  },
+  // mounted: function() {
+  //   setTimeout(() => {
+  //     this.showRefTooltip = true;
+  //   }, 5000);
+  // },
+
   methods: {
     changePortal: function(portal) {
       let newUrl = new URL(portal.link);

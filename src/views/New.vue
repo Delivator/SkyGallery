@@ -75,6 +75,7 @@
           @click="publishAlbum"
           :disabled="loading"
           :loading="loading"
+          class="upload-btn"
         >
           Publish your album
           <v-icon right>backup</v-icon>
@@ -85,7 +86,7 @@
   </v-container>
 </template>
 
-<style>
+<style scoped>
 .dropzone {
   background-color: rgb(24, 26, 27);
   border: 2px dashed rgb(88, 181, 96);
@@ -115,6 +116,10 @@ input[type="file"] {
 
 label[for="file"] {
   margin: 2rem;
+}
+
+.upload-btn {
+  margin-top: 1rem;
 }
 </style>
 
