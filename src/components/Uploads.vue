@@ -95,7 +95,7 @@ import draggable from "vuedraggable";
 let inputTimeout = null;
 
 export default {
-  name: "items",
+  name: "Uploads",
   components: { draggable },
   props: ["items", "skylinkRegex", "setItems", "selectTitle"],
   data() {

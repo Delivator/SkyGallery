@@ -1,5 +1,5 @@
 <template>
-  <v-container :class="loading ? 'fill-height' : ''" class="text-center" fluid>
+  <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
         <v-progress-circular
@@ -104,6 +104,21 @@
         </v-card>
       </v-col>
       <v-col v-if="isEmbed" cols="12"><div></div></v-col>
+    </v-row>
+    <v-row v-if="files.length > 0">
+      <v-col cols="12">
+        <v-btn
+          outlined
+          :to="`/edit/${albumId}`"
+          :disabled="loading"
+          :loading="loading"
+          class="upload-btn"
+        >
+          Edit album
+          <v-icon right>create</v-icon>
+        </v-btn>
+      </v-col>
+      <v-col cols="12"></v-col>
     </v-row>
   </v-container>
 </template>

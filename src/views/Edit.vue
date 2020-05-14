@@ -1,8 +1,13 @@
 <template>
-  <v-container class="text-center" fluid>
+  <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
     <v-row justify="center">
-      <v-col cols="12" v-if="items.length < 1">
-        <h1 class="display-2">Create a new Album</h1>
+      <v-col v-if="loading" cols="12">
+        <v-progress-circular
+          indeterminate
+          color="success"
+          size="100"
+          width="7"
+        ></v-progress-circular>
       </v-col>
       <v-col v-else xl="4" md="6" cols="12">
         <v-form @submit="publishAlbum($event)">
@@ -31,20 +36,21 @@
         </v-form>
       </v-col>
     </v-row>
-    <v-row justify="center">
+    <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
         <dropzone :items="items" />
       </v-col>
     </v-row>
     <uploads
+      v-if="!loading"
       :items="items"
       :skylinkRegex="skylinkRegex"
       :setItems="setItems"
       :selectTitle="selectTitle"
     />
-    <v-row v-if="items.length > 0">
+    <v-row v-if="!loading && items.length > 0">
       <v-col cols="12">
-        <h1 class="headline bottom-text">Done uploading?</h1>
+        <h1 class="headline bottom-text">Done editing?</h1>
         <v-btn
           large
           color="success"
@@ -71,19 +77,22 @@
 <script>
 import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
-import uploads from "@/components/Uploads.vue";
+import { getAlbum } from "../mixins/getAlbum";
 import dropzone from "@/components/Dropzone.vue";
+import uploads from "@/components/Uploads.vue";
+import { MD5 } from "crypto-js";
 
 export default {
-  name: "New",
+  name: "Edit",
   components: { uploads, dropzone },
-  props: ["version", "skylinkRegex", "alertBox", "showShare"],
-  mixins: [publishAlbum, uploadBlob],
+  mixins: [getAlbum, publishAlbum, uploadBlob],
+  props: ["alertBox", "skylinkRegex"],
   data() {
     return {
+      albumId: "",
       items: [],
-      albumTitle: "Untitled Album",
-      loading: false
+      albumTitle: "Album Title",
+      loading: true
     };
   },
 
@@ -94,6 +103,30 @@ export default {
     selectTitle(e, test) {
       if (e.target.value === test) e.target.select();
     }
+  },
+
+  beforeMount: function() {
+    if (this.$route.params && this.$route.params.id)
+      this.albumId = this.$route.params.id;
+
+    this.getAlbumData(this.albumId)
+      .then(data => {
+        this.loading = false;
+        data.files.forEach(file => {
+          let item = {
+            id: MD5(Math.random().toString()).toString(),
+            status: "finished",
+            type: file.type,
+            name: file.name,
+            newName: file.name,
+            skylinks: file.skylinks
+          };
+          if (file.skylinks.thumbnail) item.thumbnail = file.skylinks.thumbnail;
+          this.items.push(item);
+        });
+        this.albumTitle = data.title;
+      })
+      .catch(error => this.alertBox.send("error", error));
   }
 };
 </script>

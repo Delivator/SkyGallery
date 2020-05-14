@@ -257,6 +257,7 @@ export default {
       }
     };
   },
+
   beforeMount: function() {
     this.isEmbed = inIframe();
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";

@@ -23,7 +23,10 @@ export const publishAlbum = {
         type: "application/json"
       });
       this.loading = true;
-      this.uploadBlob(blob, `skygallery-${MD5(Math.random().toString())}.json`)
+      this.uploadBlob(
+        blob,
+        `skygallery-${MD5(Math.random().toString()).toString()}.json`
+      )
         .then(skylink => {
           this.loading = false;
           this.showShare = true;
