@@ -12,7 +12,7 @@
   "main": "src/main.js",
   "dependencies": {
     "browser-image-compression": "^1.0.11",
-    "core-js": "^3.6.4",
+    "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
     "vue": "^2.6.11",
     "vue-observe-visibility": "^0.4.6",
