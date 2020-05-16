@@ -21,7 +21,7 @@ export const uploadFiles = {
         fileName = fileName.reverse().join(".");
         files.push([item.thumbnailBlob, fileName]);
       }
-      await this.uploadBlobs(files, item.id)
+      await this.uploadBlobs(files, item.id, item)
         .then(skylinks => {
           if (skylinks.thumbnail) item.thumbnail = skylinks.thumbnail;
           item.skylinks = skylinks;
