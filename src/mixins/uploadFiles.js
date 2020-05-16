@@ -1,8 +1,8 @@
 export const uploadFiles = {
   methods: {
     async uploadFiles() {
-      // Max three uploads at once
-      if (this.items.filter(item => item.status === "uploading").length > 2)
+      // Max five uploads at once
+      if (this.items.filter(item => item.status === "uploading").length > 4)
         return;
 
       let index = this.items.findIndex(item => item.status === "processed");
