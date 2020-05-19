@@ -7,9 +7,9 @@ Vue.use(VueObserveVisibility);
 
 export default new Vuetify({
   icons: {
-    iconfont: "md"
+    iconfont: "md",
   },
   theme: {
-    dark: true
-  }
+    dark: true,
+  },
 });

@@ -3,7 +3,7 @@ export const getAlbum = {
     checkValidAlbum(albumId) {
       return new Promise((resolve, reject) => {
         fetch(`/${albumId}`, { method: "HEAD" })
-          .then(res => {
+          .then((res) => {
             if (res.ok && res.headers.has("skynet-file-metadata")) {
               let data = JSON.parse(res.headers.get("skynet-file-metadata"));
               if (/skygallery-[a-f0-9]{32}.json/gm.test(data.filename))
@@ -12,7 +12,7 @@ export const getAlbum = {
               reject();
             }
           })
-          .catch(err => reject(err));
+          .catch((err) => reject(err));
       });
     },
     getAlbumData(albumId) {
@@ -20,12 +20,12 @@ export const getAlbum = {
         this.checkValidAlbum(albumId)
           .then(() => {
             fetch(`/${albumId}`)
-              .then(res => res.json())
+              .then((res) => res.json())
               .then(resolve)
               .catch(reject);
           })
           .catch(reject);
       });
-    }
-  }
+    },
+  },
 };

@@ -23,7 +23,7 @@
         label="Change Skynet Portal"
         @change="changePortal"
         return-object
-        style="max-width: 12rem; top: 5px"
+        style="max-width: 12rem; top: 5px;"
         single-line
       ></v-select>
     </v-app-bar>
@@ -218,8 +218,8 @@ export default {
       portals: [
         {
           name: "SiaSky.net",
-          link: "https://siasky.net"
-        }
+          link: "https://siasky.net",
+        },
       ],
       skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
       showShare: false,
@@ -250,23 +250,23 @@ export default {
             type,
             text: message,
             timeout: setTimeout(() => {
-              this.alerts.find(alert => alert.id === id).show = false;
-            }, timeout)
+              this.alerts.find((alert) => alert.id === id).show = false;
+            }, timeout),
           });
-        }
-      }
+        },
+      },
     };
   },
 
-  beforeMount: function() {
+  beforeMount: function () {
     this.isEmbed = inIframe();
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
 
     fetch(trustedPortals)
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) return response.json();
       })
-      .then(data => {
+      .then((data) => {
         if (!data || data.length < 1 || !data[0].name || !data[0].link)
           return false;
         data = shuffleArray(data);
@@ -281,7 +281,7 @@ export default {
         });
         this.portals = data;
       })
-      .catch(error => this.alertBox.send("error", error));
+      .catch((error) => this.alertBox.send("error", error));
   },
 
   // mounted: function() {
@@ -291,7 +291,7 @@ export default {
   // },
 
   methods: {
-    changePortal: function(portal) {
+    changePortal: function (portal) {
       let newUrl = new URL(portal.link);
       document.location.href = document.location.href.replace(
         document.location.origin,
@@ -299,25 +299,25 @@ export default {
       );
     },
 
-    openAlbum: function() {
+    openAlbum: function () {
       let win = window.open(window.location);
       win.focus();
     },
 
-    refMouseover: function() {
+    refMouseover: function () {
       this.showRefTooltip = false;
       this.refHover = true;
     },
 
-    refMouseleave: function() {
+    refMouseleave: function () {
       setTimeout(() => {
         this.refHover = false;
       }, 100);
     },
 
-    refVisibility: function(isVisible) {
+    refVisibility: function (isVisible) {
       this.refVisible = isVisible;
-    }
-  }
+    },
+  },
 };
 </script>

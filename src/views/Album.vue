@@ -171,48 +171,48 @@ export default {
       files: [],
       albumTitle: "Album Title",
       loading: true,
-      tooltipText: "Click to copy to clipboard"
+      tooltipText: "Click to copy to clipboard",
     };
   },
 
   methods: {
-    imageSource: function(file) {
+    imageSource: function (file) {
       return file.skylinks.thumbnail
         ? file.skylinks.thumbnail
         : file.skylinks.source;
     },
-    openLink: function(link) {
+    openLink: function (link) {
       let win = window.open(link);
       win.focus();
     },
-    selectLink: function(event) {
+    selectLink: function (event) {
       this.tooltipText = "Click to copy to clipboard";
       let node = event.target.querySelector(".share-link, .embed-code");
       if (node) selectText(node);
     },
-    copyLink: function(event, copyText) {
+    copyLink: function (event, copyText) {
       event.preventDefault();
       event.stopPropagation();
       if (!copyText) return;
       navigator.clipboard
         .writeText(copyText)
         .then(() => (this.tooltipText = "Copied to clipboard"))
-        .catch(error => this.alertBox.send("error", error));
-    }
+        .catch((error) => this.alertBox.send("error", error));
+    },
   },
 
-  beforeMount: function() {
+  beforeMount: function () {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
 
     this.getAlbumData(this.albumId)
-      .then(data => {
+      .then((data) => {
         // if (data.version !== "0.0.5") return;
         this.loading = false;
         this.files = data.files;
         this.albumTitle = data.title;
       })
-      .catch(error => this.alertBox.send("error", error));
+      .catch((error) => this.alertBox.send("error", error));
   },
 
   computed: {
@@ -222,7 +222,7 @@ export default {
 
     embedCode: () => {
       return `<iframe src="${document.location}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
-    }
-  }
+    },
+  },
 };
 </script>

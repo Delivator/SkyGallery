@@ -92,7 +92,7 @@ export default {
       albumId: "",
       items: [],
       albumTitle: "Album Title",
-      loading: true
+      loading: true,
     };
   },
 
@@ -102,31 +102,31 @@ export default {
     },
     selectTitle(e, test) {
       if (e.target.value === test) e.target.select();
-    }
+    },
   },
 
-  beforeMount: function() {
+  beforeMount: function () {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
 
     this.getAlbumData(this.albumId)
-      .then(data => {
+      .then((data) => {
         this.loading = false;
-        data.files.forEach(file => {
+        data.files.forEach((file) => {
           let item = {
             id: MD5(Math.random().toString()).toString(),
             status: "finished",
             type: file.type,
             name: file.name,
             newName: file.name,
-            skylinks: file.skylinks
+            skylinks: file.skylinks,
           };
           if (file.skylinks.thumbnail) item.thumbnail = file.skylinks.thumbnail;
           this.items.push(item);
         });
         this.albumTitle = data.title;
       })
-      .catch(error => this.alertBox.send("error", error));
-  }
+      .catch((error) => this.alertBox.send("error", error));
+  },
 };
 </script>

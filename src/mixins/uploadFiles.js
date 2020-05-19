@@ -2,15 +2,15 @@ export const uploadFiles = {
   methods: {
     async uploadFiles() {
       // Max three uploads at once
-      if (this.items.filter(item => item.status === "uploading").length > 2)
+      if (this.items.filter((item) => item.status === "uploading").length > 2)
         return;
 
-      let index = this.items.findIndex(item => item.status === "processed");
+      let index = this.items.findIndex((item) => item.status === "processed");
 
       if (index < 0) return;
 
       let id = this.items[index].id;
-      let item = this.items.find(el => el.id === id);
+      let item = this.items.find((el) => el.id === id);
 
       item.status = "uploading";
       item.log += "Uploading files... ";
@@ -22,19 +22,19 @@ export const uploadFiles = {
         files.push([item.thumbnailBlob, fileName]);
       }
       await this.uploadBlobs(files, item.id)
-        .then(skylinks => {
+        .then((skylinks) => {
           if (skylinks.thumbnail) item.thumbnail = skylinks.thumbnail;
           item.skylinks = skylinks;
           item.status = "finished";
           item.log += "done.\n";
           this.uploadFiles();
         })
-        .catch(error => {
+        .catch((error) => {
           this.alertBox.send("error", error);
           item.status = "error";
           item.log += "Error.";
           this.uploadFiles();
         });
-    }
-  }
+    },
+  },
 };

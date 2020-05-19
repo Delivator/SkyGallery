@@ -83,7 +83,7 @@ export default {
     return {
       items: [],
       albumTitle: "Untitled Album",
-      loading: false
+      loading: false,
     };
   },
 
@@ -93,7 +93,7 @@ export default {
     },
     selectTitle(e, test) {
       if (e.target.value === test) e.target.select();
-    }
-  }
+    },
+  },
 };
 </script>

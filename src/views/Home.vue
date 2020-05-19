@@ -33,7 +33,7 @@
           single-line
           placeholder="Paste Skynet or sia:// link"
           outlined
-          style="width: 14rem"
+          style="width: 14rem;"
           @input="openAlbum"
           v-model="linkInput"
           :loading="loading"
@@ -72,11 +72,11 @@ export default {
   data: () => ({
     linkInput: "",
     loading: false,
-    inputError: ""
+    inputError: "",
   }),
 
   methods: {
-    openAlbum: function() {
+    openAlbum: function () {
       if (openAlbumTimeout !== null) clearTimeout(openAlbumTimeout);
       this.inputError = "";
       if (!this.linkInput) return;
@@ -85,7 +85,7 @@ export default {
         let skylink = this.linkInput.replace("sia://", "");
         skylink = skylink.replace(document.location, "");
         skylink = skylink.replace("a/", "");
-        this.portals.forEach(portal => {
+        this.portals.forEach((portal) => {
           skylink = skylink.replace(portal.link, "");
         });
         skylink = skylink.replace(/\//g, "");
@@ -99,13 +99,13 @@ export default {
             this.loading = false;
             this.$router.push("/a/" + skylink);
           })
-          .catch(error => {
+          .catch((error) => {
             this.alertBox.send("error", error);
             this.inputError = "Error fetching album";
             this.loading = false;
           });
       }, 250);
-    }
-  }
+    },
+  },
 };
 </script>
