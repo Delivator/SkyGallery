@@ -38,6 +38,7 @@
               :value="item.newName"
               @input="changeName(item.id, $event)"
               @focus="selectTitle($event, item.newName)"
+              autocomplete="off"
             ></v-text-field>
           </v-card-title>
         </v-img>

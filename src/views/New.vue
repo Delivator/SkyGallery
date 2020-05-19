@@ -14,6 +14,7 @@
             :disabled="loading"
             @focus="selectTitle($event, 'Untitled Album')"
             ref="titleInput"
+            autocomplete="off"
           >
             <template v-slot:append-outer>
               <v-btn
