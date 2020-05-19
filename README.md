@@ -24,6 +24,11 @@ npm run serve
 npm run build
 ```
 
+### Build and upload to SkyNet
+```
+npm run publish
+```
+
 ### Lints and fixes files
 ```
 npm run lint
