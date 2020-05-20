@@ -14,6 +14,7 @@
             :disabled="loading"
             @focus="selectTitle($event, 'Untitled Album')"
             ref="titleInput"
+            autocomplete="off"
           >
             <template v-slot:append-outer>
               <v-btn
@@ -83,7 +84,7 @@ export default {
     return {
       items: [],
       albumTitle: "Untitled Album",
-      loading: false
+      loading: false,
     };
   },
 
@@ -93,7 +94,7 @@ export default {
     },
     selectTitle(e, test) {
       if (e.target.value === test) e.target.select();
-    }
-  }
+    },
+  },
 };
 </script>

@@ -5,12 +5,12 @@ export const uploadFiles = {
       if (this.items.filter(item => item.status === "uploading").length > 4)
         return;
 
-      let index = this.items.findIndex(item => item.status === "processed");
+      let index = this.items.findIndex((item) => item.status === "processed");
 
       if (index < 0) return;
 
       let id = this.items[index].id;
-      let item = this.items.find(el => el.id === id);
+      let item = this.items.find((el) => el.id === id);
 
       item.status = "uploading";
       item.log += "Uploading files... ";
@@ -29,12 +29,12 @@ export const uploadFiles = {
           item.log += "done.\n";
           this.uploadFiles();
         })
-        .catch(error => {
+        .catch((error) => {
           this.alertBox.send("error", error);
           item.status = "error";
           item.log += "Error.";
           this.uploadFiles();
         });
-    }
-  }
+    },
+  },
 };

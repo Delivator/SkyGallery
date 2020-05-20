@@ -8,27 +8,32 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
   },
   {
     path: "/new",
     name: "New",
-    component: () => import("../views/New.vue")
+    component: () => import("../views/New.vue"),
   },
   {
     path: "/a/:id",
     name: "Album",
-    component: () => import("../views/Album.vue")
+    component: () => import("../views/Album.vue"),
+  },
+  {
+    path: "/a*",
+    name: "Album",
+    component: () => import("../views/Album.vue"),
   },
   {
     path: "/edit/:id",
     name: "Edit",
-    component: () => import("../views/Edit.vue")
-  }
+    component: () => import("../views/Edit.vue"),
+  },
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
 });
 
 export default router;

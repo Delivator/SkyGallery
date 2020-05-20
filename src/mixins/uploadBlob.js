@@ -8,13 +8,13 @@ export const uploadBlob = {
         formData.append("file", blob, fileName);
         fetch("/skynet/skyfile", {
           method: "POST",
-          body: formData
+          body: formData,
         })
-          .then(resp => {
+          .then((resp) => {
             if (!resp.ok) return reject(resp.status);
             return resp.json();
           })
-          .then(data => {
+          .then((data) => {
             return resolve(data.skylink);
           })
           .catch(reject);
@@ -41,6 +41,6 @@ export const uploadBlob = {
           })
           .catch(reject);
       });
-    }
-  }
+    },
+  },
 };

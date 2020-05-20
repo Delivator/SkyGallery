@@ -38,6 +38,7 @@
               :value="item.newName"
               @input="changeName(item.id, $event)"
               @focus="selectTitle($event, item.newName)"
+              autocomplete="off"
             ></v-text-field>
           </v-card-title>
         </v-img>
@@ -100,12 +101,12 @@ export default {
   props: ["items", "skylinkRegex", "setItems", "selectTitle"],
   data() {
     return {
-      drag: false
+      drag: false,
     };
   },
 
   methods: {
-    thumbnailUrl: function(url) {
+    thumbnailUrl: function (url) {
       if (this.skylinkRegex.test(url)) {
         return `/${url}`;
       } else {
@@ -113,17 +114,17 @@ export default {
       }
     },
 
-    changeName: function(id, newName) {
+    changeName: function (id, newName) {
       if (inputTimeout !== null) clearTimeout(inputTimeout);
       inputTimeout = setTimeout(() => {
-        this.items.find(item => item.id === id).newName = newName;
+        this.items.find((item) => item.id === id).newName = newName;
       }, 250);
     },
 
     endDrag() {
       this.drag = false;
       this.setItems(this.items);
-    }
-  }
+    },
+  },
 };
 </script>

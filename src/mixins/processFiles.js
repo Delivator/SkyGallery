@@ -3,7 +3,7 @@ import { MD5 } from "crypto-js";
 export const processFiles = {
   methods: {
     processFiles(files) {
-      files.forEach(file => {
+      files.forEach((file) => {
         const imageType = /^image\//;
         if (!imageType.test(file.type)) return;
         let item = {
@@ -11,7 +11,7 @@ export const processFiles = {
           id: MD5(Math.random().toString()).toString(),
           status: "queued",
           log: "Added\n",
-          type: "image"
+          type: "image",
         };
         item.newName = file.name.split(".");
         item.newName.pop();
@@ -19,6 +19,6 @@ export const processFiles = {
         this.items.push(item);
         this.generateThumbnails();
       });
-    }
-  }
+    },
+  },
 };

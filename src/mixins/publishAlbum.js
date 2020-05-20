@@ -8,34 +8,34 @@ export const publishAlbum = {
         format: "skygallery",
         version: this.version,
         title: this.albumTitle,
-        files: []
+        files: [],
       };
       this.items
-        .filter(file => file.status === "finished")
-        .forEach(file => {
+        .filter((file) => file.status === "finished")
+        .forEach((file) => {
           jsonData.files.push({
             type: file.type,
             skylinks: file.skylinks,
-            name: file.newName
+            name: file.newName,
           });
         });
       const blob = new Blob([JSON.stringify(jsonData)], {
-        type: "application/json"
+        type: "application/json",
       });
       this.loading = true;
       this.uploadBlob(
         blob,
         `skygallery-${MD5(Math.random().toString()).toString()}.json`
       )
-        .then(skylink => {
+        .then((skylink) => {
           this.loading = false;
           this.showShare = true;
           this.$router.push("/a/" + skylink);
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
           this.alertBox.send("error", err);
         });
-    }
-  }
+    },
+  },
 };

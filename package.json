@@ -1,12 +1,13 @@
 {
   "name": "skygallery",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": true,
   "description": "## Project setup ``` npm install ```",
   "author": "Delivator",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "publish": "vue-cli-service build && node upload_dist",
     "lint": "vue-cli-service lint"
   },
   "main": "src/main.js",
@@ -22,6 +23,7 @@
     "vuetify": "^2.2.28"
   },
   "devDependencies": {
+    "@nebulous/skynet": "^1.0.1",
     "@vue/cli-plugin-babel": "~4.3.1",
     "@vue/cli-plugin-eslint": "~4.3.1",
     "@vue/cli-plugin-router": "~4.3.1",

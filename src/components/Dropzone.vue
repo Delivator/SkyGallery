@@ -69,7 +69,7 @@ export default {
   props: ["items"],
   data() {
     return {
-      isDragOver: false
+      isDragOver: false,
     };
   },
 
@@ -91,7 +91,7 @@ export default {
     onFile(e) {
       this.preventEvent(e);
       this.processFiles(e.target.files);
-    }
-  }
+    },
+  },
 };
 </script>
