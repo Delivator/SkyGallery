@@ -1,8 +1,8 @@
 export const uploadFiles = {
   methods: {
     async uploadFiles() {
-      // Max three uploads at once
-      if (this.items.filter((item) => item.status === "uploading").length > 2)
+      // Max five uploads at once
+      if (this.items.filter(item => item.status === "uploading").length > 4)
         return;
 
       let index = this.items.findIndex((item) => item.status === "processed");
@@ -21,8 +21,8 @@ export const uploadFiles = {
         fileName = fileName.reverse().join(".");
         files.push([item.thumbnailBlob, fileName]);
       }
-      await this.uploadBlobs(files, item.id)
-        .then((skylinks) => {
+      await this.uploadBlobs(files, item.id, item)
+        .then(skylinks => {
           if (skylinks.thumbnail) item.thumbnail = skylinks.thumbnail;
           item.skylinks = skylinks;
           item.status = "finished";
