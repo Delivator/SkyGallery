@@ -18,7 +18,7 @@
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.2.0",
     "vuedraggable": "^2.23.2",
-    "vuetify": "^2.2.28"
+    "vuetify": "^2.2.29"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.1",
