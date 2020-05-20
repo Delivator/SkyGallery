@@ -23,17 +23,17 @@ export const uploadBlob = {
     uploadBlobs(blobs, id, item) {
       return new Promise((resolve, reject) => {
         const formData = new FormData();
-        blobs.forEach(blob => formData.append("files[]", blob[0], blob[1]));
+        blobs.forEach((blob) => formData.append("files[]", blob[0], blob[1]));
         axios
           .post("/skynet/skyfile?filename=" + id, formData, {
             onUploadProgress: ({ loaded, total }) => {
               const progress = loaded / total;
               item.status = progress === 1 ? "uploaded" : "uploading";
-            }
+            },
           })
-          .then(resposne => {
+          .then((resposne) => {
             let skylinks = {
-              source: `${resposne.data.skylink}/${blobs[0][1]}`
+              source: `${resposne.data.skylink}/${blobs[0][1]}`,
             };
             if (blobs[1])
               skylinks.thumbnail = `${resposne.data.skylink}/${blobs[1][1]}`;
