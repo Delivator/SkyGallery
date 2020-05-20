@@ -30,7 +30,9 @@
             <v-icon>delete</v-icon>
           </v-btn>
           <div class="drag-handle"></div>
-          <code class="file-log">{{ item.log }}</code>
+          <code class="file-log">{{
+            item.log.replace("progress", uploadProgress(item.progress))
+          }}</code>
           <v-card-title>
             <v-text-field
               single-line
@@ -124,6 +126,11 @@ export default {
     endDrag() {
       this.drag = false;
       this.setItems(this.items);
+    },
+
+    uploadProgress: function (progress) {
+      let prog = Math.floor(progress * 100);
+      return prog === 100 ? "processing" : `${prog}%`;
     },
   },
 };

@@ -12,6 +12,7 @@ export const processFiles = {
           status: "queued",
           log: "Added\n",
           type: "image",
+          progress: 0.0,
         };
         item.newName = file.name.split(".");
         item.newName.pop();

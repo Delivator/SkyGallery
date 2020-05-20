@@ -27,8 +27,8 @@ export const uploadBlob = {
         axios
           .post("/skynet/skyfile?filename=" + id, formData, {
             onUploadProgress: ({ loaded, total }) => {
-              const progress = loaded / total;
-              item.status = progress === 1 ? "uploaded" : "uploading";
+              item.progress = loaded / total;
+              item.status = item.progress === 1 ? "uploaded" : "uploading";
             },
           })
           .then((resposne) => {
