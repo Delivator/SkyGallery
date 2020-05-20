@@ -31,6 +31,23 @@
                 <template v-slot:activator="{ on }">
                   <v-list-item
                     v-on="on"
+                    @click="copyLink($event, shortLink)"
+                    @mouseover="selectLink($event)"
+                  >
+                    <v-list-item-title @click="copyLink($event, shortLink)"
+                      >Short Link:
+                      <a class="share-link" :href="shortLink">{{
+                        shortLink
+                      }}</a></v-list-item-title
+                    >
+                  </v-list-item>
+                </template>
+                <span>{{ tooltipText }}</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-list-item
+                    v-on="on"
                     @click="copyLink($event, directLink)"
                     @mouseover="selectLink($event)"
                   >
@@ -105,7 +122,7 @@
       </v-col>
       <v-col v-if="isEmbed" cols="12"><div></div></v-col>
     </v-row>
-    <v-row v-if="files.length > 0">
+    <v-row v-if="files.length > 0 && !isEmbed">
       <v-col cols="12">
         <v-btn
           outlined
@@ -205,6 +222,14 @@ export default {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
 
+    console.log(this.albumId, this.albumId === "");
+    if (this.albumId === "") {
+      console.log("redirecting to home");
+      this.$router.push("/");
+      this.alertBox.send("info", "No album ID provided");
+      return;
+    }
+
     this.getAlbumData(this.albumId)
       .then((data) => {
         // if (data.version !== "0.0.5") return;
@@ -218,6 +243,10 @@ export default {
   computed: {
     directLink: () => {
       return document.location.href;
+    },
+
+    shortLink: function () {
+      return `https://skygallery.xyz/a/${this.albumId}`;
     },
 
     embedCode: () => {

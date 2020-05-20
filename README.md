@@ -5,7 +5,7 @@ Powered by [Skynet](https://siasky.net/)
 
 ## Screenshots
 
-![Example GIF](https://cdn.skyportal.xyz/AAAQ6cGCpPL9YfSze2pw3phMZ4n6mcXVluKPIrDddhPBHQ)
+![Example GIF](https://cdn.skyportal.xyz/AAAJKqe2FVynjBjQbWEb-d6kHUCPDEGOk90QujrQIplZWQ)
 ![Homepage](https://cdn.skyportal.xyz/dAD_sdc4v1L0MW3FvPSkmZnVgyY-FgC5pkjgGsbFruO4ng)
 ![New Album Page](https://cdn.skyportal.xyz/fADx1p3Ar6eVfG-Rkjy-CmnL91qnKe1o5RWvYYkML3G8qw)
 
@@ -22,6 +22,11 @@ npm run serve
 ### Compiles and minifies for production
 ```
 npm run build
+```
+
+### Build and upload to SkyNet
+```
+npm run publish
 ```
 
 ### Lints and fixes files
