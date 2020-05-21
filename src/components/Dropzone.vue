@@ -29,7 +29,7 @@
   background-color: rgb(24, 26, 27);
   border: 2px dashed rgb(88, 181, 96);
   border-radius: 5px;
-  padding: 2rem;
+  padding: 4rem 0;
   transition: background 100ms;
 }
 
