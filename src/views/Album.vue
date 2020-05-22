@@ -222,9 +222,7 @@ export default {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
 
-    console.log(this.albumId, this.albumId === "");
     if (this.albumId === "") {
-      console.log("redirecting to home");
       this.$router.push("/");
       this.alertBox.send("info", "No album ID provided");
       return;

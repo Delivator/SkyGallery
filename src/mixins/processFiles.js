@@ -15,7 +15,6 @@ export const processFiles = {
           progress: 0.0,
         };
         // if file is larger than 50MiB
-        console.log(file.size, file.size >= 52428800);
         if (file.size >= 52428800) item.status = "toobig";
         item.newName = file.name.split(".");
         item.newName.pop();
