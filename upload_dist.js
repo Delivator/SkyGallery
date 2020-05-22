@@ -2,8 +2,8 @@ const skynet = require("@nebulous/skynet");
 
 const portals = [
   "https://skyportal.xyz",
-  "https://skynet.cloudloop.io",
-  "https://siasky.net",
+  // "https://skynet.cloudloop.io",
+  // "https://siasky.net",
 ];
 
 let opts = skynet.DefaultUploadOptions;

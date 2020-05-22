@@ -29,20 +29,31 @@
           >
             <v-icon>delete</v-icon>
           </v-btn>
-          <div class="drag-handle"></div>
-          <code class="file-log">{{
-            item.log.replace("progress", uploadProgress(item.progress))
-          }}</code>
-          <v-card-title>
-            <v-text-field
-              single-line
-              dense
-              :value="item.newName"
-              @input="changeName(item.id, $event)"
-              @focus="selectTitle($event, item.newName)"
-              autocomplete="off"
-            ></v-text-field>
-          </v-card-title>
+          <div v-if="item.status === 'toobig'" class="toobig">
+            <h2 class="title">This file is bigger than 50MiB</h2>
+            <h3 class="subtitle-1">
+              Are you sure you wan to upload this file?
+            </h3>
+            <v-btn fab small outlined color="success" @click="queueItem(item)">
+              <v-icon>done</v-icon>
+            </v-btn>
+          </div>
+          <div v-else>
+            <div class="drag-handle"></div>
+            <code class="file-log" v-if="item.log">{{
+              item.log.replace("progress", uploadProgress(item.progress))
+            }}</code>
+            <v-card-title>
+              <v-text-field
+                single-line
+                dense
+                :value="item.newName"
+                @input="changeName(item.id, $event)"
+                @focus="selectTitle($event, item.newName)"
+                autocomplete="off"
+              ></v-text-field>
+            </v-card-title>
+          </div>
         </v-img>
       </v-card>
     </v-col>
@@ -90,10 +101,19 @@
   height: 50%;
   z-index: 1;
 }
+
+.toobig {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 1rem;
+}
 </style>
 
 <script>
 import draggable from "vuedraggable";
+import { generateThumbnails } from "../mixins/generateThumbnails";
+import { uploadFiles } from "../mixins/uploadFiles";
 
 let inputTimeout = null;
 
@@ -101,6 +121,7 @@ export default {
   name: "Uploads",
   components: { draggable },
   props: ["items", "skylinkRegex", "setItems", "selectTitle"],
+  mixins: [generateThumbnails, uploadFiles],
   data() {
     return {
       drag: false,
@@ -131,6 +152,11 @@ export default {
     uploadProgress: function (progress) {
       let prog = Math.floor(progress * 100);
       return prog === 100 ? "processing" : `${prog}%`;
+    },
+
+    queueItem: function (item) {
+      item.status = "queued";
+      this.generateThumbnails();
     },
   },
 };
