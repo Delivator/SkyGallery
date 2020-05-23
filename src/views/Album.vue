@@ -1,5 +1,31 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
+    <div
+      class="fullscreen-image"
+      v-if="showFullImg"
+      :style="`background-image: url(/${files[showFullIndex].skylinks.source});`"
+      v-touch="{
+        left: () => showNext(),
+        right: () => showNext(),
+        up: () => (showFullImg = false),
+        down: () => (showFullImg = false),
+      }"
+    >
+      <v-btn
+        fab
+        small
+        class="close-full-btn"
+        color="error"
+        @click="showFullImg = false"
+        ><v-icon>close</v-icon></v-btn
+      >
+      <div class="previous-btn" @click="showPrevious()">
+        <v-icon size="64">navigate_before</v-icon>
+      </div>
+      <div class="next-btn" @click="showNext()">
+        <v-icon size="64">navigate_next</v-icon>
+      </div>
+    </div>
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
         <v-progress-circular
@@ -110,7 +136,7 @@
         lg="4"
         md="6"
       >
-        <v-card @click="openLink(`/${file.skylinks.source}`)">
+        <v-card @click="openFull(index)">
           <v-img
             :src="`/${imageSource(file)}`"
             :aspect-ratio="4 / 3"
@@ -166,6 +192,61 @@
 .title-link {
   text-decoration: none;
 }
+
+.fullscreen-image {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.7);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.close-full-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 11;
+}
+
+.previous-btn,
+.next-btn {
+  position: absolute;
+  height: 100vh;
+  width: 20vw;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.previous-btn:hover,
+.next-btn:hover {
+  opacity: 1;
+}
+
+.previous-btn {
+  left: 0;
+}
+
+.next-btn {
+  right: 0;
+}
+
+.previous-btn i {
+  position: fixed;
+  top: 50%;
+  left: 1rem;
+}
+
+.next-btn i {
+  position: fixed;
+  top: 50%;
+  right: 1rem;
+}
 </style>
 
 <script>
@@ -189,6 +270,8 @@ export default {
       albumTitle: "Album Title",
       loading: true,
       tooltipText: "Click to copy to clipboard",
+      showFullImg: false,
+      showFullIndex: 0,
     };
   },
 
@@ -198,6 +281,7 @@ export default {
         ? file.skylinks.thumbnail
         : file.skylinks.source;
     },
+
     openLink: function (link) {
       let win = window.open(link);
       win.focus();
@@ -215,6 +299,20 @@ export default {
         .writeText(copyText)
         .then(() => (this.tooltipText = "Copied to clipboard"))
         .catch((error) => this.alertBox.send("error", error));
+    },
+    openFull: function (index) {
+      this.showFullImg = true;
+      this.showFullIndex = index;
+    },
+    showPrevious: function () {
+      if (this.showFullIndex <= 0) {
+        this.showFullIndex = this.files.length - 1;
+      } else {
+        this.showFullIndex = (this.showFullIndex - 1) % this.files.length;
+      }
+    },
+    showNext: function () {
+      this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
     },
   },
 
@@ -235,7 +333,7 @@ export default {
         this.files = data.files;
         this.albumTitle = data.title;
       })
-      .catch((error) => this.alertBox.send("error", error));
+      .catch(() => this.alertBox.send("error", "Error getting album data"));
   },
 
   computed: {
