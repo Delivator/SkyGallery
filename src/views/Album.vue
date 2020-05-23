@@ -10,6 +10,7 @@
         up: () => (showFullImg = false),
         down: () => (showFullImg = false),
       }"
+      @mousewheel="fullscreenMousewheel($event)"
     >
       <v-btn
         fab
@@ -314,6 +315,15 @@ export default {
     showNext: function () {
       this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
     },
+    fullscreenMousewheel: function (event) {
+      if (!event) return;
+      event.preventDefault();
+      if (event.deltaY > 0) {
+        this.showNext();
+      } else {
+        this.showPrevious();
+      }
+    },
   },
 
   beforeMount: function () {
@@ -348,6 +358,25 @@ export default {
     embedCode: () => {
       return `<iframe src="${document.location}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
     },
+  },
+
+  mounted: function () {
+    document.addEventListener("keydown", (event) => {
+      if (!this.showFullImg || this.files.length < 0) return;
+      switch (event.key) {
+        case "Escape":
+          this.showFullImg = false;
+          break;
+        case "ArrowLeft":
+          this.showPrevious();
+          break;
+        case "ArrowRight":
+          this.showNext();
+          break;
+        default:
+          break;
+      }
+    });
   },
 };
 </script>

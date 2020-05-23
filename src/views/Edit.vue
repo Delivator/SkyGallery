@@ -38,7 +38,7 @@
     </v-row>
     <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" />
+        <dropzone :items="items" v-intersect="onIntersect" />
       </v-col>
     </v-row>
     <uploads
@@ -48,6 +48,11 @@
       :setItems="setItems"
       :selectTitle="selectTitle"
     />
+    <v-row v-if="!loading && !isIntersecting" justify="center">
+      <v-col lg="4" md="6" cols="12">
+        <dropzone :items="items" />
+      </v-col>
+    </v-row>
     <v-row v-if="!loading && items.length > 0">
       <v-col cols="12">
         <h1 class="headline bottom-text">Done editing?</h1>
@@ -93,6 +98,7 @@ export default {
       items: [],
       albumTitle: "Album Title",
       loading: true,
+      isIntersecting: false,
     };
   },
 
@@ -102,6 +108,9 @@ export default {
     },
     selectTitle(e, test) {
       if (e.target.value === test) e.target.select();
+    },
+    onIntersect(entries) {
+      this.isIntersecting = entries[0].isIntersecting;
     },
   },
 
