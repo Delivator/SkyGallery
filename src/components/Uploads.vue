@@ -51,7 +51,7 @@
                 @input="changeName(item.id, $event)"
                 @focus="selectTitle($event, item.newName)"
                 autocomplete="off"
-                :tabindex="index + 1"
+                :tabindex="index + 101"
               ></v-text-field>
             </v-card-title>
           </div>
