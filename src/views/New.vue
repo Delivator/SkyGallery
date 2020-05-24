@@ -15,6 +15,7 @@
             @focus="selectTitle($event, 'Untitled Album')"
             ref="titleInput"
             autocomplete="off"
+            tabindex="0"
           >
             <template v-slot:append-outer>
               <v-btn

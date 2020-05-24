@@ -129,6 +129,7 @@ export default {
             name: file.name,
             newName: file.name,
             skylinks: file.skylinks,
+            log: "",
           };
           if (file.skylinks.thumbnail) item.thumbnail = file.skylinks.thumbnail;
           this.items.push(item);

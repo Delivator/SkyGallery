@@ -4,6 +4,7 @@ const portals = [
   "https://skyportal.xyz",
   // "https://skynet.cloudloop.io",
   // "https://siasky.net",
+  // "https://skynethub.io",
 ];
 
 let opts = skynet.DefaultUploadOptions;

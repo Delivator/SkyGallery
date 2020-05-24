@@ -43,7 +43,7 @@
             <code class="file-log" v-if="item.log">{{
               item.log.replace("progress", uploadProgress(item.progress))
             }}</code>
-            <v-card-title>
+            <v-card-title :class="item.log ? '' : 'input-background'">
               <v-text-field
                 single-line
                 dense
@@ -51,6 +51,7 @@
                 @input="changeName(item.id, $event)"
                 @focus="selectTitle($event, item.newName)"
                 autocomplete="off"
+                :tabindex="index + 1"
               ></v-text-field>
             </v-card-title>
           </div>
@@ -81,6 +82,10 @@
   height: 100%;
   overflow: hidden;
   padding: 1rem;
+}
+
+.input-background {
+  background-color: rgba(27, 27, 27, 0.3) !important;
 }
 
 .file-log::before,

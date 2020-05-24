@@ -26,6 +26,27 @@
       <div class="next-btn" @click="showNext()">
         <v-icon size="64">navigate_next</v-icon>
       </div>
+      <div class="fullscreen-footer text-center">
+        <span class="headline">{{ files[showFullIndex].name }}</span>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          :href="`/${files[showFullIndex].skylinks.source}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Original<v-icon>launch</v-icon></v-btn
+        >
+        <v-btn
+          small
+          outlined
+          color="primary"
+          :href="`/${files[showFullIndex].skylinks.thumbnail}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Thumbnail<v-icon>launch</v-icon></v-btn
+        >
+      </div>
     </div>
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
@@ -128,7 +149,7 @@
         </span>
       </v-col>
     </v-row>
-    <v-row justify="center" v-if="files.length > 0">
+    <v-row justify="center" v-if="files.length > 0" dense>
       <v-col
         v-for="(file, index) in files"
         :key="index"
@@ -137,7 +158,11 @@
         lg="4"
         md="6"
       >
-        <v-card @click="openFull(index)">
+        <v-card
+          @click="openFull(index)"
+          :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
+          :id="`img-${index}`"
+        >
           <v-img
             :src="`/${imageSource(file)}`"
             :aspect-ratio="4 / 3"
@@ -247,6 +272,23 @@
   position: fixed;
   top: 50%;
   right: 1rem;
+  z-index: 1;
+}
+
+.grayscale {
+  filter: grayscale() blur(3px);
+}
+
+.fullscreen-footer {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  bottom: 0;
+  padding: 1rem;
+  width: 100%;
+}
+
+.fullscreen-footer > .v-btn {
+  margin: 0 0.5rem;
 }
 </style>
 
@@ -304,6 +346,7 @@ export default {
     openFull: function (index) {
       this.showFullImg = true;
       this.showFullIndex = index;
+      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     showPrevious: function () {
       if (this.showFullIndex <= 0) {
@@ -311,12 +354,15 @@ export default {
       } else {
         this.showFullIndex = (this.showFullIndex - 1) % this.files.length;
       }
+      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     showNext: function () {
       this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
+      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     fullscreenMousewheel: function (event) {
       if (!event) return;
+      event.stopPropagation();
       event.preventDefault();
       if (event.deltaY > 0) {
         this.showNext();

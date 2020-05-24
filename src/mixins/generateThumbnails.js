@@ -17,7 +17,7 @@ export const generateThumbnails = {
       item.status = "processing";
       item.log += "Generating thumbnail... ";
       let options = {
-        maxWidthOrHeight: 400,
+        maxWidthOrHeight: 500,
       };
 
       imageCompression(item.file, options)
