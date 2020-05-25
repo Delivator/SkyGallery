@@ -3,9 +3,11 @@ Powered by [Skynet](https://siasky.net/)
 
 ### SkyGallery is an app that allows users to upload images to an album, give them titles and rearrange them.
 
+Example video: https://cdn.skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkvSNUtgVw
+
 ## Screenshots
 
-![Example GIF](https://cdn.skyportal.xyz/AAAJKqe2FVynjBjQbWEb-d6kHUCPDEGOk90QujrQIplZWQ)
+![Example GIF](https://cdn.skyportal.xyz/AABLjyeZ8J8AaATzk_s_oK0cPlHWSmIrAqCxD2v_i8JLLA)
 ![Homepage](https://cdn.skyportal.xyz/dAD_sdc4v1L0MW3FvPSkmZnVgyY-FgC5pkjgGsbFruO4ng)
 ![New Album Page](https://cdn.skyportal.xyz/fADx1p3Ar6eVfG-Rkjy-CmnL91qnKe1o5RWvYYkML3G8qw)
 
