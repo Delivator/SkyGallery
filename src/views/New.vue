@@ -15,6 +15,7 @@
             @focus="selectTitle($event, 'Untitled Album')"
             ref="titleInput"
             autocomplete="off"
+            tabindex="100"
           >
             <template v-slot:append-outer>
               <v-btn
@@ -34,7 +35,7 @@
     </v-row>
     <v-row justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" />
+        <dropzone :items="items" v-intersect="onIntersect" />
       </v-col>
     </v-row>
     <uploads
@@ -43,6 +44,11 @@
       :setItems="setItems"
       :selectTitle="selectTitle"
     />
+    <v-row justify="center" v-if="!isIntersecting">
+      <v-col lg="4" md="6" cols="12">
+        <dropzone :items="items" />
+      </v-col>
+    </v-row>
     <v-row v-if="items.length > 0">
       <v-col cols="12">
         <h1 class="headline bottom-text">Done uploading?</h1>
@@ -85,6 +91,7 @@ export default {
       items: [],
       albumTitle: "Untitled Album",
       loading: false,
+      isIntersecting: false,
     };
   },
 
@@ -94,6 +101,9 @@ export default {
     },
     selectTitle(e, test) {
       if (e.target.value === test) e.target.select();
+    },
+    onIntersect(entries) {
+      this.isIntersecting = entries[0].isIntersecting;
     },
   },
 };

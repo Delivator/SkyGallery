@@ -1,16 +1,23 @@
 const skynet = require("@nebulous/skynet");
 
-const portalUrl = "https://skyportal.xyz";
+const portals = [
+  "http://skynet.local",
+  "https://skyportal.xyz",
+  // "https://skynet.cloudloop.io",
+  // "https://siasky.net",
+  // "https://skynethub.io",
+];
 
 let opts = skynet.DefaultUploadOptions;
-opts.portalUrl = portalUrl;
+portals.forEach((portal) => {
+  opts.portalUrl = portal;
+  console.log("Uploading ./dist to " + portal);
 
-console.log("Uploading ./dist to " + portalUrl);
-
-skynet
-  .UploadDirectory("./dist", opts)
-  .then((resp) => {
-    const skylink = resp.replace("sia://", "");
-    console.log(`${portalUrl}/${skylink}/index.html`);
-  })
-  .catch((err) => console.error(err.message));
+  skynet
+    .UploadDirectory("./dist", opts)
+    .then((resp) => {
+      const skylink = resp.replace("sia://", "");
+      console.log(`${portal}/${skylink}/index.html`);
+    })
+    .catch((err) => console.error(err.message));
+});

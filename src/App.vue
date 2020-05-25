@@ -135,17 +135,21 @@
 </template>
 
 <style>
-/* Remove persistent scrollbar */
-html,
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+html {
+  overflow: auto;
 }
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  background: transparent;
+
+::-webkit-scrollbar-track {
+  background-color: #202020;
+}
+
+::-webkit-scrollbar {
+  width: 13px;
+  background-color: #202020;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #555;
 }
 
 .version-tag {

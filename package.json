@@ -1,6 +1,6 @@
 {
   "name": "skygallery",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": true,
   "description": "## Project setup ``` npm install ```",
   "author": "Delivator",
@@ -12,6 +12,7 @@
   },
   "main": "src/main.js",
   "dependencies": {
+    "axios": "^0.19.2",
     "browser-image-compression": "^1.0.11",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
@@ -47,7 +48,7 @@
     "Skynet",
     "Siasky",
     "Sia",
-    "Skygallery",
+    "SkyGallery",
     "DApp"
   ],
   "license": "MIT",

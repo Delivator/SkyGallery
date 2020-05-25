@@ -1,5 +1,53 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
+    <div
+      class="fullscreen-image"
+      v-if="showFullImg"
+      :style="`background-image: url(/${files[showFullIndex].skylinks.source});`"
+      v-touch="{
+        left: () => showNext(),
+        right: () => showNext(),
+        up: () => (showFullImg = false),
+        down: () => (showFullImg = false),
+      }"
+      @mousewheel="fullscreenMousewheel($event)"
+    >
+      <v-btn
+        fab
+        small
+        class="close-full-btn"
+        color="error"
+        @click="showFullImg = false"
+        ><v-icon>close</v-icon></v-btn
+      >
+      <div class="previous-btn" @click="showPrevious()">
+        <v-icon size="64">navigate_before</v-icon>
+      </div>
+      <div class="next-btn" @click="showNext()">
+        <v-icon size="64">navigate_next</v-icon>
+      </div>
+      <div class="fullscreen-footer text-center">
+        <span class="headline">{{ files[showFullIndex].name }}</span>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          :href="`/${files[showFullIndex].skylinks.source}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Original<v-icon>launch</v-icon></v-btn
+        >
+        <v-btn
+          small
+          outlined
+          color="primary"
+          :href="`/${files[showFullIndex].skylinks.thumbnail}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Thumbnail<v-icon>launch</v-icon></v-btn
+        >
+      </div>
+    </div>
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
         <v-progress-circular
@@ -101,7 +149,7 @@
         </span>
       </v-col>
     </v-row>
-    <v-row justify="center" v-if="files.length > 0">
+    <v-row justify="center" v-if="files.length > 0" dense>
       <v-col
         v-for="(file, index) in files"
         :key="index"
@@ -110,7 +158,11 @@
         lg="4"
         md="6"
       >
-        <v-card @click="openLink(`/${file.skylinks.source}`)">
+        <v-card
+          @click="openFull(index)"
+          :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
+          :id="`img-${index}`"
+        >
           <v-img
             :src="`/${imageSource(file)}`"
             :aspect-ratio="4 / 3"
@@ -166,6 +218,78 @@
 .title-link {
   text-decoration: none;
 }
+
+.fullscreen-image {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.7);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.close-full-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 11;
+}
+
+.previous-btn,
+.next-btn {
+  position: absolute;
+  height: 100vh;
+  width: 20vw;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.previous-btn:hover,
+.next-btn:hover {
+  opacity: 1;
+}
+
+.previous-btn {
+  left: 0;
+}
+
+.next-btn {
+  right: 0;
+}
+
+.previous-btn i {
+  position: fixed;
+  top: 50%;
+  left: 1rem;
+}
+
+.next-btn i {
+  position: fixed;
+  top: 50%;
+  right: 1rem;
+  z-index: 1;
+}
+
+.grayscale {
+  filter: grayscale() blur(3px);
+}
+
+.fullscreen-footer {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  bottom: 0;
+  padding: 1rem;
+  width: 100%;
+}
+
+.fullscreen-footer > .v-btn {
+  margin: 0 0.5rem;
+}
 </style>
 
 <script>
@@ -189,6 +313,8 @@ export default {
       albumTitle: "Album Title",
       loading: true,
       tooltipText: "Click to copy to clipboard",
+      showFullImg: false,
+      showFullIndex: 0,
     };
   },
 
@@ -198,6 +324,7 @@ export default {
         ? file.skylinks.thumbnail
         : file.skylinks.source;
     },
+
     openLink: function (link) {
       let win = window.open(link);
       win.focus();
@@ -216,15 +343,40 @@ export default {
         .then(() => (this.tooltipText = "Copied to clipboard"))
         .catch((error) => this.alertBox.send("error", error));
     },
+    openFull: function (index) {
+      this.showFullImg = true;
+      this.showFullIndex = index;
+      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
+    },
+    showPrevious: function () {
+      if (this.showFullIndex <= 0) {
+        this.showFullIndex = this.files.length - 1;
+      } else {
+        this.showFullIndex = (this.showFullIndex - 1) % this.files.length;
+      }
+      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
+    },
+    showNext: function () {
+      this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
+      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
+    },
+    fullscreenMousewheel: function (event) {
+      if (!event) return;
+      event.stopPropagation();
+      event.preventDefault();
+      if (event.deltaY > 0) {
+        this.showNext();
+      } else {
+        this.showPrevious();
+      }
+    },
   },
 
   beforeMount: function () {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
 
-    console.log(this.albumId, this.albumId === "");
     if (this.albumId === "") {
-      console.log("redirecting to home");
       this.$router.push("/");
       this.alertBox.send("info", "No album ID provided");
       return;
@@ -237,7 +389,7 @@ export default {
         this.files = data.files;
         this.albumTitle = data.title;
       })
-      .catch((error) => this.alertBox.send("error", error));
+      .catch(() => this.alertBox.send("error", "Error getting album data"));
   },
 
   computed: {
@@ -252,6 +404,25 @@ export default {
     embedCode: () => {
       return `<iframe src="${document.location}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
     },
+  },
+
+  mounted: function () {
+    document.addEventListener("keydown", (event) => {
+      if (!this.showFullImg || this.files.length < 0) return;
+      switch (event.key) {
+        case "Escape":
+          this.showFullImg = false;
+          break;
+        case "ArrowLeft":
+          this.showPrevious();
+          break;
+        case "ArrowRight":
+          this.showNext();
+          break;
+        default:
+          break;
+      }
+    });
   },
 };
 </script>
