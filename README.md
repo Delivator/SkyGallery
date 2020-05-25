@@ -7,7 +7,7 @@ Example video: https://cdn.skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkv
 
 ## Screenshots
 
-<img src="src/assets/skygallery.gif?raw=true" width="720px">
+<img src="src/assets/skygallery.gif?raw=true" width="100%">
 
 ![Homepage](https://cdn.skyportal.xyz/dAD_sdc4v1L0MW3FvPSkmZnVgyY-FgC5pkjgGsbFruO4ng)
 ![New Album Page](https://cdn.skyportal.xyz/fADx1p3Ar6eVfG-Rkjy-CmnL91qnKe1o5RWvYYkML3G8qw)
