@@ -5,7 +5,7 @@ Example album: https://skygallery.xyz/a/EAB75QcbfXAMw1vldaTXJYIbpAv8Z45zW99uwS_q
 
 ## Why use SkyGallery?
 - Files are stored with a 10x redundancy on a decentralized storage network called [Sia](https://sia.tech/) for high availability and speed
-- 100% free, if you use a public free skynet webportal (like [skyporta.xyz](https://skyportal.yz/))
+- 100% free, if you use a public free skynet webportal (like [skyporta.xyz](https://skyportal.xyz/) or [siasky.net](https://siasky.net/))
 - No anoying ads, cookie notices, trackers or paywalls
 - You can also use your own sia node, this gives you the advantage of not having to trust any portal as well as having your files pined for as long as you want. With this you also have to pay for storage an traffic, but the costs on sia are a fraction of common hosting prices.
 - Easy to use UI with click to copy share links and iframe embed support
