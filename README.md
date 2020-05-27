@@ -5,7 +5,7 @@ Powered by [Skynet](https://siasky.net/)
 - Files are stored with a 10x redundancy on a decentralized storage network called [Sia](https://sia.tech/) for high availability and speed
 - 100% free, if you use a public free skynet webportal (like [skyporta.xyz](https://skyportal.yz/))
 - No anoying ads, cookie notices, trackers or paywalls
-- You can also use your own sia node, this gives you the advantage of not having to trust any portal as well as having your files pined for as long as you want
+- You can also use your own sia node, this gives you the advantage of not having to trust any portal as well as having your files pined for as long as you want. With this you also have to pay for storage an traffic, but the costs on sia are a fraction of common hosting prices.
 - Easy to use UI with click to copy share links and iframe embed support
 - Album meta data is stored as an open json file uploaded to skynet together with the images
 - totally client side, files are processed (compressed and resized for thumbnails) by the browser before uploading
