@@ -22,6 +22,11 @@ Example video: https://cdn.skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkv
 ![Homepage](https://cdn.skyportal.xyz/dAD_sdc4v1L0MW3FvPSkmZnVgyY-FgC5pkjgGsbFruO4ng)
 ![New Album Page](https://cdn.skyportal.xyz/fADx1p3Ar6eVfG-Rkjy-CmnL91qnKe1o5RWvYYkML3G8qw)
 
+## Upcoming features
+- Linking to other albums in your album
+- Adding a location/map
+- Support for videos
+
 ## Project setup
 ```
 npm install
