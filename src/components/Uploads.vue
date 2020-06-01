@@ -29,6 +29,14 @@
           >
             <v-icon>delete</v-icon>
           </v-btn>
+          <v-btn
+            v-if="item.status === 'waitforuser'"
+            color="success"
+            small
+            class="thumbnail-btn"
+            @click="setThumbnail(item)"
+            >Set as thumbnail</v-btn
+          >
           <div v-if="item.status === 'toobig'" class="toobig">
             <h2 class="title">This file is bigger than 50MiB</h2>
             <h3 class="subtitle-1">
@@ -40,9 +48,25 @@
           </div>
           <div v-else>
             <div class="drag-handle"></div>
-            <code class="file-log" v-if="item.log">{{
-              item.log.replace("progress", uploadProgress(item.progress))
-            }}</code>
+            <code
+              class="file-log"
+              v-if="item.log && item.status !== 'waitforuser'"
+              >{{
+                item.log.replace("progress", uploadProgress(item.progress))
+              }}</code
+            >
+            <video
+              v-if="
+                item.type === 'video' &&
+                item.videoUrl &&
+                item.status === 'waitforuser'
+              "
+              :src="item.videoUrl"
+              class="video-card"
+              muted
+              controls
+              :id="`video-${item.id}`"
+            ></video>
             <v-card-title :class="item.log ? '' : 'input-background'">
               <v-text-field
                 single-line
@@ -113,12 +137,24 @@
   width: 100%;
   top: 1rem;
 }
+
+.video-card {
+  width: 100%;
+}
+
+.thumbnail-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+}
 </style>
 
 <script>
 import draggable from "vuedraggable";
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
+import { uploadBlob } from "../mixins/uploadBlob";
 
 let inputTimeout = null;
 
@@ -126,7 +162,7 @@ export default {
   name: "Uploads",
   components: { draggable },
   props: ["items", "skylinkRegex", "setItems", "selectTitle"],
-  mixins: [generateThumbnails, uploadFiles],
+  mixins: [generateThumbnails, uploadFiles, uploadBlob],
   data() {
     return {
       drag: false,
@@ -160,6 +196,15 @@ export default {
     },
 
     queueItem: function (item) {
+      if (item.type === "image") {
+        item.status = "queued";
+        this.generateThumbnails();
+      } else if (item.type === "video") {
+        item.status = "waitforuser";
+      }
+    },
+
+    setThumbnail: function (item) {
       item.status = "queued";
       this.generateThumbnails();
     },

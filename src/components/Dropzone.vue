@@ -13,7 +13,7 @@
     <input
       type="file"
       name="files[]"
-      accept="image/*"
+      accept="image/*,video/*"
       ref="file"
       multiple
       @change="onFile"

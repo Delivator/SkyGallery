@@ -4,8 +4,6 @@ export const processFiles = {
   methods: {
     processFiles(files) {
       files.forEach((file) => {
-        const imageType = /^image\//;
-        if (!imageType.test(file.type)) return;
         let item = {
           file,
           id: MD5(Math.random().toString()).toString(),
@@ -14,8 +12,19 @@ export const processFiles = {
           type: "image",
           progress: 0.0,
         };
-        // if file is larger than 50MiB
-        if (file.size >= 52428800) item.status = "toobig";
+        if (/^image\//.test(file.type)) {
+          item.type = "image";
+          // if file is larger than 50MiB
+          if (file.size >= 52428800) item.status = "toobig";
+        } else if (/^video\//.test(file.type)) {
+          item.type = "video";
+          item.status = "waitforuser";
+          // if file is larger than 100MiB
+          if (file.size >= 104857600) item.status = "toobig";
+          item.videoUrl = URL.createObjectURL(file);
+        } else {
+          return;
+        }
         item.newName = file.name.split(".");
         item.newName.pop();
         item.newName = item.newName.join(".");
