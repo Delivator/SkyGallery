@@ -15,6 +15,12 @@
 
       <v-spacer></v-spacer>
 
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-on="on" class="help-icon">help</v-icon>
+        </template>
+        <span>Got a slow portal?<br />Try a different one!</span>
+      </v-tooltip>
       <v-select
         :items="portals"
         item-text="name"
@@ -179,6 +185,10 @@ html {
 
 .v-alert {
   pointer-events: all;
+}
+
+.help-icon {
+  margin-right: 1rem;
 }
 </style>
 
