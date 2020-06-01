@@ -3,7 +3,7 @@
     <div
       class="fullscreen-image"
       v-if="showFullImg"
-      :style="`background-image: url(/${files[showFullIndex].skylinks.source});`"
+      :style="fullscreenStyle()"
       v-touch="{
         left: () => showNext(),
         right: () => showNext(),
@@ -12,6 +12,15 @@
       }"
       @mousewheel="fullscreenMousewheel($event)"
     >
+      <video
+        class="fullscreen-video"
+        v-if="files[showFullIndex].type === 'video'"
+        :src="`/${files[showFullIndex].skylinks.source}`"
+        controls
+        muted
+        loop
+        autoplay
+      ></video>
       <v-btn
         fab
         small
@@ -20,10 +29,10 @@
         @click="showFullImg = false"
         ><v-icon>close</v-icon></v-btn
       >
-      <div class="previous-btn" @click="showPrevious()">
+      <div :class="btnClass()" class="previous-btn" @click="showPrevious()">
         <v-icon size="64">navigate_before</v-icon>
       </div>
-      <div class="next-btn" @click="showNext()">
+      <div :class="btnClass()" class="next-btn" @click="showNext()">
         <v-icon size="64">navigate_next</v-icon>
       </div>
       <div class="fullscreen-footer text-center">
@@ -168,6 +177,9 @@
             :aspect-ratio="4 / 3"
             class="align-end"
           >
+            <v-icon v-if="file.type === 'video'" class="video-icon" large
+              >play_arrow</v-icon
+            >
             <v-card-title>{{ file.name }}</v-card-title>
           </v-img>
         </v-card>
@@ -275,6 +287,10 @@
   z-index: 1;
 }
 
+.short {
+  height: 75vh;
+}
+
 .grayscale {
   filter: grayscale() blur(3px);
 }
@@ -282,13 +298,28 @@
 .fullscreen-footer {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
-  bottom: 0;
+  top: 0;
   padding: 1rem;
   width: 100%;
 }
 
 .fullscreen-footer > .v-btn {
   margin: 0 0.5rem;
+}
+
+.fullscreen-video {
+  height: 100vh;
+  width: auto;
+  max-width: 100vw;
+}
+
+.video-icon {
+  position: absolute;
+  top: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 1rem;
+  transform: translate(-50%, -50%);
 }
 </style>
 
@@ -368,6 +399,22 @@ export default {
         this.showNext();
       } else {
         this.showPrevious();
+      }
+    },
+    fullscreenStyle: function () {
+      let file = this.files[this.showFullIndex];
+      if (file.type === "image") {
+        return `background-image: url(/${file.skylinks.source});`;
+      } else if (file.type === "video") {
+        return "";
+      }
+    },
+    btnClass: function () {
+      let file = this.files[this.showFullIndex];
+      if (file.type === "image") {
+        return "";
+      } else if (file.type === "video") {
+        return "short";
       }
     },
   },

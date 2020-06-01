@@ -65,6 +65,7 @@
               class="video-card"
               muted
               controls
+              loop
               :id="`video-${item.id}`"
             ></video>
             <v-card-title :class="item.log ? '' : 'input-background'">
@@ -127,7 +128,7 @@
   position: absolute;
   top: 0;
   width: 100%;
-  height: 50%;
+  height: 30%;
   z-index: 1;
 }
 

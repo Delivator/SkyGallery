@@ -31,7 +31,6 @@ export const generateThumbnails = {
         let ctx = canvas.getContext("2d");
         ctx.drawImage(video, 0, 0, w, h);
         let file = await imageCompression.canvasToFile(canvas, "image/jpeg");
-        console.log(file);
         return file;
       }
 
