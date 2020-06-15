@@ -3,15 +3,28 @@
     <div
       class="fullscreen-image"
       v-if="showFullImg"
-      :style="`background-image: url(/${files[showFullIndex].skylinks.source});`"
       v-touch="{
         left: () => showNext(),
-        right: () => showNext(),
+        right: () => showPrevious(),
         up: () => (showFullImg = false),
         down: () => (showFullImg = false),
       }"
       @mousewheel="fullscreenMousewheel($event)"
     >
+      <img
+        v-if="files[showFullIndex].type === 'image'"
+        class="fullscreen-img"
+        :src="`/${files[showFullIndex].skylinks.source}`"
+        :alt="files[showFullIndex].name"
+      />
+      <video
+        class="fullscreen-video"
+        v-if="files[showFullIndex].type === 'video'"
+        :src="`/${files[showFullIndex].skylinks.source}`"
+        controls
+        loop
+        autoplay
+      ></video>
       <v-btn
         fab
         small
@@ -20,10 +33,10 @@
         @click="showFullImg = false"
         ><v-icon>close</v-icon></v-btn
       >
-      <div class="previous-btn" @click="showPrevious()">
+      <div :class="btnClass()" class="previous-btn" @click="showPrevious()">
         <v-icon size="64">navigate_before</v-icon>
       </div>
-      <div class="next-btn" @click="showNext()">
+      <div :class="btnClass()" class="next-btn" @click="showNext()">
         <v-icon size="64">navigate_next</v-icon>
       </div>
       <div class="fullscreen-footer text-center">
@@ -168,6 +181,9 @@
             :aspect-ratio="4 / 3"
             class="align-end"
           >
+            <v-icon v-if="file.type === 'video'" class="video-icon" large
+              >play_arrow</v-icon
+            >
             <v-card-title>{{ file.name }}</v-card-title>
           </v-img>
         </v-card>
@@ -243,7 +259,7 @@
 .next-btn {
   position: absolute;
   height: 100vh;
-  width: 20vw;
+  width: 10rem;
   top: 0;
   opacity: 0;
   cursor: pointer;
@@ -275,6 +291,10 @@
   z-index: 1;
 }
 
+.short {
+  height: 75vh;
+}
+
 .grayscale {
   filter: grayscale() blur(3px);
 }
@@ -282,13 +302,41 @@
 .fullscreen-footer {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
-  bottom: 0;
+  top: 0;
   padding: 1rem;
   width: 100%;
 }
 
 .fullscreen-footer > .v-btn {
   margin: 0 0.5rem;
+}
+
+.fullscreen-video {
+  max-width: 100vw;
+  max-height: 100vh;
+  outline: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.video-icon {
+  position: absolute;
+  top: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 1rem;
+  transform: translate(-50%, -50%);
+}
+
+.fullscreen-img {
+  max-width: 100vw;
+  max-height: 100vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
 
@@ -368,6 +416,14 @@ export default {
         this.showNext();
       } else {
         this.showPrevious();
+      }
+    },
+    btnClass: function () {
+      let file = this.files[this.showFullIndex];
+      if (file.type === "image") {
+        return "";
+      } else if (file.type === "video") {
+        return "short";
       }
     },
   },

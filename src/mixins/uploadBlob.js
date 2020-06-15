@@ -15,7 +15,9 @@ export const uploadBlob = {
             return resp.json();
           })
           .then((data) => {
-            return resolve(data.skylink);
+            setTimeout(() => {
+              return resolve(data.skylink);
+            }, 5000);
           })
           .catch(reject);
       });
@@ -37,7 +39,9 @@ export const uploadBlob = {
             };
             if (blobs[1])
               skylinks.thumbnail = `${resposne.data.skylink}/${blobs[1][1]}`;
-            return resolve(skylinks);
+            setTimeout(() => {
+              return resolve(skylinks);
+            }, 5000);
           })
           .catch(reject);
       });
