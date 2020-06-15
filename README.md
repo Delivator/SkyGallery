@@ -1,11 +1,11 @@
 # SkyGallery
 Powered by [Skynet](https://siasky.net/)
 
-Example album: https://skygallery.xyz/a/EAB75QcbfXAMw1vldaTXJYIbpAv8Z45zW99uwS_qqLRIGQ
+Example album: https://skygallery.xyz/a/EADikasKV2EdYiqli2TsgzSX6QJgdyvfR2JCl2guBRu9zg
 
 ## Why use SkyGallery?
 - Files are stored with a 10x redundancy on a decentralized storage network called [Sia](https://sia.tech/) for high availability and speed
-- 100% free, if you use a public free skynet webportal (like [skyporta.xyz](https://skyportal.xyz/) or [siasky.net](https://siasky.net/))
+- 100% free, if you use a public free skynet webportal (like [skyportal.xyz](https://skyportal.xyz/) or [siasky.net](https://siasky.net/))
 - No anoying ads, cookie notices, trackers or paywalls
 - You can also use your own sia node, this gives you the advantage of not having to trust any portal as well as having your files pined for as long as you want. With this you also have to pay for storage an traffic, but the costs on sia are a fraction of common hosting prices.
 - Easy to use UI with click to copy share links and iframe embed support
@@ -25,32 +25,18 @@ Example video: https://cdn.skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkv
 ## Upcoming features
 - Linking to other albums in your album
 - Adding a location/map
-- Support for videos
 
 ## Project setup
-```
-npm install
-```
+`npm install`
 
 ### Compiles and hot-reloads for development
-```
-npm run serve
-```
+`npm run serve`
 
 ### Compiles and minifies for production
-```
-npm run build
-```
+`npm run build`
 
-### Build and upload to SkyNet
-```
-npm run publish
-```
+### Build and upload to Skynet
+`npm run publish`
 
 ### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+`npm run lint`
