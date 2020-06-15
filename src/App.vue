@@ -6,7 +6,7 @@
           alt="Skynet Logo"
           class="shrink mr-2"
           contain
-          :src="require('./assets/skynet-logo.svg')"
+          :src="require('./assets/skygallery_logo.svg')"
           transition="scale-transition"
           width="40"
         />

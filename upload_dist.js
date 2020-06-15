@@ -1,7 +1,7 @@
 const skynet = require("@nebulous/skynet");
 
 const portals = [
-  // "http://skynet.local",
+  "http://skynet.local",
   "https://skyportal.xyz",
   // "https://siasky.net",
   // "https://skynethub.io",
