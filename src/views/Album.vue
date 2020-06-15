@@ -3,21 +3,25 @@
     <div
       class="fullscreen-image"
       v-if="showFullImg"
-      :style="fullscreenStyle()"
       v-touch="{
         left: () => showNext(),
-        right: () => showNext(),
+        right: () => showPrevious(),
         up: () => (showFullImg = false),
         down: () => (showFullImg = false),
       }"
       @mousewheel="fullscreenMousewheel($event)"
     >
+      <img
+        v-if="files[showFullIndex].type === 'image'"
+        class="fullscreen-img"
+        :src="`/${files[showFullIndex].skylinks.source}`"
+        :alt="files[showFullIndex].name"
+      />
       <video
         class="fullscreen-video"
         v-if="files[showFullIndex].type === 'video'"
         :src="`/${files[showFullIndex].skylinks.source}`"
         controls
-        muted
         loop
         autoplay
       ></video>
@@ -255,7 +259,7 @@
 .next-btn {
   position: absolute;
   height: 100vh;
-  width: 20vw;
+  width: 10rem;
   top: 0;
   opacity: 0;
   cursor: pointer;
@@ -308,9 +312,13 @@
 }
 
 .fullscreen-video {
-  height: 100vh;
-  width: auto;
   max-width: 100vw;
+  max-height: 100vh;
+  outline: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .video-icon {
@@ -319,6 +327,15 @@
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
   padding: 1rem;
+  transform: translate(-50%, -50%);
+}
+
+.fullscreen-img {
+  max-width: 100vw;
+  max-height: 100vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }
 </style>
@@ -399,14 +416,6 @@ export default {
         this.showNext();
       } else {
         this.showPrevious();
-      }
-    },
-    fullscreenStyle: function () {
-      let file = this.files[this.showFullIndex];
-      if (file.type === "image") {
-        return `background-image: url(/${file.skylinks.source});`;
-      } else if (file.type === "video") {
-        return "";
       }
     },
     btnClass: function () {
