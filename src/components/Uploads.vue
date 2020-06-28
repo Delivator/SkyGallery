@@ -107,6 +107,7 @@
   height: 100%;
   overflow: hidden;
   padding: 1rem;
+  white-space: pre;
 }
 
 .input-background {

@@ -23,11 +23,11 @@
     "vuetify": "^2.3.1"
   },
   "devDependencies": {
-    "@nebulous/skynet": "^1.0.1",
+    "@nebulous/skynet": "git+https://github.com/NebulousLabs/nodejs-skynet.git#942f166f8c409b9ddad4677de8bd71ae59011e52",
     "@vue/cli-plugin-babel": "~4.4.5",
     "@vue/cli-plugin-eslint": "~4.4.5",
-    "@vue/cli-service": "~4.4.5",
     "@vue/cli-plugin-router": "~4.4.5",
+    "@vue/cli-service": "~4.4.5",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
