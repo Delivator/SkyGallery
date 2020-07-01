@@ -2,7 +2,7 @@ const skynet = require("@nebulous/skynet");
 
 const portals = [
   // "http://skynet.local",
-  // "https://skyportal.xyz",
+  "https://skyportal.xyz",
   // "https://siasky.net",
   "https://siasky.dev",
   // "https://skynethub.io",
@@ -16,7 +16,7 @@ const path = "./dist";
 portals.forEach((portal) => {
   opts.portalUrl = portal;
   opts.removeRootDir = true;
-  console.log(`Uploading ${path} to ` + portal);
+  console.log(`Uploading ${path} to ${portal}`);
 
   skynet
     .UploadDirectory(path, opts)
