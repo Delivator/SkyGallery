@@ -15,7 +15,6 @@ const path = "./dist";
 
 portals.forEach((portal) => {
   opts.portalUrl = portal;
-  opts.removeRootDir = true;
   console.log(`Uploading ${path} to ${portal}`);
 
   skynet
