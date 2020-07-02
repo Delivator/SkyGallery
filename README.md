@@ -13,14 +13,14 @@ Example album: https://skygallery.xyz/a/EADikasKV2EdYiqli2TsgzSX6QJgdyvfR2JCl2gu
 - totally client side, files are processed (compressed and resized for thumbnails) by the browser before uploading
 
 
-Example video: https://cdn.skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkvSNUtgVw
+Example video: https://skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkvSNUtgVw
 
 ## Screenshots
 
 <img src="src/assets/skygallery.gif?raw=true" width="100%">
 
-![Homepage](https://cdn.skyportal.xyz/dAD_sdc4v1L0MW3FvPSkmZnVgyY-FgC5pkjgGsbFruO4ng)
-![New Album Page](https://cdn.skyportal.xyz/fADx1p3Ar6eVfG-Rkjy-CmnL91qnKe1o5RWvYYkML3G8qw)
+![Homepage](https://skyportal.xyz/dAD_sdc4v1L0MW3FvPSkmZnVgyY-FgC5pkjgGsbFruO4ng)
+![New Album Page](https://skyportal.xyz/fADx1p3Ar6eVfG-Rkjy-CmnL91qnKe1o5RWvYYkML3G8qw)
 
 ## Upcoming features
 - Linking to other albums in your album
