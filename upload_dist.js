@@ -2,14 +2,14 @@ const skynet = require("@nebulous/skynet");
 
 const portals = [
   // "http://skynet.local",
-  "https://skyportal.xyz",
+  // "https://skyportal.xyz",
   // "https://siasky.net",
   "https://siasky.dev",
   // "https://skynethub.io",
   // "https://skynet.cloudloop.io",
 ];
 
-let opts = skynet.DefaultUploadOptions;
+let opts = skynet.defaultUploadOptions;
 
 const path = "./dist";
 
@@ -18,10 +18,10 @@ portals.forEach((portal) => {
   console.log(`Uploading ${path} to ${portal}`);
 
   skynet
-    .UploadDirectory(path, opts)
+    .uploadDirectory(path, opts)
     .then((resp) => {
       const skylink = resp.replace("sia://", "");
-      console.log(`${portal}/${skylink}/index.html`);
+      console.log(`${portal}/${skylink}/`);
     })
     .catch((err) => console.error(err.message));
 });

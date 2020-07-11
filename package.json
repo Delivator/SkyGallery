@@ -1,6 +1,6 @@
 {
   "name": "skygallery",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "## Project setup ``` npm install ```",
   "author": "Delivator",
@@ -23,7 +23,7 @@
     "vuetify": "^2.3.3"
   },
   "devDependencies": {
-    "@nebulous/skynet": "github:Delivator/nodejs-skynet#91d0df3308802d39298603ab5cd0f776ce288bca",
+    "@nebulous/skynet": "git+https://github.com/Delivator/nodejs-skynet.git#05964668ad5eb1d7cdb5fb18133c55d8cbd7b033",
     "@vue/cli-plugin-babel": "~4.4.6",
     "@vue/cli-plugin-eslint": "~4.4.6",
     "@vue/cli-plugin-router": "~4.4.6",

@@ -10,15 +10,28 @@
         down: () => (showFullImg = false),
       }"
       @mousewheel="fullscreenMousewheel($event)"
+      @click="closeFullscreen($event)"
     >
+      <v-progress-circular
+        indeterminate="true"
+        v-if="imgloading && files[showFullIndex].type === 'image'"
+        class="imgloading translate-center"
+        color="primary"
+        size="100"
+        width="7"
+      ></v-progress-circular>
       <img
         v-if="files[showFullIndex].type === 'image'"
-        class="fullscreen-img"
+        class="fullscreen-img translate-center"
         :src="`/${files[showFullIndex].skylinks.source}`"
         :alt="files[showFullIndex].name"
+        @load="
+          imgloading = false;
+          imgloaded = true;
+        "
       />
       <video
-        class="fullscreen-video"
+        class="fullscreen-video translate-center"
         v-if="files[showFullIndex].type === 'video'"
         :src="`/${files[showFullIndex].skylinks.source}`"
         controls
@@ -181,7 +194,10 @@
             :aspect-ratio="4 / 3"
             class="align-end"
           >
-            <v-icon v-if="file.type === 'video'" class="video-icon" large
+            <v-icon
+              v-if="file.type === 'video'"
+              class="video-icon translate-center"
+              large
               >play_arrow</v-icon
             >
             <v-card-title>{{ file.name }}</v-card-title>
@@ -311,6 +327,10 @@
   margin: 0 0.5rem;
 }
 
+.translate-center {
+  transform: translate(-50%, -50%);
+}
+
 .fullscreen-video {
   max-width: 100vw;
   max-height: 100vh;
@@ -318,7 +338,6 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .video-icon {
@@ -327,7 +346,6 @@
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
   padding: 1rem;
-  transform: translate(-50%, -50%);
 }
 
 .fullscreen-img {
@@ -336,7 +354,13 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+}
+
+.imgloading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
 }
 </style>
 
@@ -363,6 +387,8 @@ export default {
       tooltipText: "Click to copy to clipboard",
       showFullImg: false,
       showFullIndex: 0,
+      imgloaded: false,
+      imgloading: false,
     };
   },
 
@@ -372,7 +398,12 @@ export default {
         ? file.skylinks.thumbnail
         : file.skylinks.source;
     },
-
+    setImgloading: function () {
+      this.imgloaded = false;
+      setTimeout(() => {
+        if (!this.imgloaded) this.imgloading = true;
+      }, 100);
+    },
     openLink: function (link) {
       let win = window.open(link);
       win.focus();
@@ -392,11 +423,13 @@ export default {
         .catch((error) => this.alertBox.send("error", error));
     },
     openFull: function (index) {
+      this.setImgloading();
       this.showFullImg = true;
       this.showFullIndex = index;
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     showPrevious: function () {
+      this.setImgloading();
       if (this.showFullIndex <= 0) {
         this.showFullIndex = this.files.length - 1;
       } else {
@@ -405,6 +438,7 @@ export default {
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     showNext: function () {
+      this.setImgloading();
       this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
@@ -426,6 +460,13 @@ export default {
         return "short";
       }
     },
+
+    closeFullscreen: function (event) {
+      if (!event) return;
+      if (event.target.classList.contains("fullscreen-image")) {
+        this.showFullImg = false;
+      }
+    },
   },
 
   beforeMount: function () {
@@ -444,6 +485,10 @@ export default {
         this.loading = false;
         this.files = data.files;
         this.albumTitle = data.title;
+        if (this.files.length > 0 && this.files[0].skylinks.thumbnail)
+          document.querySelectorAll(".metaimg").forEach((element) => {
+            element.content = this.files[0].skylinks.thumbnail;
+          });
       })
       .catch(() => this.alertBox.send("error", "Error getting album data"));
   },

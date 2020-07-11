@@ -49,7 +49,7 @@
       </v-row>
     </v-container>
 
-    <v-content>
+    <v-main>
       <router-view
         :portals="portals"
         :skylinkRegex="skylinkRegex"
@@ -58,7 +58,7 @@
         :showShare="showShare"
         :isEmbed="isEmbed"
       />
-    </v-content>
+    </v-main>
     <v-footer v-if="isEmbed" padless fixed>
       <v-row justify="center">
         <v-col class="py-3 text-center" cols="12" @click="openAlbum">
