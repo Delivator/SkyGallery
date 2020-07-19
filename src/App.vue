@@ -118,7 +118,7 @@
                 color="#FB542B"
                 small
                 dark
-                href="https://brave.com/sky969"
+                href="https://brave.com/sky643"
                 target="_blank"
                 rel="noopener noreferrer"
                 v-on="on"
@@ -191,7 +191,7 @@ html {
   margin-right: 1rem;
 }
 </style>
-
+x
 <script>
 import { MD5 } from "crypto-js";
 import version from "../package.json";
