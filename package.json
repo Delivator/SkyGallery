@@ -19,8 +19,8 @@
     "vue": "^2.6.11",
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.3.4",
-    "vuedraggable": "^2.23.2",
-    "vuetify": "^2.3.3"
+    "vuedraggable": "^2.24.0",
+    "vuetify": "^2.3.4"
   },
   "devDependencies": {
     "@nebulous/skynet": "git+https://github.com/Delivator/nodejs-skynet.git#05964668ad5eb1d7cdb5fb18133c55d8cbd7b033",
@@ -34,11 +34,11 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^2.0.5",
-    "sass": "^1.26.9",
-    "sass-loader": "^9.0.1",
-    "vue-cli-plugin-vuetify": "~2.0.6",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.2",
+    "vue-cli-plugin-vuetify": "~2.0.7",
     "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.5.0"
+    "vuetify-loader": "^1.6.0"
   },
   "bugs": {
     "url": "https://github.com/Delivator/SkyGallery/issues"
