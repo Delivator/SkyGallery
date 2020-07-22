@@ -283,6 +283,10 @@ export default {
       .then((data) => {
         if (!data || data.length < 1 || !data[0].name || !data[0].link)
           return false;
+        data.push({
+          name: "SiaSky.dev",
+          link: "https://siasky.dev/",
+        });
         data = shuffleArray(data);
         data.forEach((portal, index) => {
           if (portal.link.includes(document.location.hostname)) {

@@ -23,7 +23,7 @@
     "vuetify": "^2.3.4"
   },
   "devDependencies": {
-    "@nebulous/skynet": "git+https://github.com/Delivator/nodejs-skynet.git#05964668ad5eb1d7cdb5fb18133c55d8cbd7b033",
+    "@nebulous/skynet": "git://github.com/Delivator/nodejs-skynet.git#1c0eb326276d2267899cb0ab482a40ef37c04866",
     "@vue/cli-plugin-babel": "~4.4.6",
     "@vue/cli-plugin-eslint": "~4.4.6",
     "@vue/cli-plugin-router": "~4.4.6",

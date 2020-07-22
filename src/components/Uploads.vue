@@ -30,12 +30,20 @@
             <v-icon>delete</v-icon>
           </v-btn>
           <v-btn
-            v-if="item.status === 'waitforuser'"
+            v-if="item.status === 'editthumbnail'"
             color="success"
             small
             class="thumbnail-btn"
-            @click="setThumbnail(item)"
+            @click="generateVideoThumbnail(item)"
             >Set as thumbnail</v-btn
+          >
+          <v-btn
+            v-if="item.status === 'queued' || item.status === 'finished'"
+            color="success"
+            small
+            class="thumbnail-btn"
+            @click="item.status = 'editthumbnail'"
+            >Edit thumbnail</v-btn
           >
           <div v-if="item.status === 'toobig'" class="toobig">
             <h2 class="title">This file is bigger than 50MiB</h2>
@@ -50,25 +58,27 @@
             <div class="drag-handle"></div>
             <code
               class="file-log"
-              v-if="item.log && item.status !== 'waitforuser'"
+              :class="item.status"
+              v-if="item.log && item.status !== 'editthumbnail'"
               >{{
                 item.log.replace("progress", uploadProgress(item.progress))
               }}</code
             >
             <video
-              v-if="
-                item.type === 'video' &&
-                item.videoUrl &&
-                item.status === 'waitforuser'
-              "
+              v-if="item.type === 'video' && item.videoUrl"
+              v-show="item.status === 'editthumbnail'"
               :src="item.videoUrl"
               class="video-card"
               muted
               controls
               loop
               :id="`video-${item.id}`"
+              @loadeddata="videoCanplay(item, $event)"
             ></video>
-            <v-card-title :class="item.log ? '' : 'input-background'">
+            <v-card-title
+              v-show="item.status !== 'editthumbnail'"
+              :class="item.log ? '' : 'input-background'"
+            >
               <v-text-field
                 single-line
                 dense
@@ -108,6 +118,11 @@
   overflow: hidden;
   padding: 1rem;
   white-space: pre;
+}
+
+.file-log.editthumbnail,
+.file-log.finished {
+  padding-top: 3rem;
 }
 
 .input-background {
@@ -209,6 +224,10 @@ export default {
     setThumbnail: function (item) {
       item.status = "queued";
       this.generateThumbnails();
+    },
+
+    videoCanplay: function (item, event) {
+      this.generateVideoThumbnail(item, event.target);
     },
   },
 };
