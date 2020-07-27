@@ -2,8 +2,7 @@ import { MD5 } from "crypto-js";
 
 export const publishAlbum = {
   methods: {
-    publishAlbum(event) {
-      if (event) event.preventDefault();
+    publishAlbum() {
       let jsonData = {
         format: "skygallery",
         version: this.version,

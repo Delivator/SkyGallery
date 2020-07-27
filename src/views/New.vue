@@ -1,11 +1,15 @@
 <template>
   <v-container class="text-center" fluid>
+    <uploadDialog
+      :unfinishedDialog.sync="unfinishedDialog"
+      :publish="publish"
+    />
     <v-row justify="center">
       <v-col cols="12" v-if="items.length < 1">
         <h1 class="display-2">Create a new Album</h1>
       </v-col>
       <v-col v-else xl="4" md="6" cols="12">
-        <v-form @submit="publishAlbum($event)">
+        <v-form @submit="publish($event)">
           <v-text-field
             class="headline"
             v-model="albumTitle"
@@ -23,7 +27,7 @@
                 text
                 icon
                 color="success"
-                @click="publishAlbum"
+                @click="publish"
                 :loading="loading"
               >
                 <v-icon>backup</v-icon>
@@ -55,7 +59,7 @@
         <v-btn
           large
           color="success"
-          @click="publishAlbum"
+          @click="publish"
           :disabled="loading"
           :loading="loading"
           class="upload-btn"
@@ -80,10 +84,11 @@ import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
 import uploads from "@/components/Uploads.vue";
 import dropzone from "@/components/Dropzone.vue";
+import uploadDialog from "@/components/UploadDialog.vue";
 
 export default {
   name: "New",
-  components: { uploads, dropzone },
+  components: { uploads, dropzone, uploadDialog },
   props: ["version", "skylinkRegex", "alertBox", "showShare"],
   mixins: [publishAlbum, uploadBlob],
   data() {
@@ -92,6 +97,7 @@ export default {
       albumTitle: "Untitled Album",
       loading: false,
       isIntersecting: true,
+      unfinishedDialog: false,
     };
   },
 
@@ -104,6 +110,25 @@ export default {
     },
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;
+    },
+    publish: function (event, force = false) {
+      if (event) event.preventDefault();
+
+      const unfinished = this.items.filter(
+        (item) => item.status !== "finished"
+      );
+      if (unfinished.length === 0 || force) {
+        const finished = this.items.filter(
+          (item) => item.status === "finished"
+        );
+        if (finished.length < 1) {
+          this.loading = false;
+          this.unfinishedDialog = false;
+          return;
+        }
+        this.publishAlbum();
+      }
+      this.unfinishedDialog = unfinished.length > 0;
     },
   },
 };
