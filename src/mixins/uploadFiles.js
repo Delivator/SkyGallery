@@ -32,6 +32,7 @@ export const uploadFiles = {
           item.status = "finished";
           item.log = item.log.replace("progress", "");
           item.log += "done.\n";
+          this.$forceUpdate();
           this.uploadFiles();
         })
         .catch((error) => {

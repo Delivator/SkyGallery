@@ -75,6 +75,15 @@ export default {
     inputError: "",
   }),
 
+  mounted: function () {
+    document.addEventListener("dragenter", this.dragoverHandler);
+  },
+
+  beforeRouteLeave: function (to, from, next) {
+    document.removeEventListener("dragenter", this.dragoverHandler);
+    next();
+  },
+
   methods: {
     openAlbum: function () {
       if (openAlbumTimeout !== null) clearTimeout(openAlbumTimeout);
@@ -105,6 +114,11 @@ export default {
             this.loading = false;
           });
       }, 250);
+    },
+
+    dragoverHandler: function (event) {
+      if (event.dataTransfer && event.dataTransfer.files)
+        this.$router.push("/new");
     },
   },
 };

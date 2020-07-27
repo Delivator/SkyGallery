@@ -336,6 +336,10 @@ export default {
     refVisibility: function (isVisible) {
       this.refVisible = isVisible;
     },
+
+    dragEnter: function (event) {
+      if (event) console.log(event);
+    },
   },
 };
 </script>

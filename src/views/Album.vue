@@ -46,10 +46,20 @@
         @click="showFullImg = false"
         ><v-icon>close</v-icon></v-btn
       >
-      <div :class="btnClass()" class="previous-btn" @click="showPrevious()">
+      <div
+        v-if="files.length > 1"
+        :class="btnClass()"
+        class="previous-btn"
+        @click="showPrevious()"
+      >
         <v-icon size="64">navigate_before</v-icon>
       </div>
-      <div :class="btnClass()" class="next-btn" @click="showNext()">
+      <div
+        v-if="files.length > 1"
+        :class="btnClass()"
+        class="next-btn"
+        @click="showNext()"
+      >
         <v-icon size="64">navigate_next</v-icon>
       </div>
       <div class="fullscreen-footer text-center">
@@ -276,6 +286,7 @@
   position: absolute;
   height: 100vh;
   width: 10rem;
+  max-width: 12.5vw;
   top: 0;
   opacity: 0;
   cursor: pointer;
@@ -429,6 +440,7 @@ export default {
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     showPrevious: function () {
+      if (this.files.length < 2) return;
       this.setImgloading();
       if (this.showFullIndex <= 0) {
         this.showFullIndex = this.files.length - 1;
@@ -438,6 +450,7 @@ export default {
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     showNext: function () {
+      if (this.files.length < 2) return;
       this.setImgloading();
       this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
