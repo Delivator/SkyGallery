@@ -20,7 +20,7 @@
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.3.4",
     "vuedraggable": "^2.24.0",
-    "vuetify": "^2.3.4"
+    "vuetify": "^2.3.6"
   },
   "devDependencies": {
     "@nebulous/skynet": "git://github.com/Delivator/nodejs-skynet.git#1c0eb326276d2267899cb0ab482a40ef37c04866",
