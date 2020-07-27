@@ -8,8 +8,9 @@ const path = "./dist";
 const search = "sky";
 
 let found = false;
+let i = 0;
 
-async function next(i = 0) {
+async function next() {
   if (process.argv[2]) i = process.argv[2];
   opts.customFilename = `skygallery-${i}`;
   let skylink = await skynet

@@ -1,4 +1,5 @@
 const skynet = require("@nebulous/skynet");
+import version from "./package.json";
 
 const portals = [
   // "http://skynet.local",
@@ -10,7 +11,7 @@ const portals = [
 ];
 
 let opts = skynet.defaultUploadOptions;
-// opts.customFilename = "skygallery-0";
+opts.customFilename = `skygallery-${version}`;
 
 const path = "./dist";
 
