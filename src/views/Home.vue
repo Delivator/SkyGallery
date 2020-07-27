@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-center">
     <v-row>
-      <v-col cols="12" class="head">
+      <v-col cols="12" class="head" :class="`mobile-${isMobile}`">
         <h1 class="display-3">Welcome to SkyGallery</h1>
         <span class="subtitle-1"
           >Powered by
@@ -51,10 +51,10 @@
 .subtext > span {
   margin-right: 1rem;
 }
-.head.mobile-true {
+.head.mobile-false {
   margin: 5rem 0;
 }
-.logo.mobile-true {
+.logo.mobile-false {
   margin-bottom: 5rem;
 }
 </style>
