@@ -39,7 +39,7 @@
     </v-row>
     <v-row justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" v-intersect="onIntersect" />
+        <dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
       </v-col>
     </v-row>
     <uploads
@@ -47,10 +47,11 @@
       :skylinkRegex="skylinkRegex"
       :setItems="setItems"
       :selectTitle="selectTitle"
+      :drag.sync="drag"
     />
     <v-row justify="center" v-if="!isIntersecting">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" />
+        <dropzone :items="items" :dragUpload="drag" />
       </v-col>
     </v-row>
     <v-row v-if="items.length > 0">
@@ -98,6 +99,7 @@ export default {
       loading: false,
       isIntersecting: true,
       unfinishedDialog: false,
+      drag: false,
     };
   },
 

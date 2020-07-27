@@ -1,7 +1,7 @@
 <template>
   <draggable
     v-model="items"
-    @start="drag = true"
+    @start="$emit('update:drag', true)"
     @end="endDrag"
     class="row justify-center"
     handle=".drag-handle"
@@ -39,7 +39,7 @@
               >Set as thumbnail</v-btn
             >
             <v-btn
-              v-if="item.status !== 'editthumbnail'"
+              v-if="item.status === 'finished'"
               color="success"
               small
               class="thumbnail-btn"
@@ -183,13 +183,8 @@ let inputTimeout = null;
 export default {
   name: "Uploads",
   components: { draggable },
-  props: ["items", "skylinkRegex", "setItems", "selectTitle"],
+  props: ["items", "skylinkRegex", "setItems", "selectTitle", "drag"],
   mixins: [generateThumbnails, uploadFiles, uploadBlob],
-  data() {
-    return {
-      drag: false,
-    };
-  },
 
   methods: {
     thumbnailUrl: function (item) {
@@ -210,7 +205,7 @@ export default {
     },
 
     endDrag() {
-      this.drag = false;
+      this.$emit("update:drag", false);
       this.setItems(this.items);
     },
 

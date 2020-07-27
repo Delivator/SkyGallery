@@ -5,7 +5,7 @@
     :class="isDragOver ? 'is-dragover' : ''"
     @drop="onDrop"
     @dragover="onDrag"
-    @dragenter="isDragOver = true"
+    @dragenter="onDrag"
     @dragleave="isDragOver = false"
     @mouseleave="isDragOver = false"
     @dragend="isDragOver = false"
@@ -74,7 +74,7 @@ import { uploadBlob } from "../mixins/uploadBlob";
 export default {
   name: "Dropzone",
   mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob],
-  props: ["items"],
+  props: ["items", "dragUpload"],
   data() {
     return {
       isDragOver: false,
@@ -100,6 +100,7 @@ export default {
     },
     onDrag(e) {
       this.preventEvent(e);
+      if (this.dragUpload) return;
       this.isDragOver = true;
     },
     onDrop(e) {
