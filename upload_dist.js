@@ -10,7 +10,7 @@ const portals = [
 ];
 
 let opts = skynet.defaultUploadOptions;
-opts.customFilename = "skygallery-0";
+// opts.customFilename = "skygallery-0";
 
 const path = "./dist";
 

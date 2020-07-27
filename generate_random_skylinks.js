@@ -5,25 +5,29 @@ opts.dryRun = true;
 opts.portalUrl = "https://skyportal.xyz";
 
 const path = "./dist";
-const search = "gallery";
+const search = "skyg";
 
 let found = false;
 
 async function next() {
-  opts.customFilename = `skygallery-${Math.floor(Math.random() * 10000)}`;
+  const rand = Math.floor(Math.random() * 100000);
+  opts.customFilename = `skygallery-${rand}`;
   let skylink = await skynet
     .uploadDirectory(path, opts)
     .catch((err) => console.error(err.message));
   skylink = skylink.replace("sia://", "");
-  found = skylink.toLowerCase().includes("gallery");
+  found = skylink.toLowerCase().includes(search);
   if (found) {
     console.log(
-      `Skylink that includes ${search} with ${opts.customFilename}: ${opts.portalUrl}/${skylink}/`
+      `Skylink that includes ${search} with rand ${rand}: ${opts.portalUrl}/${skylink}/`
     );
+    return;
   } else {
     console.log(`${skylink}: ${found}`);
     next();
   }
 }
 
+next();
+next();
 next();
