@@ -1,5 +1,9 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
+    <uploadDialog
+      :unfinishedDialog.sync="unfinishedDialog"
+      :publish="publish"
+    />
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
         <v-progress-circular
@@ -10,7 +14,7 @@
         ></v-progress-circular>
       </v-col>
       <v-col v-else xl="4" md="6" cols="12">
-        <v-form @submit="publishAlbum($event)">
+        <v-form @submit="publish">
           <v-text-field
             class="headline"
             v-model="albumTitle"
@@ -27,7 +31,7 @@
                 text
                 icon
                 color="success"
-                @click="publishAlbum"
+                @click="publish"
                 :loading="loading"
               >
                 <v-icon>backup</v-icon>
@@ -39,7 +43,7 @@
     </v-row>
     <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" v-intersect="onIntersect" />
+        <dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
       </v-col>
     </v-row>
     <uploads
@@ -48,10 +52,11 @@
       :skylinkRegex="skylinkRegex"
       :setItems="setItems"
       :selectTitle="selectTitle"
+      :drag.sync="drag"
     />
     <v-row v-if="!loading && !isIntersecting" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" />
+        <dropzone :items="items" :dragUpload="drag" />
       </v-col>
     </v-row>
     <v-row v-if="!loading && items.length > 0">
@@ -60,7 +65,7 @@
         <v-btn
           large
           color="success"
-          @click="publishAlbum"
+          @click="publish"
           :disabled="loading"
           :loading="loading"
           class="upload-btn"
@@ -81,6 +86,7 @@
 </style>
 
 <script>
+import uploadDialog from "@/components/UploadDialog.vue";
 import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
 import { getAlbum } from "../mixins/getAlbum";
@@ -90,7 +96,7 @@ import { MD5 } from "crypto-js";
 
 export default {
   name: "Edit",
-  components: { uploads, dropzone },
+  components: { uploads, dropzone, uploadDialog },
   mixins: [getAlbum, publishAlbum, uploadBlob],
   props: ["alertBox", "skylinkRegex"],
   data() {
@@ -100,6 +106,8 @@ export default {
       albumTitle: "Album Title",
       loading: true,
       isIntersecting: false,
+      drag: false,
+      unfinishedDialog: false,
     };
   },
 
@@ -112,6 +120,25 @@ export default {
     },
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;
+    },
+    publish: function (event, force = false) {
+      if (event) event.preventDefault();
+
+      const unfinished = this.items.filter(
+        (item) => item.status !== "finished"
+      );
+      if (unfinished.length === 0 || force) {
+        const finished = this.items.filter(
+          (item) => item.status === "finished"
+        );
+        if (finished.length < 1) {
+          this.loading = false;
+          this.unfinishedDialog = false;
+          return;
+        }
+        this.publishAlbum();
+      }
+      this.unfinishedDialog = unfinished.length > 0;
     },
   },
 

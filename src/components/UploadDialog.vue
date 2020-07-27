@@ -1,5 +1,9 @@
 <template>
-  <v-dialog v-model="unfinishedDialog" max-width="500">
+  <v-dialog
+    v-model="unfinishedDialog"
+    max-width="500"
+    @input="$emit('update:unfinishedDialog', unfinishedDialog)"
+  >
     <v-card>
       <v-card-title>
         You have unfinished uploads that will be lost. <br />

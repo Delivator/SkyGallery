@@ -60,9 +60,7 @@
             <div class="drag-handle"></div>
             <code
               class="file-log"
-              :class="`edit-${item.status === 'editthumbnail'} log-${
-                item.type
-              }`"
+              :class="`log-${item.status} log-${item.type}`"
               v-if="item.log && item.status !== 'editthumbnail'"
               >{{
                 item.log.replace("progress", uploadProgress(item.progress))
@@ -126,7 +124,7 @@
   white-space: pre;
 }
 
-.log-video.edit-false {
+.log-video.log-finished {
   padding-top: 3rem;
 }
 
