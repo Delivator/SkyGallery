@@ -21,7 +21,7 @@ async function next() {
   found = skylink.toLowerCase().includes(search);
   if (found) {
     console.log(
-      `Skylink that includes ${search} with i ${rand}: ${opts.portalUrl}/${skylink}/`
+      `Skylink that includes ${search} with rand ${rand}: ${opts.portalUrl}/${skylink}/`
     );
     return;
   } else {

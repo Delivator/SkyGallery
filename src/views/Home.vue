@@ -14,7 +14,7 @@
           ></span
         >
       </v-col>
-      <v-col cols="12" class="logo">
+      <v-col cols="12" class="logo" :class="`mobile-${isMobile}`">
         <v-img
           :src="require('../assets/skynet-logo-animated.svg')"
           contain
@@ -51,17 +51,17 @@
 .subtext > span {
   margin-right: 1rem;
 }
-.head {
+.head.mobile-true {
   margin: 5rem 0;
 }
-.logo {
+.logo.mobile-true {
   margin-bottom: 5rem;
 }
 </style>
 
 <script>
-// @ is an alias to /src
 import { getAlbum } from "../mixins/getAlbum";
+import { isMobile } from "mobile-device-detect";
 
 let openAlbumTimeout = null;
 
@@ -73,6 +73,7 @@ export default {
     linkInput: "",
     loading: false,
     inputError: "",
+    isMobile,
   }),
 
   mounted: function () {
