@@ -125,6 +125,7 @@ export default {
         data.files.forEach((file) => {
           let item = {
             id: MD5(Math.random().toString()).toString(),
+            filename: file.filename,
             status: "finished",
             type: file.type,
             name: file.name,
@@ -133,6 +134,7 @@ export default {
             log: "",
           };
           if (file.skylinks.thumbnail) item.thumbnail = file.skylinks.thumbnail;
+          if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;
           this.items.push(item);
         });
         this.albumTitle = data.title;

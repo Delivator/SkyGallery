@@ -16,7 +16,7 @@
     >
       <v-card :loading="item.status !== 'finished'">
         <v-img
-          :src="thumbnailUrl(item.thumbnail)"
+          :src="thumbnailUrl(item)"
           :aspect-ratio="4 / 3"
           class="align-end"
         >
@@ -29,22 +29,24 @@
           >
             <v-icon>delete</v-icon>
           </v-btn>
-          <v-btn
-            v-if="item.status === 'editthumbnail'"
-            color="success"
-            small
-            class="thumbnail-btn"
-            @click="generateVideoThumbnail(item)"
-            >Set as thumbnail</v-btn
-          >
-          <v-btn
-            v-if="item.status === 'queued' || item.status === 'finished'"
-            color="success"
-            small
-            class="thumbnail-btn"
-            @click="item.status = 'editthumbnail'"
-            >Edit thumbnail</v-btn
-          >
+          <div v-if="item.type === 'video'">
+            <v-btn
+              v-if="item.status === 'editthumbnail'"
+              color="success"
+              small
+              class="thumbnail-btn"
+              @click="generateVideoThumbnail(item.id)"
+              >Set as thumbnail</v-btn
+            >
+            <v-btn
+              v-if="item.status !== 'editthumbnail'"
+              color="success"
+              small
+              class="thumbnail-btn"
+              @click="item.status = 'editthumbnail'"
+              >Edit thumbnail</v-btn
+            >
+          </div>
           <div v-if="item.status === 'toobig'" class="toobig">
             <h2 class="title">This file is bigger than 50MiB</h2>
             <h3 class="subtitle-1">
@@ -58,14 +60,18 @@
             <div class="drag-handle"></div>
             <code
               class="file-log"
-              :class="item.status"
+              :class="`edit-${item.status === 'editthumbnail'} log-${
+                item.type
+              }`"
               v-if="item.log && item.status !== 'editthumbnail'"
               >{{
                 item.log.replace("progress", uploadProgress(item.progress))
               }}</code
             >
             <video
-              v-if="item.type === 'video' && item.videoUrl"
+              v-if="
+                item.type === 'video' && (item.videoUrl || item.skylinks.source)
+              "
               v-show="item.status === 'editthumbnail'"
               :src="item.videoUrl"
               class="video-card"
@@ -120,8 +126,7 @@
   white-space: pre;
 }
 
-.file-log.editthumbnail,
-.file-log.finished {
+.log-video.edit-false {
   padding-top: 3rem;
 }
 
@@ -187,7 +192,9 @@ export default {
   },
 
   methods: {
-    thumbnailUrl: function (url) {
+    thumbnailUrl: function (item) {
+      if (item.status === "editthumbnail") return "";
+      let url = item.thumbnail;
       if (this.skylinkRegex.test(url)) {
         return `/${url}`;
       } else {
@@ -227,7 +234,8 @@ export default {
     },
 
     videoCanplay: function (item, event) {
-      this.generateVideoThumbnail(item, event.target);
+      if (item.skylinks.thumbnail) return;
+      this.generateVideoThumbnail(item.id, event.target);
     },
   },
 };

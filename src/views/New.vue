@@ -91,7 +91,7 @@ export default {
       items: [],
       albumTitle: "Untitled Album",
       loading: false,
-      isIntersecting: false,
+      isIntersecting: true,
     };
   },
 

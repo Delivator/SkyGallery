@@ -7,6 +7,7 @@ export const processFiles = {
         let item = {
           file,
           id: MD5(Math.random().toString()).toString(),
+          filename: file.name,
           status: "queued",
           log: "Added\n",
           type: "image",

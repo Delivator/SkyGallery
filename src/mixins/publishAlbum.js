@@ -17,6 +17,7 @@ export const publishAlbum = {
             type: file.type,
             skylinks: file.skylinks,
             name: file.newName,
+            filename: file.filename,
           });
         });
       const blob = new Blob([JSON.stringify(jsonData)], {

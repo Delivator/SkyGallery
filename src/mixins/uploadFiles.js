@@ -29,7 +29,6 @@ export const uploadFiles = {
       await this.uploadBlobs(files, item.id, item)
         .then((skylinks) => {
           Object.assign(item.skylinks, skylinks);
-          item.skylinks = skylinks;
           item.status = "finished";
           item.log = item.log.replace("progress", "");
           item.log += "done.\n";
