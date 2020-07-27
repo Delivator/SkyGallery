@@ -1,5 +1,5 @@
 const skynet = require("@nebulous/skynet");
-import version from "./package.json";
+const version = require("./package.json").version;
 
 const portals = [
   // "http://skynet.local",
