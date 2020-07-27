@@ -1,4 +1,6 @@
 const skynet = require("@nebulous/skynet");
+const version = require("./package.json").version;
+const { MD5 } = require("crypto-js");
 
 let opts = skynet.defaultUploadOptions;
 opts.dryRun = true;
@@ -8,11 +10,10 @@ const path = "./dist";
 const search = "sky";
 
 let found = false;
-let i = 0;
 
 async function next() {
-  if (process.argv[2]) i = process.argv[2];
-  opts.customFilename = `skygallery-${i}`;
+  let rand = MD5(Math.random().toString()).toString();
+  opts.customFilename = `skygallery-v${version}-${rand}`;
   let skylink = await skynet
     .uploadDirectory(path, opts)
     .catch((err) => console.error(err.message));
@@ -20,12 +21,11 @@ async function next() {
   found = skylink.toLowerCase().includes(search);
   if (found) {
     console.log(
-      `Skylink that includes ${search} with i ${i}: ${opts.portalUrl}/${skylink}/`
+      `Skylink that includes ${search} with i ${rand}: ${opts.portalUrl}/${skylink}/`
     );
     return;
   } else {
-    console.log(`${skylink} ${i}: ${found}`);
-    next(++i);
+    next();
   }
 }
 

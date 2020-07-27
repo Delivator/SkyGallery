@@ -92,6 +92,7 @@ export default {
       openAlbumTimeout = setTimeout(() => {
         this.loading = true;
         let skylink = this.linkInput.replace("sia://", "");
+        skylink = skylink.replace("https://skygallery.xyz/", "");
         skylink = skylink.replace(document.location, "");
         skylink = skylink.replace("a/", "");
         this.portals.forEach((portal) => {

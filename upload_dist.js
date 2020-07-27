@@ -11,7 +11,9 @@ const portals = [
 ];
 
 let opts = skynet.defaultUploadOptions;
-opts.customFilename = `skygallery-${version}`;
+opts.customFilename = `skygallery-v${version}`;
+
+if (process.argv[2]) opts.customFilename += `-${process.argv[2]}`;
 
 const path = "./dist";
 
