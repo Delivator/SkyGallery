@@ -1,4 +1,4 @@
-export const getAlbum = {
+export const utils = {
   methods: {
     checkValidAlbum(albumId) {
       return new Promise((resolve, reject) => {

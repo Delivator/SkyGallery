@@ -6,15 +6,19 @@
     class="row justify-center"
     handle=".drag-handle"
   >
+    <AddItemDialog :addItemDialog.sync="addItemDialog" />
     <v-col
-      v-for="(item, index) in items"
+      v-for="(item, index) in [...items, addItem]"
       :key="item.id"
       cols="12"
       xl="2"
       lg="4"
       md="6"
     >
-      <v-card :loading="item.status !== 'finished'">
+      <v-card
+        v-if="item.type !== 'addItemCard'"
+        :loading="item.status !== 'finished'"
+      >
         <v-img
           :src="thumbnailUrl(item)"
           :aspect-ratio="4 / 3"
@@ -96,6 +100,20 @@
           </div>
         </v-img>
       </v-card>
+      <v-hover v-else>
+        <template v-slot="{ hover }">
+          <v-card
+            :elevation="hover ? 24 : 0"
+            class="add-card"
+            @click="addItemDialog = true"
+          >
+            <v-responsive :aspect-ratio="4 / 3" class="align-center">
+              <p>Add titles, link existing albums and more.</p>
+              <v-icon size="64">add</v-icon>
+            </v-responsive>
+          </v-card>
+        </template>
+      </v-hover>
     </v-col>
   </draggable>
 </template>
@@ -168,21 +186,38 @@
   left: 1rem;
   z-index: 2;
 }
+
+.add-card {
+  border: 2px dashed grey;
+  border-radius: 5px;
+}
 </style>
 
 <script>
-import draggable from "vuedraggable";
 import { generateThumbnails } from "../mixins/generateThumbnails";
+import AddItemDialog from "@/components/AddItemDialog.vue";
 import { uploadFiles } from "../mixins/uploadFiles";
 import { uploadBlob } from "../mixins/uploadBlob";
+import { utils } from "../mixins/utils";
+import draggable from "vuedraggable";
 
 let inputTimeout = null;
+let addAlbumTimeout = null;
 
 export default {
   name: "Uploads",
-  components: { draggable },
+  components: { draggable, AddItemDialog },
   props: ["items", "skylinkRegex", "setItems", "selectTitle", "drag"],
-  mixins: [generateThumbnails, uploadFiles, uploadBlob],
+  mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
+
+  data() {
+    return {
+      addItem: {
+        type: "addItemCard",
+      },
+      addItemDialog: false,
+    };
+  },
 
   methods: {
     thumbnailUrl: function (item) {
@@ -229,6 +264,43 @@ export default {
     videoCanplay: function (item, event) {
       if (item.skylinks.thumbnail) return;
       this.generateVideoThumbnail(item.id, event.target);
+    },
+
+    addTitle: function (event) {
+      if (event) event.preventDefault();
+      this.addTitleText = "New Title";
+    },
+
+    albumInput: function () {
+      if (addAlbumTimeout !== null) clearTimeout(addAlbumTimeout);
+      this.inputError = "";
+      if (!this.addAlbumURL) return;
+      addAlbumTimeout = setTimeout(() => {
+        this.loading = true;
+        let skylink = this.linkInput.replace("sia://", "");
+        skylink = skylink.replace("https://skygallery.xyz/", "");
+        skylink = skylink.replace(document.location, "");
+        skylink = skylink.replace("a/", "");
+        this.portals.forEach((portal) => {
+          skylink = skylink.replace(portal.link, "");
+        });
+        skylink = skylink.replace(/\//g, "");
+        if (!this.skylinkRegex.test(skylink)) {
+          this.loading = false;
+          this.inputError = "Invalid skylink";
+          return (this.loading = false);
+        }
+        this.checkValidAlbum(skylink)
+          .then(() => {
+            this.loading = false;
+            this.$router.push("/a/" + skylink);
+          })
+          .catch((error) => {
+            this.alertBox.send("error", error);
+            this.inputError = "Error fetching album";
+            this.loading = false;
+          });
+      }, 250);
     },
   },
 };

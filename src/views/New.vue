@@ -1,6 +1,6 @@
 <template>
   <v-container class="text-center" fluid>
-    <uploadDialog
+    <UploadDialog
       :unfinishedDialog.sync="unfinishedDialog"
       :publish="publish"
     />
@@ -39,10 +39,10 @@
     </v-row>
     <v-row justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
+        <Dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
       </v-col>
     </v-row>
-    <uploads
+    <Uploads
       :items="items"
       :skylinkRegex="skylinkRegex"
       :setItems="setItems"
@@ -51,7 +51,7 @@
     />
     <v-row justify="center" v-if="!isIntersecting">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" :dragUpload="drag" />
+        <Dropzone :items="items" :dragUpload="drag" />
       </v-col>
     </v-row>
     <v-row v-if="items.length > 0">
@@ -83,13 +83,13 @@
 <script>
 import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
-import uploads from "@/components/Uploads.vue";
-import dropzone from "@/components/Dropzone.vue";
-import uploadDialog from "@/components/UploadDialog.vue";
+import Uploads from "@/components/Uploads.vue";
+import Dropzone from "@/components/Dropzone.vue";
+import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
   name: "New",
-  components: { uploads, dropzone, uploadDialog },
+  components: { Uploads, Dropzone, UploadDialog },
   props: ["version", "skylinkRegex", "alertBox", "showShare"],
   mixins: [publishAlbum, uploadBlob],
   data() {

@@ -89,7 +89,7 @@
 import uploadDialog from "@/components/UploadDialog.vue";
 import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
-import { getAlbum } from "../mixins/getAlbum";
+import { utils } from "../mixins/utils";
 import dropzone from "@/components/Dropzone.vue";
 import uploads from "@/components/Uploads.vue";
 import { MD5 } from "crypto-js";
@@ -97,7 +97,7 @@ import { MD5 } from "crypto-js";
 export default {
   name: "Edit",
   components: { uploads, dropzone, uploadDialog },
-  mixins: [getAlbum, publishAlbum, uploadBlob],
+  mixins: [utils, publishAlbum, uploadBlob],
   props: ["alertBox", "skylinkRegex"],
   data() {
     return {

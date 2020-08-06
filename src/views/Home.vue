@@ -30,12 +30,13 @@
           or open an existing one
         </span>
         <v-text-field
-          single-line
-          placeholder="Paste Skynet or sia:// link"
-          outlined
-          style="width: 14rem;"
           @input="openAlbum"
+          outlined
+          single-line
+          autocomplete="off"
           v-model="linkInput"
+          style="width: 14rem;"
+          placeholder="Paste Skynet or sia:// link"
           :loading="loading"
           :error-messages="inputError"
         ></v-text-field>
@@ -60,7 +61,7 @@
 </style>
 
 <script>
-import { getAlbum } from "../mixins/getAlbum";
+import { utils } from "../mixins/utils";
 import { isMobile } from "mobile-device-detect";
 
 let openAlbumTimeout = null;
@@ -68,7 +69,7 @@ let openAlbumTimeout = null;
 export default {
   name: "Home",
   props: ["portals", "skylinkRegex", "alertBox"],
-  mixins: [getAlbum],
+  mixins: [utils],
   data: () => ({
     linkInput: "",
     loading: false,

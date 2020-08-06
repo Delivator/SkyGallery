@@ -25,7 +25,7 @@ portals.forEach((portal) => {
     .uploadDirectory(path, opts)
     .then((resp) => {
       const skylink = resp.replace("sia://", "");
-      console.log(`${portal}/${skylink}/`);
+      console.log(`${portal}/${skylink}`);
     })
     .catch((err) => console.error(err.message));
 });

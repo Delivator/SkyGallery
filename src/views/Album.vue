@@ -376,7 +376,7 @@
 </style>
 
 <script>
-import { getAlbum } from "../mixins/getAlbum";
+import { utils } from "../mixins/utils";
 
 function selectText(node) {
   const range = new Range();
@@ -387,7 +387,7 @@ function selectText(node) {
 
 export default {
   name: "Album",
-  mixins: [getAlbum],
+  mixins: [utils],
   props: ["showShare", "alertBox", "isEmbed"],
   data() {
     return {
