@@ -107,10 +107,12 @@
             class="add-card"
             @click="addItemDialog = true"
           >
-            <v-responsive :aspect-ratio="4 / 3" class="align-center">
-              <p>Add titles, link existing albums and more.</p>
-              <v-icon size="64">add</v-icon>
-            </v-responsive>
+            <v-card-text>
+              <v-responsive :aspect-ratio="4 / 3" class="align-center">
+                <p>Add titles, link existing albums and more.</p>
+                <v-icon size="64">add</v-icon>
+              </v-responsive>
+            </v-card-text>
           </v-card>
         </template>
       </v-hover>
