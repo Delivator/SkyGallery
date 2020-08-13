@@ -19,14 +19,14 @@
     "mobile-device-detect": "^0.4.3",
     "vue": "^2.6.11",
     "vue-observe-visibility": "^0.4.6",
-    "vue-router": "^3.4.2",
+    "vue-router": "^3.4.3",
     "vuedraggable": "^2.24.0",
     "vuetify": "^2.3.8"
   },
   "devDependencies": {
-    "@nebulous/skynet": "git+https://github.com/NebulousLabs/nodejs-skynet.git#89ac5db47414d6ad5f1a1a2461d264c55f696553",
+    "@nebulous/skynet": "^1.1.0",
     "@vue/cli-plugin-babel": "~4.5.3",
-    "@vue/cli-plugin-eslint": "~4.5.2",
+    "@vue/cli-plugin-eslint": "~4.5.3",
     "@vue/cli-service": "~4.5.3",
     "@vue/cli-plugin-router": "~4.5.3",
     "@vue/eslint-config-prettier": "^6.0.0",
