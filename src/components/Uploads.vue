@@ -4,21 +4,23 @@
     @start="$emit('update:drag', true)"
     @end="endDrag"
     class="row justify-center"
-    handle=".drag-handle"
+    handle=".drag-handle, .v-input__icon--prepend"
   >
-    <AddItemDialog :addItemDialog.sync="addItemDialog" />
     <v-col
-      v-for="(item, index) in [...items, addItem]"
+      v-for="(item, index) in items"
       :key="item.id"
-      cols="12"
-      xl="2"
-      lg="4"
-      md="6"
+      :class="itemsClass(item)"
     >
-      <v-card
-        v-if="item.type !== 'addItemCard'"
-        :loading="item.status !== 'finished'"
-      >
+      <v-text-field
+        v-if="item.type === 'title'"
+        v-model="item.value"
+        autocomplete="off"
+        outlined
+        label="Title"
+        prepend-icon="open_with"
+        append-outer-icon="delete"
+      ></v-text-field>
+      <v-card v-else :loading="item.status !== 'finished'">
         <v-img
           :src="thumbnailUrl(item)"
           :aspect-ratio="4 / 3"
@@ -100,22 +102,6 @@
           </div>
         </v-img>
       </v-card>
-      <v-hover v-else>
-        <template v-slot="{ hover }">
-          <v-card
-            :elevation="hover ? 24 : 0"
-            class="add-card"
-            @click="addItemDialog = true"
-          >
-            <v-card-text>
-              <v-responsive :aspect-ratio="4 / 3" class="align-center">
-                <p>Add titles, link existing albums and more.</p>
-                <v-icon size="64">add</v-icon>
-              </v-responsive>
-            </v-card-text>
-          </v-card>
-        </template>
-      </v-hover>
     </v-col>
   </draggable>
 </template>
@@ -188,16 +174,10 @@
   left: 1rem;
   z-index: 2;
 }
-
-.add-card {
-  border: 2px dashed grey;
-  border-radius: 5px;
-}
 </style>
 
 <script>
 import { generateThumbnails } from "../mixins/generateThumbnails";
-import AddItemDialog from "@/components/AddItemDialog.vue";
 import { uploadFiles } from "../mixins/uploadFiles";
 import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
@@ -208,15 +188,12 @@ let addAlbumTimeout = null;
 
 export default {
   name: "Uploads",
-  components: { draggable, AddItemDialog },
+  components: { draggable },
   props: ["items", "skylinkRegex", "setItems", "selectTitle", "drag"],
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 
   data() {
     return {
-      addItem: {
-        type: "addItemCard",
-      },
       addItemDialog: false,
     };
   },
@@ -303,6 +280,14 @@ export default {
             this.loading = false;
           });
       }, 250);
+    },
+
+    itemsClass: function (item) {
+      if (item.type === "title") {
+        return "col-12";
+      } else {
+        return "col-md-6 col-lg-4 col-xl-2 col-12";
+      }
     },
   },
 };
