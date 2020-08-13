@@ -18,7 +18,7 @@
     "crypto-js": "^4.0.0",
     "vue": "^2.6.11",
     "vue-observe-visibility": "^0.4.6",
-    "vue-router": "^3.4.2",
+    "vue-router": "^3.4.3",
     "vuedraggable": "^2.24.0",
     "vuetify": "^2.3.8"
   },
