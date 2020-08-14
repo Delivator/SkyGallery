@@ -9,7 +9,8 @@
     <v-col
       v-for="(item, index) in items"
       :key="item.id"
-      :class="itemsClass(item)"
+      :class="itemsClass(item.type)"
+      class="dragcol"
     >
       <v-text-field
         v-if="item.type === 'title'"
@@ -19,6 +20,7 @@
         label="Title"
         prepend-icon="open_with"
         append-outer-icon="delete"
+        @click:append-outer="items.splice(index, 1)"
       ></v-text-field>
       <v-card v-else :loading="item.status !== 'finished'">
         <v-img
@@ -174,6 +176,10 @@
   left: 1rem;
   z-index: 2;
 }
+
+.dragcol.sortable-chosen.sortable-ghost {
+  max-width: 420px;
+}
 </style>
 
 <script>
@@ -280,14 +286,6 @@ export default {
             this.loading = false;
           });
       }, 250);
-    },
-
-    itemsClass: function (item) {
-      if (item.type === "title") {
-        return "col-12";
-      } else {
-        return "col-md-6 col-lg-4 col-xl-2 col-12";
-      }
     },
   },
 };

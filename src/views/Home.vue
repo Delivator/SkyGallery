@@ -23,7 +23,7 @@
       </v-col>
       <v-col cols="12" class="subtext">
         <span class="display-1">
-          Start by creating a
+          Creating a
           <v-btn color="primary" to="new" outlined
             ><v-icon left>add</v-icon>new album</v-btn
           >
@@ -35,7 +35,7 @@
           single-line
           autocomplete="off"
           v-model="linkInput"
-          style="width: 14rem;"
+          style="width: 15rem;"
           placeholder="Paste SkyGallery or sia:// link"
           :loading="loading"
           :error-messages="inputError"

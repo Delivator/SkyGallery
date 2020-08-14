@@ -15,6 +15,7 @@ export const utils = {
           .catch((err) => reject(err));
       });
     },
+
     getAlbumData(albumId) {
       return new Promise((resolve, reject) => {
         this.checkValidAlbum(albumId)
@@ -26,6 +27,14 @@ export const utils = {
           })
           .catch(reject);
       });
+    },
+
+    itemsClass: function (type) {
+      if (type === "title") {
+        return "col-12";
+      } else {
+        return "col-md-6 col-lg-4 col-xl-2 col-12";
+      }
     },
   },
 };

@@ -160,8 +160,14 @@ export default {
             skylinks: file.skylinks,
             log: "",
           };
-          if (file.skylinks.thumbnail) item.thumbnail = file.skylinks.thumbnail;
-          if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;
+          if (file.type === "title") {
+            item.value = file.value;
+          } else {
+            if (file.skylinks.thumbnail)
+              item.thumbnail = file.skylinks.thumbnail;
+            if (file.type === "video")
+              item.videoUrl = `/${file.skylinks.source}`;
+          }
           this.items.push(item);
         });
         this.albumTitle = data.title;

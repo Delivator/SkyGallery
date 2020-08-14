@@ -187,30 +187,29 @@
     </v-row>
     <v-row justify="center" v-if="files.length > 0" dense>
       <v-col
-        v-for="(file, index) in files"
+        v-for="(item, index) in files"
         :key="index"
-        cols="12"
-        xl="2"
-        lg="4"
-        md="6"
+        :class="itemsClass(item.type)"
       >
+        <h1 v-if="item.type === 'title'">{{ item.value }}</h1>
         <v-card
+          v-else
           @click="openFull(index)"
           :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
           :id="`img-${index}`"
         >
           <v-img
-            :src="`/${imageSource(file)}`"
+            :src="`/${imageSource(item)}`"
             :aspect-ratio="4 / 3"
             class="align-end"
           >
             <v-icon
-              v-if="file.type === 'video'"
+              v-if="item.type === 'video'"
               class="video-icon translate-center"
               large
               >play_arrow</v-icon
             >
-            <v-card-title>{{ file.name }}</v-card-title>
+            <v-card-title>{{ item.name }}</v-card-title>
           </v-img>
         </v-card>
       </v-col>
@@ -441,18 +440,24 @@ export default {
     },
     showPrevious: function () {
       if (this.files.length < 2) return;
-      this.setImgloading();
       if (this.showFullIndex <= 0) {
         this.showFullIndex = this.files.length - 1;
       } else {
         this.showFullIndex = (this.showFullIndex - 1) % this.files.length;
       }
+      // skip one if item is not an image or video
+      if (!/^image|video$/.test(this.files[this.showFullIndex].type))
+        return this.showPrevious();
+      this.setImgloading();
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     showNext: function () {
       if (this.files.length < 2) return;
-      this.setImgloading();
       this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
+      // skip one if item is not an image or video
+      if (!/^image|video$/.test(this.files[this.showFullIndex].type))
+        return this.showNext();
+      this.setImgloading();
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
     fullscreenMousewheel: function (event) {
@@ -498,10 +503,6 @@ export default {
         this.loading = false;
         this.files = data.files;
         this.albumTitle = data.title;
-        if (this.files.length > 0 && this.files[0].skylinks.thumbnail)
-          document.querySelectorAll(".metaimg").forEach((element) => {
-            element.content = this.files[0].skylinks.thumbnail;
-          });
       })
       .catch(() => this.alertBox.send("error", "Error getting album data"));
   },

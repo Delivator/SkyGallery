@@ -10,7 +10,7 @@ const portals = [
   // "https://skynet.cloudloop.io",
 ];
 
-let opts = skynet.defaultUploadOptions;
+let opts = skynet.defaultOptions;
 opts.customFilename = `skygallery-v${version}`;
 
 if (process.argv[2]) opts.customFilename += `-${process.argv[2]}`;
