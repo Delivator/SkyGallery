@@ -62,19 +62,17 @@
 
 <script>
 import { utils } from "../mixins/utils";
-import { isMobile } from "mobile-device-detect";
 
 let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "skylinkRegex", "alertBox"],
+  props: ["portals", "skylinkRegex", "alertBox", "isMobile"],
   mixins: [utils],
   data: () => ({
     linkInput: "",
     loading: false,
     inputError: "",
-    isMobile,
   }),
 
   mounted: function () {

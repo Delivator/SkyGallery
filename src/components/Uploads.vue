@@ -105,6 +105,35 @@
         </v-img>
       </v-card>
     </v-col>
+    <v-menu open-on-hover top offset-y close-delay="100">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          class="add-extra-btn"
+          color="primary"
+          fab
+          x-large
+          v-on="on"
+          v-bind="attrs"
+          :class="`mobile-${isMobile}`"
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item @click="void 0">
+          <v-list-item-icon>
+            <v-icon>link</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Link an existing album</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="addTitle">
+          <v-list-item-icon>
+            <v-icon>text_fields</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Add Title</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </draggable>
 </template>
 
@@ -180,6 +209,18 @@
 .dragcol.sortable-chosen.sortable-ghost {
   max-width: 420px;
 }
+
+.add-extra-btn {
+  position: absolute;
+  z-index: 1;
+  bottom: 3rem;
+  right: 3rem;
+}
+
+.add-extra-btn.mobile-true {
+  bottom: 0.5rem;
+  right: 0.5rem;
+}
 </style>
 
 <script>
@@ -187,6 +228,7 @@ import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
 import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
+import { MD5 } from "crypto-js";
 import draggable from "vuedraggable";
 
 let inputTimeout = null;
@@ -195,7 +237,14 @@ let addAlbumTimeout = null;
 export default {
   name: "Uploads",
   components: { draggable },
-  props: ["items", "skylinkRegex", "setItems", "selectTitle", "drag"],
+  props: [
+    "items",
+    "skylinkRegex",
+    "setItems",
+    "selectTitle",
+    "drag",
+    "isMobile",
+  ],
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 
   data() {
@@ -251,11 +300,6 @@ export default {
       this.generateVideoThumbnail(item.id, event.target);
     },
 
-    addTitle: function (event) {
-      if (event) event.preventDefault();
-      this.addTitleText = "New Title";
-    },
-
     albumInput: function () {
       if (addAlbumTimeout !== null) clearTimeout(addAlbumTimeout);
       this.inputError = "";
@@ -286,6 +330,15 @@ export default {
             this.loading = false;
           });
       }, 250);
+    },
+
+    addTitle: function () {
+      this.items.push({
+        id: MD5(Math.random().toString()).toString(),
+        type: "title",
+        value: "New Title",
+        status: "finished",
+      });
     },
   },
 };

@@ -4,34 +4,6 @@
       :unfinishedDialog.sync="unfinishedDialog"
       :publish="publish"
     />
-    <v-menu open-on-hover top offset-y close-delay="100">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          class="add-extra-btn"
-          color="primary"
-          fab
-          x-large
-          v-on="on"
-          v-bind="attrs"
-        >
-          <v-icon>add</v-icon>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item @click="void 0">
-          <v-list-item-icon>
-            <v-icon>link</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Link an existing album</v-list-item-title>
-        </v-list-item>
-        <v-list-item @click="addTitle">
-          <v-list-item-icon>
-            <v-icon>text_fields</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Add Title</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
     <v-row justify="center">
       <v-col cols="12" v-if="items.length < 1">
         <h1 class="display-2">Create a new Album</h1>
@@ -76,6 +48,7 @@
       :setItems="setItems"
       :selectTitle="selectTitle"
       :drag.sync="drag"
+      :isMobile="isMobile"
     />
     <v-row justify="center" v-if="!isIntersecting">
       <v-col lg="4" md="6" cols="12">
@@ -106,12 +79,6 @@
 .upload-btn {
   margin-top: 1rem;
 }
-
-.add-extra-btn {
-  position: absolute;
-  bottom: 3rem;
-  right: 3rem;
-}
 </style>
 
 <script>
@@ -125,7 +92,7 @@ import UploadDialog from "@/components/UploadDialog.vue";
 export default {
   name: "New",
   components: { Uploads, Dropzone, UploadDialog },
-  props: ["version", "skylinkRegex", "alertBox", "showShare"],
+  props: ["version", "skylinkRegex", "alertBox", "showShare", "isMobile"],
   mixins: [publishAlbum, uploadBlob],
   data() {
     return {
@@ -174,14 +141,6 @@ export default {
         this.publishAlbum();
       }
       this.unfinishedDialog = unfinished.length > 0;
-    },
-    addTitle: function () {
-      this.items.push({
-        id: MD5(Math.random().toString()).toString(),
-        type: "title",
-        value: "New Title",
-        status: "finished",
-      });
     },
   },
 };

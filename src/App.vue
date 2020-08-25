@@ -8,7 +8,7 @@
           contain
           :src="require('./assets/skygallery_logo.svg')"
           transition="scale-transition"
-          width="40"
+          width="30"
         />
         <v-toolbar-title>SkyGallery</v-toolbar-title>
       </router-link>
@@ -57,6 +57,7 @@
         :alertBox="alertBox"
         :showShare="showShare"
         :isEmbed="isEmbed"
+        :isMobile="isMobile"
       />
     </v-main>
     <v-footer v-if="isEmbed" padless fixed>
@@ -145,13 +146,15 @@ html {
   overflow: auto;
 }
 
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar {
   background-color: #202020;
 }
 
 ::-webkit-scrollbar {
-  width: 13px;
-  background-color: #202020;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -191,9 +194,10 @@ html {
   margin-right: 1rem;
 }
 </style>
-x
+
 <script>
 import { MD5 } from "crypto-js";
+import { isMobile } from "mobile-device-detect";
 import version from "../package.json";
 
 function inIframe() {
@@ -241,6 +245,7 @@ export default {
       refHover: false,
       showRefTooltip: false,
       refVisible: false,
+      isMobile,
 
       alerts: [],
       alertBox: {
@@ -283,10 +288,6 @@ export default {
       .then((data) => {
         if (!data || data.length < 1 || !data[0].name || !data[0].link)
           return false;
-        data.push({
-          name: "SiaSky.dev",
-          link: "https://siasky.dev/",
-        });
         data = shuffleArray(data);
         data.forEach((portal, index) => {
           if (portal.link.includes(document.location.hostname)) {
