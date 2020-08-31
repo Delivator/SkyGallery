@@ -44,7 +44,6 @@
     </v-row>
     <Uploads
       :items="items"
-      :skylinkRegex="skylinkRegex"
       :setItems="setItems"
       :selectTitle="selectTitle"
       :drag.sync="drag"
@@ -82,7 +81,6 @@
 </style>
 
 <script>
-import { MD5 } from "crypto-js";
 import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
 import Uploads from "@/components/Uploads.vue";
@@ -92,7 +90,7 @@ import UploadDialog from "@/components/UploadDialog.vue";
 export default {
   name: "New",
   components: { Uploads, Dropzone, UploadDialog },
-  props: ["version", "skylinkRegex", "alertBox", "showShare", "isMobile"],
+  props: ["version", "alertBox", "showShare", "isMobile"],
   mixins: [publishAlbum, uploadBlob],
   data() {
     return {
@@ -102,14 +100,6 @@ export default {
       isIntersecting: true,
       unfinishedDialog: false,
       drag: false,
-      extraItems: {
-        title: {
-          id: MD5(Math.random().toString()).toString(),
-          type: "title",
-          value: "New Title",
-          status: "finished",
-        },
-      },
     };
   },
 

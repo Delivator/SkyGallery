@@ -67,7 +67,7 @@ let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "skylinkRegex", "alertBox", "isMobile"],
+  props: ["portals", "alertBox", "isMobile"],
   mixins: [utils],
   data: () => ({
     linkInput: "",
@@ -91,15 +91,8 @@ export default {
       if (!this.linkInput) return;
       openAlbumTimeout = setTimeout(() => {
         this.loading = true;
-        let skylink = this.linkInput.replace("sia://", "");
-        skylink = skylink.replace("https://skygallery.xyz/", "");
-        skylink = skylink.replace(document.location, "");
-        skylink = skylink.replace("a/", "");
-        this.portals.forEach((portal) => {
-          skylink = skylink.replace(portal.link, "");
-        });
-        skylink = skylink.replace(/\//g, "");
-        if (!this.skylinkRegex.test(skylink)) {
+        let skylink = this.extractAlbumSkylink(this.linkInput);
+        if (!skylink) {
           this.loading = false;
           this.inputError = "Invalid skylink";
           return (this.loading = false);

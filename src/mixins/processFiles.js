@@ -1,4 +1,4 @@
-import { MD5 } from "crypto-js";
+import sha256 from "crypto-js/sha256";
 
 export const processFiles = {
   methods: {
@@ -6,7 +6,7 @@ export const processFiles = {
       files.forEach((file) => {
         let item = {
           file,
-          id: MD5(Math.random().toString()).toString(),
+          id: sha256(Math.random().toString()).toString(),
           filename: file.name,
           status: "queued",
           log: "Added\n",

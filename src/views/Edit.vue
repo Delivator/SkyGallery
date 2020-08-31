@@ -49,7 +49,6 @@
     <uploads
       v-if="!loading"
       :items="items"
-      :skylinkRegex="skylinkRegex"
       :setItems="setItems"
       :selectTitle="selectTitle"
       :drag.sync="drag"
@@ -92,13 +91,13 @@ import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
 import dropzone from "@/components/Dropzone.vue";
 import uploads from "@/components/Uploads.vue";
-import { MD5 } from "crypto-js";
+import sha256 from "crypto-js/sha256";
 
 export default {
   name: "Edit",
   components: { uploads, dropzone, uploadDialog },
   mixins: [utils, publishAlbum, uploadBlob],
-  props: ["alertBox", "skylinkRegex"],
+  props: ["alertBox"],
   data() {
     return {
       albumId: "",
@@ -151,7 +150,7 @@ export default {
         this.loading = false;
         data.files.forEach((file) => {
           let item = {
-            id: MD5(Math.random().toString()).toString(),
+            id: sha256(Math.random().toString()).toString(),
             filename: file.filename,
             status: "finished",
             type: file.type,

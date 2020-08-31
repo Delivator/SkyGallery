@@ -22,6 +22,17 @@
         append-outer-icon="delete"
         @click:append-outer="items.splice(index, 1)"
       ></v-text-field>
+      <v-card
+        v-else-if="item.type === 'album'"
+        :loading="item.status !== 'finished'"
+      >
+        <v-responsive :aspect-ratio="4 / 3">
+          <AlbumCard
+            :dialog="item.status === 'showdialog'"
+            :skylink.sync="item.skylink"
+          />
+        </v-responsive>
+      </v-card>
       <v-card v-else :loading="item.status !== 'finished'">
         <v-img
           :src="thumbnailUrl(item)"
@@ -120,7 +131,7 @@
         </v-btn>
       </template>
       <v-list>
-        <v-list-item @click="void 0">
+        <v-list-item @click="addAlbumCard">
           <v-list-item-icon>
             <v-icon>link</v-icon>
           </v-list-item-icon>
@@ -224,11 +235,12 @@
 </style>
 
 <script>
+import AlbumCard from "./AlbumCard";
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
 import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
-import { MD5 } from "crypto-js";
+import sha256 from "crypto-js/sha256";
 import draggable from "vuedraggable";
 
 let inputTimeout = null;
@@ -236,10 +248,9 @@ let addAlbumTimeout = null;
 
 export default {
   name: "Uploads",
-  components: { draggable },
+  components: { draggable, AlbumCard },
   props: [
     "items",
-    "skylinkRegex",
     "setItems",
     "selectTitle",
     "drag",
@@ -334,10 +345,19 @@ export default {
 
     addTitle: function () {
       this.items.push({
-        id: MD5(Math.random().toString()).toString(),
+        id: sha256(Math.random().toString()).toString(),
         type: "title",
         value: "New Title",
         status: "finished",
+      });
+    },
+
+    addAlbumCard: function () {
+      this.items.push({
+        id: sha256(Math.random().toString()).toString(),
+        type: "album",
+        skylink: "",
+        status: "showdialog",
       });
     },
   },

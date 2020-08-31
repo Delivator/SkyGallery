@@ -52,7 +52,6 @@
     <v-main>
       <router-view
         :portals="portals"
-        :skylinkRegex="skylinkRegex"
         :version="version"
         :alertBox="alertBox"
         :showShare="showShare"
@@ -196,7 +195,7 @@ html {
 </style>
 
 <script>
-import { MD5 } from "crypto-js";
+import sha256 from "crypto-js/sha256";
 import { isMobile } from "mobile-device-detect";
 import version from "../package.json";
 
@@ -239,7 +238,6 @@ export default {
           link: "https://siasky.net",
         },
       ],
-      skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
       showShare: false,
       isEmbed: false,
       refHover: false,
@@ -261,7 +259,7 @@ export default {
             console.error(message);
           }
 
-          let id = MD5(Math.random().toString()).toString();
+          let id = sha256(Math.random().toString()).toString();
 
           this.alerts.push({
             id,
