@@ -249,13 +249,7 @@ let addAlbumTimeout = null;
 export default {
   name: "Uploads",
   components: { draggable, AlbumCard },
-  props: [
-    "items",
-    "setItems",
-    "selectTitle",
-    "drag",
-    "isMobile",
-  ],
+  props: ["items", "setItems", "selectTitle", "drag", "isMobile"],
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 
   data() {
