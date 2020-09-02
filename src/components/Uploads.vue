@@ -30,6 +30,7 @@
           <AlbumCard
             :dialog="item.status === 'showdialog'"
             :skylink.sync="item.skylink"
+            :removeItem="removeItem(index)"
           />
         </v-responsive>
       </v-card>
@@ -353,6 +354,12 @@ export default {
         skylink: "",
         status: "showdialog",
       });
+    },
+
+    removeItem: function (id) {
+      if (!id) return;
+      const index = this.items.findIndex((item) => item.id === id);
+      if (index > -1) this.items.splice(index, 1);
     },
   },
 };

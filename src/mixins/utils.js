@@ -2,7 +2,7 @@ export const utils = {
   data() {
     return {
       skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
-      albumRegex: /skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json/gm,
+      albumRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
     };
   },
   methods: {
