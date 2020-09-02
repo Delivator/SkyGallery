@@ -20,7 +20,7 @@
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.3",
     "vuedraggable": "^2.24.0",
-    "vuetify": "^2.3.9"
+    "vuetify": "^2.3.10"
   },
   "devDependencies": {
     "@nebulous/skynet": "^1.1.0",
