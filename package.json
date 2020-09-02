@@ -22,14 +22,14 @@
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.3",
     "vuedraggable": "^2.24.0",
-    "vuetify": "^2.3.8"
+    "vuetify": "^2.3.9"
   },
   "devDependencies": {
     "@nebulous/skynet": "^1.1.0",
-    "@vue/cli-plugin-babel": "~4.5.3",
-    "@vue/cli-plugin-eslint": "~4.5.3",
-    "@vue/cli-plugin-router": "~4.5.3",
-    "@vue/cli-service": "~4.5.3",
+    "@vue/cli-plugin-babel": "~4.5.4",
+    "@vue/cli-plugin-eslint": "~4.5.4",
+    "@vue/cli-service": "~4.5.4",
+    "@vue/cli-plugin-router": "~4.5.4",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
