@@ -16,7 +16,7 @@
     "browser-image-compression": "^1.0.12",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
-    "vue": "^2.6.11",
+    "vue": "^2.6.12",
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.3",
     "vuedraggable": "^2.24.0",
@@ -37,7 +37,7 @@
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
     "vue-cli-plugin-vuetify": "~2.0.7",
-    "vue-template-compiler": "^2.6.11",
+    "vue-template-compiler": "^2.6.12",
     "vuetify-loader": "^1.6.0"
   },
   "bugs": {
