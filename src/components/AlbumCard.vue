@@ -22,67 +22,111 @@
             <v-col cols="12" v-if="items > 0">
               <p class="text-h5 white--text">Select a layout</p>
               <v-row justify="center">
-                <v-col cols="3">
-                  <v-responsive :aspect-ratio="4 / 3">
-                    <v-row dense class="layout-selector">
-                      <v-col cols="12">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                    </v-row>
-                  </v-responsive>
+                <v-col cols="3" @click="$emit('selectlayout', 0)">
+                  <v-hover v-slot:default="{ hover }">
+                    <v-responsive :aspect-ratio="4 / 3">
+                      <v-row dense class="layout-selector">
+                        <v-col cols="12">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                      </v-row>
+                    </v-responsive>
+                  </v-hover>
                 </v-col>
-                <v-col cols="3" v-if="items > 1">
-                  <v-responsive :aspect-ratio="4 / 3">
-                    <v-row dense class="layout-selector">
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                    </v-row>
-                    <v-row dense class="layout-selector">
-                      <v-col cols="12">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                    </v-row>
-                  </v-responsive>
+                <v-col
+                  cols="3"
+                  v-if="items > 1"
+                  @click="$emit('selectlayout', 1)"
+                >
+                  <v-hover v-slot:default="{ hover }">
+                    <v-responsive :aspect-ratio="4 / 3">
+                      <v-row dense class="layout-selector">
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                      </v-row>
+                      <v-row dense class="layout-selector">
+                        <v-col cols="12">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                      </v-row>
+                    </v-responsive>
+                  </v-hover>
                 </v-col>
-                <v-col cols="3" v-if="items > 2">
-                  <v-responsive :aspect-ratio="4 / 3">
-                    <v-row dense class="layout-selector">
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                    </v-row>
-                  </v-responsive>
+                <v-col
+                  cols="3"
+                  v-if="items > 2"
+                  @click="$emit('selectlayout', 2)"
+                >
+                  <v-hover v-slot:default="{ hover }">
+                    <v-responsive :aspect-ratio="4 / 3">
+                      <v-row dense class="layout-selector">
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                      </v-row>
+                    </v-responsive>
+                  </v-hover>
                 </v-col>
-                <v-col cols="3" v-if="items > 3">
-                  <v-responsive :aspect-ratio="4 / 3">
-                    <v-row dense class="layout-selector">
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-sheet color="grey" height="100%">&nbsp;</v-sheet>
-                      </v-col>
-                    </v-row>
-                  </v-responsive>
+                <v-col
+                  cols="3"
+                  v-if="items > 3"
+                  @click="$emit('selectlayout', 3)"
+                >
+                  <v-hover v-slot:default="{ hover }">
+                    <v-responsive :aspect-ratio="4 / 3">
+                      <v-row dense class="layout-selector">
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                      </v-row>
+                    </v-responsive>
+                  </v-hover>
                 </v-col>
               </v-row>
             </v-col>
@@ -104,6 +148,10 @@
 .layout-selector {
   height: 100%;
 }
+
+.layout-selector .v-sheet {
+  transition: background-color 0.3s;
+}
 </style>
 
 <script>
@@ -113,7 +161,7 @@ let linkInputTimeout = null;
 
 export default {
   mixins: [utils],
-  props: ["dialog", "skylink"],
+  props: ["dialog", "skylink", "itemId"],
   data() {
     return {
       linkInput: "",
@@ -149,8 +197,13 @@ export default {
           });
       }, 250);
     },
+
     cancelDialog() {
-      this.removeItem();
+      this.$emit("removeItem");
+    },
+
+    sheetColor(hover) {
+      return hover ? "primary" : "grey";
     },
   },
 };

@@ -26,11 +26,21 @@
         v-else-if="item.type === 'album'"
         :loading="item.status !== 'finished'"
       >
+        <v-btn
+          class="remove-btn"
+          fab
+          small
+          color="error"
+          @click="items.splice(index, 1)"
+        >
+          <v-icon>delete</v-icon>
+        </v-btn>
         <v-responsive :aspect-ratio="4 / 3">
           <AlbumCard
             :dialog="item.status === 'showdialog'"
             :skylink.sync="item.skylink"
-            :removeItem="removeItem(index)"
+            :itemId="item.id"
+            @removeItem="items.splice(index, 1)"
           />
         </v-responsive>
       </v-card>
