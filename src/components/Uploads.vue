@@ -26,6 +26,12 @@
         v-else-if="item.type === 'album'"
         :loading="item.status !== 'finished'"
       >
+        <AlbumCard
+          :dialog="item.status === 'showdialog'"
+          :itemId="item.id"
+          @removeItem="items.splice(index, 1)"
+          @updateAlbumItem="updateAlbumItem"
+        />
         <v-btn
           class="remove-btn"
           fab
@@ -35,15 +41,9 @@
         >
           <v-icon>delete</v-icon>
         </v-btn>
+        <div class="drag-handle"></div>
         <v-responsive :aspect-ratio="4 / 3">
-          <div class="drag-handle"></div>
-          <v-card-title>{{ item.title }}</v-card-title>
-          <AlbumCard
-            :dialog="item.status === 'showdialog'"
-            :itemId="item.id"
-            @removeItem="items.splice(index, 1)"
-            @updateAlbumItem="updateAlbumItem"
-          />
+          <AlbumCardGrid :layout="item.layout" :items="item.items" />
         </v-responsive>
       </v-card>
       <v-card v-else :loading="item.status !== 'finished'">
@@ -249,6 +249,7 @@
 
 <script>
 import AlbumCard from "./AlbumCard";
+import AlbumCardGrid from "./AlbumCardGrid";
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
 import { uploadBlob } from "../mixins/uploadBlob";
@@ -261,7 +262,7 @@ let addAlbumTimeout = null;
 
 export default {
   name: "Uploads",
-  components: { draggable, AlbumCard },
+  components: { draggable, AlbumCard, AlbumCardGrid },
   props: ["items", "setItems", "selectTitle", "drag", "isMobile"],
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 
@@ -375,12 +376,13 @@ export default {
       if (index > -1) this.items.splice(index, 1);
     },
 
-    updateAlbumItem: function (id, status, skylink, layout, title) {
+    updateAlbumItem: function (id, status, skylink, layout, title, items) {
       const index = this.items.findIndex((item) => item.id === id);
       this.items[index].status = status;
       this.items[index].skylink = skylink;
       this.items[index].layout = layout;
       this.items[index].title = title;
+      this.items[index].items = items;
     },
   },
 };

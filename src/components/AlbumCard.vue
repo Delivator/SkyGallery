@@ -19,7 +19,7 @@
                 v-model="linkInput"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" v-if="items > 0">
+            <v-col cols="12" v-if="items.length > 0">
               <p class="text-h5 white--text">Select a layout</p>
               <v-row justify="center">
                 <v-col cols="3" @click="selectedLayout = 0">
@@ -35,7 +35,11 @@
                     </v-responsive>
                   </v-hover>
                 </v-col>
-                <v-col cols="3" v-if="items > 1" @click="selectedLayout = 1">
+                <v-col
+                  cols="3"
+                  v-if="items.length > 1"
+                  @click="selectedLayout = 1"
+                >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
                       <v-row dense class="layout-selector">
@@ -53,7 +57,11 @@
                     </v-responsive>
                   </v-hover>
                 </v-col>
-                <v-col cols="3" v-if="items > 2" @click="selectedLayout = 2">
+                <v-col
+                  cols="3"
+                  v-if="items.length > 2"
+                  @click="selectedLayout = 2"
+                >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
                       <v-row dense class="layout-selector">
@@ -76,7 +84,11 @@
                     </v-responsive>
                   </v-hover>
                 </v-col>
-                <v-col cols="3" v-if="items > 3" @click="selectedLayout = 3">
+                <v-col
+                  cols="3"
+                  v-if="items.length > 3"
+                  @click="selectedLayout = 3"
+                >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
                       <v-row dense class="layout-selector">
@@ -143,7 +155,7 @@ export default {
       linkInput: "",
       loading: false,
       inputError: "",
-      items: 0,
+      items: [],
       title: "",
       selectedLayout: 0,
       skylink: "",
@@ -167,8 +179,8 @@ export default {
             this.loading = false;
             this.items = data.files.filter((item) => {
               return /^(image|video)$/.test(item.type);
-            }).length;
-            if (this.items < 1) return (this.inputError = "Empty album");
+            });
+            if (this.items.length < 1) return (this.inputError = "Empty album");
             this.title = data.title;
             this.inputError = "";
             this.skylink = skylink;
@@ -191,7 +203,8 @@ export default {
         "finished",
         this.skylink,
         this.selectedLayout,
-        this.title
+        this.title,
+        this.items
       );
     },
 
