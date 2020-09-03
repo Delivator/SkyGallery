@@ -3,18 +3,12 @@ export const utils = {
     return {
       skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
       albumRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
+      albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
     };
   },
   methods: {
     extractAlbumSkylink(str) {
-      let skylink = str
-        .replace("sia://", "")
-        .replace("https://skygallery.xyz/", "")
-        .replace(location.origin, "")
-        .replace(location.pathname, "")
-        .replace("#/", "")
-        .replace("a/", "");
-      skylink = skylink.replace(/\//g, "");
+      let skylink = str.match(this.albumIdRegex)[2];
       return this.skylinkRegex.test(skylink) ? skylink : false;
     },
 

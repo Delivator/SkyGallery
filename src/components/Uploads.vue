@@ -36,11 +36,13 @@
           <v-icon>delete</v-icon>
         </v-btn>
         <v-responsive :aspect-ratio="4 / 3">
+          <div class="drag-handle"></div>
+          <v-card-title>{{ item.title }}</v-card-title>
           <AlbumCard
             :dialog="item.status === 'showdialog'"
-            :skylink.sync="item.skylink"
             :itemId="item.id"
             @removeItem="items.splice(index, 1)"
+            @updateAlbumItem="updateAlbumItem"
           />
         </v-responsive>
       </v-card>
@@ -233,7 +235,7 @@
 }
 
 .add-extra-btn {
-  position: absolute;
+  position: fixed;
   z-index: 1;
   bottom: 3rem;
   right: 3rem;
@@ -362,6 +364,7 @@ export default {
         id: sha256(Math.random().toString()).toString(),
         type: "album",
         skylink: "",
+        layout: 0,
         status: "showdialog",
       });
     },
@@ -370,6 +373,14 @@ export default {
       if (!id) return;
       const index = this.items.findIndex((item) => item.id === id);
       if (index > -1) this.items.splice(index, 1);
+    },
+
+    updateAlbumItem: function (id, status, skylink, layout, title) {
+      const index = this.items.findIndex((item) => item.id === id);
+      this.items[index].status = status;
+      this.items[index].skylink = skylink;
+      this.items[index].layout = layout;
+      this.items[index].title = title;
     },
   },
 };

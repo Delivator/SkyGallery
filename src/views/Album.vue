@@ -446,7 +446,7 @@ export default {
         this.showFullIndex = (this.showFullIndex - 1) % this.files.length;
       }
       // skip one if item is not an image or video
-      if (!/^image|video$/.test(this.files[this.showFullIndex].type))
+      if (!/^(image|video)$/.test(this.files[this.showFullIndex].type))
         return this.showPrevious();
       this.setImgloading();
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
@@ -455,7 +455,7 @@ export default {
       if (this.files.length < 2) return;
       this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
       // skip one if item is not an image or video
-      if (!/^image|video$/.test(this.files[this.showFullIndex].type))
+      if (!/^(image|video)$/.test(this.files[this.showFullIndex].type))
         return this.showNext();
       this.setImgloading();
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
