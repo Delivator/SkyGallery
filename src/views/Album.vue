@@ -193,6 +193,16 @@
       >
         <h1 v-if="item.type === 'title'">{{ item.value }}</h1>
         <v-card
+          v-else-if="item.type === 'album'"
+          :href="`#/a/${item.skylink}`"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <v-responsive :aspect-ratio="4 / 3">
+            <AlbumCardGrid :layout="item.layout" :skylink="item.skylink" />
+          </v-responsive>
+        </v-card>
+        <v-card
           v-else
           @click="openFull(index)"
           :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
@@ -376,6 +386,7 @@
 
 <script>
 import { utils } from "../mixins/utils";
+import AlbumCardGrid from "../components/AlbumCardGrid";
 
 function selectText(node) {
   const range = new Range();
@@ -388,6 +399,7 @@ export default {
   name: "Album",
   mixins: [utils],
   props: ["showShare", "alertBox", "isEmbed"],
+  components: { AlbumCardGrid },
   data() {
     return {
       albumId: "",

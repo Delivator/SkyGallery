@@ -202,9 +202,7 @@ export default {
         this.itemId,
         "finished",
         this.skylink,
-        this.selectedLayout,
-        this.title,
-        this.items
+        this.selectedLayout
       );
     },
 

@@ -42,7 +42,7 @@ export const utils = {
 
     itemsClass: function (type) {
       if (type === "title") {
-        return "col-12";
+        return "title col-12";
       } else {
         return "col-md-6 col-lg-4 col-xl-2 col-12";
       }

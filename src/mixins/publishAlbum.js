@@ -18,6 +18,8 @@ export const publishAlbum = {
             name: file.newName,
             filename: file.filename,
             value: file.value,
+            layout: file.layout,
+            skylink: file.skylink,
           });
         });
       const blob = new Blob([JSON.stringify(jsonData, null, 2)], {

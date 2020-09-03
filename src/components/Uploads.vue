@@ -21,6 +21,7 @@
         prepend-icon="open_with"
         append-outer-icon="delete"
         @click:append-outer="items.splice(index, 1)"
+        class="title"
       ></v-text-field>
       <v-card
         v-else-if="item.type === 'album'"
@@ -43,7 +44,7 @@
         </v-btn>
         <div class="drag-handle"></div>
         <v-responsive :aspect-ratio="4 / 3">
-          <AlbumCardGrid :layout="item.layout" :items="item.items" />
+          <AlbumCardGrid :layout="item.layout" :skylink="item.skylink" />
         </v-responsive>
       </v-card>
       <v-card v-else :loading="item.status !== 'finished'">
@@ -166,7 +167,7 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 2;
+  z-index: 3;
 }
 
 .file-log {
@@ -209,7 +210,7 @@
   top: 0;
   width: 100%;
   height: 30%;
-  z-index: 1;
+  z-index: 2;
 }
 
 .toobig {
@@ -230,7 +231,7 @@
   z-index: 2;
 }
 
-.dragcol.sortable-chosen.sortable-ghost {
+.dragcol.sortable-chosen.sortable-ghost.title {
   max-width: 420px;
 }
 
@@ -376,13 +377,11 @@ export default {
       if (index > -1) this.items.splice(index, 1);
     },
 
-    updateAlbumItem: function (id, status, skylink, layout, title, items) {
+    updateAlbumItem: function (id, status, skylink, layout) {
       const index = this.items.findIndex((item) => item.id === id);
       this.items[index].status = status;
       this.items[index].skylink = skylink;
       this.items[index].layout = layout;
-      this.items[index].title = title;
-      this.items[index].items = items;
     },
   },
 };

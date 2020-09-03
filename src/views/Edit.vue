@@ -158,15 +158,12 @@ export default {
             newName: file.name,
             skylinks: file.skylinks,
             log: "",
+            value: file.value,
+            layout: file.layout,
+            skylink: file.skylink,
           };
-          if (file.type === "title") {
-            item.value = file.value;
-          } else {
-            if (file.skylinks.thumbnail)
-              item.thumbnail = file.skylinks.thumbnail;
-            if (file.type === "video")
-              item.videoUrl = `/${file.skylinks.source}`;
-          }
+          if (file.skylinks) item.thumbnail = file.skylinks.thumbnail;
+          if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;
           this.items.push(item);
         });
         this.albumTitle = data.title;
