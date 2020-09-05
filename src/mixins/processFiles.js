@@ -10,7 +10,6 @@ export const processFiles = {
           filename: file.name,
           status: "queued",
           log: "Added\n",
-          type: "image",
           progress: 0.0,
           skylinks: {},
         };
@@ -20,6 +19,7 @@ export const processFiles = {
           if (file.size >= 52428800) item.status = "toobig";
         } else if (/^video\//.test(file.type)) {
           item.type = "video";
+          item.canplay = false;
           // if file is larger than 500MiB.
           if (file.size >= 524288000) item.status = "toobig";
           item.videoUrl = URL.createObjectURL(file);

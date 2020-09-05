@@ -68,7 +68,7 @@
               color="success"
               small
               class="thumbnail-btn"
-              @click="generateVideoThumbnail(item.id)"
+              @click="generateVideoThumbnail(item)"
               >Set as thumbnail</v-btn
             >
             <v-btn
@@ -228,7 +228,7 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
-  z-index: 2;
+  z-index: 3;
 }
 
 .dragcol.sortable-chosen.sortable-ghost.title {
@@ -317,7 +317,9 @@ export default {
 
     videoCanplay: function (item, event) {
       if (item.skylinks.thumbnail) return;
-      this.generateVideoThumbnail(item.id, event.target);
+      item.canplay = true;
+      item.videoElement = event.target;
+      this.generateThumbnails();
     },
 
     albumInput: function () {
@@ -382,6 +384,11 @@ export default {
       this.items[index].status = status;
       this.items[index].skylink = skylink;
       this.items[index].layout = layout;
+    },
+
+    generateVideoThumbnail: function (item) {
+      item.status = "queued";
+      this.generateThumbnails();
     },
   },
 };

@@ -191,7 +191,9 @@
         :key="index"
         :class="itemsClass(item.type)"
       >
-        <h1 v-if="item.type === 'title'">{{ item.value }}</h1>
+        <h1 v-if="item.type === 'title'" class="title text-h4">
+          {{ item.value }}
+        </h1>
         <v-card
           v-else-if="item.type === 'album'"
           :href="`#/a/${item.skylink}`"
@@ -209,7 +211,7 @@
           :id="`img-${index}`"
         >
           <v-img
-            :src="`/${imageSource(item)}`"
+            :src="`/${item.skylinks.thumbnail}`"
             :aspect-ratio="4 / 3"
             class="align-end"
           >
@@ -382,6 +384,10 @@
   left: 50%;
   z-index: 1;
 }
+
+h1.title {
+  margin-top: 1rem;
+}
 </style>
 
 <script>
@@ -415,20 +421,11 @@ export default {
   },
 
   methods: {
-    imageSource: function (file) {
-      return file.skylinks.thumbnail
-        ? file.skylinks.thumbnail
-        : file.skylinks.source;
-    },
     setImgloading: function () {
       this.imgloaded = false;
       setTimeout(() => {
         if (!this.imgloaded) this.imgloading = true;
       }, 100);
-    },
-    openLink: function (link) {
-      let win = window.open(link);
-      win.focus();
     },
     selectLink: function (event) {
       this.tooltipText = "Click to copy to clipboard";
