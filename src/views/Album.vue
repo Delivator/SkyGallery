@@ -132,23 +132,6 @@
                 <template v-slot:activator="{ on }">
                   <v-list-item
                     v-on="on"
-                    @click="copyLink($event, hnsLink)"
-                    @mouseover="selectLink($event)"
-                  >
-                    <v-list-item-title @click="copyLink($event, hnsLink)"
-                      >HNS Link:
-                      <a class="share-link" :href="hnsLink">{{
-                        hnsLink
-                      }}</a></v-list-item-title
-                    >
-                  </v-list-item>
-                </template>
-                <span>{{ tooltipText }}</span>
-              </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <v-list-item
-                    v-on="on"
                     @click="copyLink($event, directLink)"
                     @mouseover="selectLink($event)"
                   >
@@ -156,6 +139,23 @@
                       >Direct Link:
                       <a class="share-link" :href="directLink">{{
                         directLink
+                      }}</a></v-list-item-title
+                    >
+                  </v-list-item>
+                </template>
+                <span>{{ tooltipText }}</span>
+              </v-tooltip>
+              <v-tooltip top v-if="!directLink.includes('/hns/')">
+                <template v-slot:activator="{ on }">
+                  <v-list-item
+                    v-on="on"
+                    @click="copyLink($event, hnsLink)"
+                    @mouseover="selectLink($event)"
+                  >
+                    <v-list-item-title @click="copyLink($event, hnsLink)"
+                      >HNS Link:
+                      <a class="share-link" :href="hnsLink">{{
+                        hnsLink
                       }}</a></v-list-item-title
                     >
                   </v-list-item>
@@ -540,7 +540,7 @@ export default {
 
   computed: {
     directLink: () => {
-      return document.location.href;
+      return location.href;
     },
 
     shortLink: function () {
@@ -548,7 +548,7 @@ export default {
     },
 
     hnsLink: function () {
-      return `${location.origin}/hns/skygallery/${this.albumId}`;
+      return `${location.origin}/hns/skygallery/#/a/${this.albumId}`;
     },
 
     embedCode: () => {
