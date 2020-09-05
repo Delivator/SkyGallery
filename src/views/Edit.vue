@@ -161,6 +161,7 @@ export default {
             value: file.value,
             layout: file.layout,
             skylink: file.skylink,
+            newTab: file.newTab,
           };
           if (file.skylinks) item.thumbnail = file.skylinks.thumbnail;
           if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;

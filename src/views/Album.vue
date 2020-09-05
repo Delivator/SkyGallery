@@ -195,10 +195,18 @@
           {{ item.value }}
         </h1>
         <v-card
-          v-else-if="item.type === 'album'"
+          v-else-if="item.type === 'album' && item.newTab"
           :href="`#/a/${item.skylink}`"
           target="_blank"
           rel="noopener noreferrer"
+        >
+          <v-responsive :aspect-ratio="4 / 3">
+            <AlbumCardGrid :layout="item.layout" :skylink="item.skylink" />
+          </v-responsive>
+        </v-card>
+        <v-card
+          v-else-if="item.type === 'album' && !item.newTab"
+          :to="`/a/${item.skylink}`"
         >
           <v-responsive :aspect-ratio="4 / 3">
             <AlbumCardGrid :layout="item.layout" :skylink="item.skylink" />
@@ -494,26 +502,23 @@ export default {
         this.showFullImg = false;
       }
     },
-  },
 
-  beforeMount: function () {
-    if (this.$route.params && this.$route.params.id)
-      this.albumId = this.$route.params.id;
-
-    if (this.albumId === "") {
-      this.$router.push("/");
-      this.alertBox.send("info", "No album ID provided");
-      return;
-    }
-
-    this.getAlbumData(this.albumId)
-      .then((data) => {
-        // if (data.version !== "0.0.5") return;
-        this.loading = false;
-        this.files = data.files;
-        this.albumTitle = data.title;
-      })
-      .catch(() => this.alertBox.send("error", "Error getting album data"));
+    loadAlbum: function (albumId) {
+      if (!albumId) albumId = this.albumId;
+      if (albumId === "") {
+        this.$router.push("/");
+        this.alertBox.send("info", "No album ID provided");
+        return;
+      }
+      this.loading = true;
+      this.getAlbumData(albumId)
+        .then((data) => {
+          this.loading = false;
+          this.files = data.files;
+          this.albumTitle = data.title;
+        })
+        .catch(() => this.alertBox.send("error", "Error getting album data"));
+    },
   },
 
   computed: {
@@ -531,6 +536,24 @@ export default {
   },
 
   mounted: function () {
+    if (this.$route.params && this.$route.params.id)
+      this.albumId = this.$route.params.id;
+    this.loadAlbum();
+
+    this.$router.beforeEach((to, from, next) => {
+      if (!to.path.startsWith("/a/")) return next();
+      const newSkylink = this.extractAlbumSkylink(to.path);
+      console.log(to, from, newSkylink);
+      if (newSkylink) this.loadAlbum(newSkylink);
+      next();
+    });
+
+    // window.addEventListener("hashchange", () => {
+    //   const newSkylink = this.extractAlbumSkylink(location.href);
+    //   console.log("hashchange", newSkylink);
+    //   if (newSkylink && newSkylink !== this.albumId) this.loadAlbum(newSkylink);
+    // });
+
     document.addEventListener("keydown", (event) => {
       if (!this.showFullImg || this.files.length < 0) return;
       switch (event.key) {

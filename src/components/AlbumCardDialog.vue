@@ -20,6 +20,9 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" v-if="items.length > 0">
+              <v-switch v-model="newTab" label="Open in new tab"></v-switch>
+            </v-col>
+            <v-col cols="12" v-if="items.length > 0">
               <p class="text-h5 white--text">Select a layout</p>
               <v-row justify="center">
                 <v-col cols="3" @click="selectedLayout = 0">
@@ -159,6 +162,7 @@ export default {
       title: "",
       selectedLayout: 0,
       skylink: "",
+      newTab: false,
     };
   },
 
@@ -202,7 +206,8 @@ export default {
         this.itemId,
         "finished",
         this.skylink,
-        this.selectedLayout
+        this.selectedLayout,
+        this.newTab
       );
     },
 

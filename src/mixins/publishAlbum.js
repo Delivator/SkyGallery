@@ -20,6 +20,7 @@ export const publishAlbum = {
             value: file.value,
             layout: file.layout,
             skylink: file.skylink,
+            newTab: file.newTab,
           });
         });
       const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
