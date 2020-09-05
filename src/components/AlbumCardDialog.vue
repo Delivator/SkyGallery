@@ -120,6 +120,59 @@
                   </v-hover>
                 </v-col>
               </v-row>
+              <v-row justify="center" v-if="items.length > 1">
+                <v-col
+                  cols="3"
+                  offset="3"
+                  v-if="items.length > 1"
+                  @click="selectedLayout = 4"
+                >
+                  <v-hover v-slot:default="{ hover }">
+                    <v-responsive :aspect-ratio="4 / 3">
+                      <v-row dense class="layout-selector">
+                        <v-col cols="12">
+                          <v-sheet :color="sheetColor(hover, 4)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-sheet :color="sheetColor(hover, 4)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                      </v-row>
+                    </v-responsive>
+                  </v-hover>
+                </v-col>
+                <v-col
+                  cols="3"
+                  v-if="items.length > 2"
+                  @click="selectedLayout = 5"
+                >
+                  <v-hover v-slot:default="{ hover }">
+                    <v-responsive :aspect-ratio="4 / 3">
+                      <v-row dense class="layout-selector">
+                        <v-col cols="12">
+                          <v-sheet :color="sheetColor(hover, 5)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover, 5)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-sheet :color="sheetColor(hover, 5)" height="100%">
+                            &nbsp;
+                          </v-sheet>
+                        </v-col>
+                      </v-row>
+                    </v-responsive>
+                  </v-hover>
+                </v-col>
+                <v-spacer v-if="items.length > 3" />
+              </v-row>
             </v-col>
           </v-row>
         </v-container>

@@ -33,15 +33,14 @@
           @removeItem="items.splice(index, 1)"
           @updateAlbumItem="updateAlbumItem"
         />
-        <v-btn
-          class="remove-btn"
-          fab
-          small
-          color="error"
-          @click="items.splice(index, 1)"
-        >
-          <v-icon>delete</v-icon>
-        </v-btn>
+        <div class="remove-btn">
+          <v-btn fab small color="primary" @click="item.status = 'showdialog'">
+            <v-icon>edit</v-icon>
+          </v-btn>
+          <v-btn fab small color="error" @click="items.splice(index, 1)">
+            <v-icon>delete</v-icon>
+          </v-btn>
+        </div>
         <div class="drag-handle"></div>
         <v-responsive :aspect-ratio="4 / 3">
           <AlbumCardGrid :layout="item.layout" :skylink="item.skylink" />

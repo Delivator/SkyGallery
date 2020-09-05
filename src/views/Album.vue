@@ -202,7 +202,7 @@
         </span>
       </v-col>
     </v-row>
-    <v-row justify="center" v-if="files.length > 0" dense>
+    <v-row justify="center" v-if="!loading && files.length > 0" dense>
       <v-col
         v-for="(item, index) in files"
         :key="index"
@@ -252,7 +252,7 @@
       </v-col>
       <v-col v-if="isEmbed" cols="12"><div></div></v-col>
     </v-row>
-    <v-row v-if="files.length > 0 && !isEmbed">
+    <v-row v-if="!loading && files.length > 0 && !isEmbed">
       <v-col cols="12">
         <v-btn
           outlined
