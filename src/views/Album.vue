@@ -240,7 +240,6 @@
         <v-btn
           outlined
           :to="`/edit/${albumId}`"
-          :disabled="loading"
           :loading="loading"
           class="upload-btn"
         >
@@ -510,6 +509,7 @@ export default {
         this.alertBox.send("info", "No album ID provided");
         return;
       }
+      this.albumId = albumId;
       this.loading = true;
       this.getAlbumData(albumId)
         .then((data) => {
@@ -543,16 +543,9 @@ export default {
     this.$router.beforeEach((to, from, next) => {
       if (!to.path.startsWith("/a/")) return next();
       const newSkylink = this.extractAlbumSkylink(to.path);
-      console.log(to, from, newSkylink);
       if (newSkylink) this.loadAlbum(newSkylink);
       next();
     });
-
-    // window.addEventListener("hashchange", () => {
-    //   const newSkylink = this.extractAlbumSkylink(location.href);
-    //   console.log("hashchange", newSkylink);
-    //   if (newSkylink && newSkylink !== this.albumId) this.loadAlbum(newSkylink);
-    // });
 
     document.addEventListener("keydown", (event) => {
       if (!this.showFullImg || this.files.length < 0) return;

@@ -2,13 +2,14 @@ export const utils = {
   data() {
     return {
       skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
-      albumRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
+      albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
       albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
     };
   },
   methods: {
     extractAlbumSkylink(str) {
-      let skylink = str.match(this.albumIdRegex)[2];
+      if (!this.albumIdRegex.test(str)) return false;
+      const skylink = str.match(this.albumIdRegex)[2];
       return this.skylinkRegex.test(skylink) ? skylink : false;
     },
 
@@ -18,7 +19,7 @@ export const utils = {
           .then((res) => {
             if (res.ok && res.headers.has("skynet-file-metadata")) {
               let data = JSON.parse(res.headers.get("skynet-file-metadata"));
-              if (this.albumRegex.test(data.filename)) resolve(data);
+              if (this.albumFileRegex.test(data.filename)) resolve(data);
             } else {
               reject();
             }
