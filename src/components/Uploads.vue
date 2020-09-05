@@ -27,7 +27,7 @@
         v-else-if="item.type === 'album'"
         :loading="item.status !== 'finished'"
       >
-        <AlbumCard
+        <AlbumCardDialog
           :dialog="item.status === 'showdialog'"
           :itemId="item.id"
           @removeItem="items.splice(index, 1)"
@@ -249,7 +249,7 @@
 </style>
 
 <script>
-import AlbumCard from "./AlbumCard";
+import AlbumCardDialog from "./AlbumCardDialog";
 import AlbumCardGrid from "./AlbumCardGrid";
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
@@ -263,7 +263,7 @@ let addAlbumTimeout = null;
 
 export default {
   name: "Uploads",
-  components: { draggable, AlbumCard, AlbumCardGrid },
+  components: { draggable, AlbumCardDialog, AlbumCardGrid },
   props: ["items", "setItems", "selectTitle", "drag", "isMobile"],
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 
