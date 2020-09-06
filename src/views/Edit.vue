@@ -21,7 +21,7 @@
             single-line
             :loading="loading"
             :disabled="loading"
-            @focus="selectTitle($event, 'Untitled Album')"
+            @focus="selectText($event, 'Untitled Album')"
             ref="titleInput"
             tabindex="100"
           >
@@ -50,7 +50,6 @@
       v-if="!loading"
       :items="items"
       :setItems="setItems"
-      :selectTitle="selectTitle"
       :drag.sync="drag"
     />
     <v-row v-if="!loading && !isIntersecting" justify="center">
@@ -113,9 +112,6 @@ export default {
   methods: {
     setItems(newItems) {
       this.items = newItems;
-    },
-    selectTitle(e, test) {
-      if (e.target.value === test) e.target.select();
     },
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;

@@ -48,5 +48,9 @@ export const utils = {
         return "col-md-6 col-lg-4 col-xl-2 col-12";
       }
     },
+
+    selectText(event, test) {
+      if (event.target.value === test) event.target.select();
+    },
   },
 };

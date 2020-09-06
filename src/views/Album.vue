@@ -38,14 +38,46 @@
         loop
         autoplay
       ></video>
-      <v-btn
-        fab
-        small
-        class="close-full-btn"
-        color="error"
-        @click="showFullImg = false"
-        ><v-icon>close</v-icon></v-btn
-      >
+      <div class="full-top-right">
+        <v-menu offset-y bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              fab
+              text
+              small
+              class="full-menu-btn"
+              color="white"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              :href="`/${files[showFullIndex].skylinks.source}`"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <v-list-item-title>
+                Original <v-icon>launch</v-icon>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              :href="`/${files[showFullIndex].skylinks.thumbnail}`"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <v-list-item-title>
+                Thumbnail <v-icon>launch</v-icon>
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-btn fab text small color="error" @click="showFullImg = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+      </div>
       <div
         v-if="files.length > 1"
         :class="btnClass()"
@@ -64,24 +96,6 @@
       </div>
       <div class="fullscreen-footer text-center">
         <span class="headline">{{ files[showFullIndex].name }}</span>
-        <v-btn
-          small
-          outlined
-          color="primary"
-          :href="`/${files[showFullIndex].skylinks.source}`"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Original<v-icon>launch</v-icon></v-btn
-        >
-        <v-btn
-          small
-          outlined
-          color="primary"
-          :href="`/${files[showFullIndex].skylinks.thumbnail}`"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Thumbnail<v-icon>launch</v-icon></v-btn
-        >
       </div>
     </div>
     <v-row justify="center">
@@ -309,11 +323,15 @@
   left: 0;
 }
 
-.close-full-btn {
+.full-top-right {
   position: fixed;
   top: 1rem;
   right: 1rem;
   z-index: 11;
+}
+
+.full-menu-btn {
+  margin-right: 1rem;
 }
 
 .previous-btn,
@@ -418,7 +436,7 @@ h1.title {
 import { utils } from "../mixins/utils";
 import AlbumCardGrid from "../components/AlbumCardGrid";
 
-function selectText(node) {
+function selectTextRange(node) {
   const range = new Range();
   range.selectNodeContents(node);
   document.getSelection().removeAllRanges();
@@ -454,7 +472,7 @@ export default {
     selectLink: function (event) {
       this.tooltipText = "Click to copy to clipboard";
       let node = event.target.querySelector(".share-link, .embed-code");
-      if (node) selectText(node);
+      if (node) selectTextRange(node);
     },
     copyLink: function (event, copyText) {
       event.preventDefault();

@@ -22,6 +22,7 @@
         append-outer-icon="delete"
         @click:append-outer="items.splice(index, 1)"
         class="title"
+        @focus="selectText($event, item.value)"
       ></v-text-field>
       <v-card
         v-else-if="item.type === 'album'"
@@ -33,7 +34,13 @@
           @updateAlbumItem="updateAlbumItem"
         />
         <div class="remove-btn">
-          <v-btn fab small color="primary" @click="item.status = 'showdialog'">
+          <v-btn
+            class="edit-btn"
+            fab
+            small
+            color="primary"
+            @click="item.status = 'showdialog'"
+          >
             <v-icon>edit</v-icon>
           </v-btn>
           <v-btn fab small color="error" @click="items.splice(index, 1)">
@@ -119,7 +126,7 @@
                 dense
                 :value="item.newName"
                 @input="changeName(item.id, $event)"
-                @focus="selectTitle($event, item.newName)"
+                @focus="selectText($event, item.newName)"
                 autocomplete="off"
                 :tabindex="index + 101"
               ></v-text-field>
@@ -244,6 +251,10 @@
   bottom: 0.5rem;
   right: 0.5rem;
 }
+
+.edit-btn {
+  margin-right: 1rem;
+}
 </style>
 
 <script>
@@ -262,7 +273,7 @@ let addAlbumTimeout = null;
 export default {
   name: "Uploads",
   components: { draggable, AlbumCardDialog, AlbumCardGrid },
-  props: ["items", "setItems", "selectTitle", "drag", "isMobile"],
+  props: ["items", "setItems", "drag", "isMobile"],
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 
   data() {
