@@ -1,105 +1,14 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
-    <div
-      class="fullscreen-image"
+    <AlbumFullscreen
       v-if="showFullImg"
-      v-touch="{
-        left: () => showNext(),
-        right: () => showPrevious(),
-        up: () => (showFullImg = false),
-        down: () => (showFullImg = false),
-      }"
-      @mousewheel="fullscreenMousewheel($event)"
-      @click="closeFullscreen($event)"
-    >
-      <v-progress-circular
-        indeterminate="true"
-        v-if="imgloading && files[showFullIndex].type === 'image'"
-        class="imgloading translate-center"
-        color="primary"
-        size="100"
-        width="7"
-      ></v-progress-circular>
-      <img
-        v-if="files[showFullIndex].type === 'image'"
-        class="fullscreen-img translate-center"
-        :src="`/${files[showFullIndex].skylinks.source}`"
-        :alt="files[showFullIndex].name"
-        @load="
-          imgloading = false;
-          imgloaded = true;
-        "
-      />
-      <video
-        class="fullscreen-video translate-center"
-        v-if="files[showFullIndex].type === 'video'"
-        :src="`/${files[showFullIndex].skylinks.source}`"
-        controls
-        loop
-        autoplay
-      ></video>
-      <div
-        v-if="files.length > 1"
-        :class="btnClass()"
-        class="previous-btn"
-        @click="showPrevious()"
-      >
-        <v-icon size="64">navigate_before</v-icon>
-      </div>
-      <div
-        v-if="files.length > 1"
-        :class="btnClass()"
-        class="next-btn"
-        @click="showNext()"
-      >
-        <v-icon size="64">navigate_next</v-icon>
-      </div>
-      <div class="fullscreen-header text-center">
-        <span class="headline">{{ files[showFullIndex].name }}</span>
-        <div class="float-right">
-          <v-menu offset-y bottom transition="slide-y-transition">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                fab
-                text
-                small
-                class="full-menu-btn"
-                color="white"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon>more_vert</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                :href="`/${files[showFullIndex].skylinks.source}`"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <v-list-item-title>Original</v-list-item-title>
-                <v-list-item-icon>
-                  <v-icon>launch</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-              <v-list-item
-                :href="`/${files[showFullIndex].skylinks.thumbnail}`"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <v-list-item-title>Thumbnail</v-list-item-title>
-                <v-list-item-icon>
-                  <v-icon>launch</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-btn fab text small color="error" @click="showFullImg = false">
-            <v-icon>close</v-icon>
-          </v-btn>
-        </div>
-      </div>
-    </div>
+      :showFullIndex.sync="showFullIndex"
+      :showFullImg.sync="showFullImg"
+      :imgloading.sync="imgloading"
+      :imgloaded.sync="imgloaded"
+      :files="files"
+      @setImgloading="setImgloading"
+    />
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
         <v-progress-circular
@@ -285,6 +194,12 @@
   </v-container>
 </template>
 
+<style>
+.translate-center {
+  transform: translate(-50%, -50%);
+}
+</style>
+
 <style scoped>
 .v-card__title {
   background-color: rgba(27, 27, 27, 0.3);
@@ -312,98 +227,8 @@
   text-decoration: none;
 }
 
-.fullscreen-image {
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(0, 0, 0, 0.7);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  z-index: 10;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.full-top-right {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 11;
-}
-
-.full-menu-btn {
-  margin-right: 1rem;
-}
-
-.previous-btn,
-.next-btn {
-  position: absolute;
-  height: 100vh;
-  width: 10rem;
-  max-width: 12.5vw;
-  top: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.previous-btn:hover,
-.next-btn:hover {
-  opacity: 1;
-}
-
-.previous-btn {
-  left: 0;
-}
-
-.next-btn {
-  right: 0;
-}
-
-.previous-btn i {
-  position: fixed;
-  top: 50%;
-  left: 1rem;
-}
-
-.next-btn i {
-  position: fixed;
-  top: 50%;
-  right: 1rem;
-  z-index: 1;
-}
-
-.short {
-  height: 75vh;
-}
-
 .grayscale {
   filter: grayscale() blur(3px);
-}
-
-.fullscreen-header {
-  background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  padding: 1rem;
-  width: 100%;
-}
-
-.fullscreen-header > .v-btn {
-  margin: 0 0.5rem;
-}
-
-.translate-center {
-  transform: translate(-50%, -50%);
-}
-
-.fullscreen-video {
-  max-width: 100vw;
-  max-height: 100vh;
-  outline: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
 }
 
 .video-icon {
@@ -414,21 +239,6 @@
   padding: 1rem;
 }
 
-.fullscreen-img {
-  max-width: 100vw;
-  max-height: 100vh;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-}
-
-.imgloading {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-}
-
 h1.title {
   margin-top: 1rem;
 }
@@ -437,6 +247,7 @@ h1.title {
 <script>
 import { utils } from "../mixins/utils";
 import AlbumCardGrid from "../components/AlbumCardGrid";
+import AlbumFullscreen from "../components/AlbumFullscreen";
 
 function selectTextRange(node) {
   const range = new Range();
@@ -449,7 +260,7 @@ export default {
   name: "Album",
   mixins: [utils],
   props: ["showShare", "alertBox", "isEmbed"],
-  components: { AlbumCardGrid },
+  components: { AlbumCardGrid, AlbumFullscreen },
   data() {
     return {
       albumId: "",
@@ -471,11 +282,13 @@ export default {
         if (!this.imgloaded) this.imgloading = true;
       }, 100);
     },
+
     selectLink: function (event) {
       this.tooltipText = "Click to copy to clipboard";
       let node = event.target.querySelector(".share-link, .embed-code");
       if (node) selectTextRange(node);
     },
+
     copyLink: function (event, copyText) {
       event.preventDefault();
       event.stopPropagation();
@@ -485,58 +298,12 @@ export default {
         .then(() => (this.tooltipText = "Copied to clipboard"))
         .catch((error) => this.alertBox.send("error", error));
     },
+
     openFull: function (index) {
       this.setImgloading();
       this.showFullImg = true;
       this.showFullIndex = index;
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
-    },
-    showPrevious: function () {
-      if (this.files.length < 2) return;
-      if (this.showFullIndex <= 0) {
-        this.showFullIndex = this.files.length - 1;
-      } else {
-        this.showFullIndex = (this.showFullIndex - 1) % this.files.length;
-      }
-      // skip one if item is not an image or video
-      if (!/^(image|video)$/.test(this.files[this.showFullIndex].type))
-        return this.showPrevious();
-      this.setImgloading();
-      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
-    },
-    showNext: function () {
-      if (this.files.length < 2) return;
-      this.showFullIndex = (this.showFullIndex + 1) % this.files.length;
-      // skip one if item is not an image or video
-      if (!/^(image|video)$/.test(this.files[this.showFullIndex].type))
-        return this.showNext();
-      this.setImgloading();
-      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
-    },
-    fullscreenMousewheel: function (event) {
-      if (!event) return;
-      event.stopPropagation();
-      event.preventDefault();
-      if (event.deltaY > 0) {
-        this.showNext();
-      } else {
-        this.showPrevious();
-      }
-    },
-    btnClass: function () {
-      let file = this.files[this.showFullIndex];
-      if (file.type === "image") {
-        return "";
-      } else if (file.type === "video") {
-        return "short";
-      }
-    },
-
-    closeFullscreen: function (event) {
-      if (!event) return;
-      if (event.target.classList.contains("fullscreen-image")) {
-        this.showFullImg = false;
-      }
     },
 
     loadAlbum: function (albumId) {
@@ -586,23 +353,6 @@ export default {
       const newSkylink = this.extractAlbumSkylink(to.path);
       if (newSkylink) this.loadAlbum(newSkylink);
       next();
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (!this.showFullImg || this.files.length < 0) return;
-      switch (event.key) {
-        case "Escape":
-          this.showFullImg = false;
-          break;
-        case "ArrowLeft":
-          this.showPrevious();
-          break;
-        case "ArrowRight":
-          this.showNext();
-          break;
-        default:
-          break;
-      }
     });
   },
 };
