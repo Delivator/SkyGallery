@@ -82,6 +82,7 @@
 <script>
 import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
+import { utils } from "../mixins/utils";
 import Uploads from "@/components/Uploads.vue";
 import Dropzone from "@/components/Dropzone.vue";
 import UploadDialog from "@/components/UploadDialog.vue";
@@ -90,7 +91,7 @@ export default {
   name: "New",
   components: { Uploads, Dropzone, UploadDialog },
   props: ["version", "alertBox", "showShare", "isMobile"],
-  mixins: [publishAlbum, uploadBlob],
+  mixins: [publishAlbum, uploadBlob, utils],
   data() {
     return {
       items: [],

@@ -39,7 +39,7 @@
         autoplay
       ></video>
       <div class="full-top-right">
-        <v-menu offset-y bottom>
+        <v-menu offset-y bottom transition="slide-y-transition">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               fab
@@ -59,18 +59,20 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              <v-list-item-title>
-                Original <v-icon>launch</v-icon>
-              </v-list-item-title>
+              <v-list-item-title>Original</v-list-item-title>
+              <v-list-item-icon>
+                <v-icon>launch</v-icon>
+              </v-list-item-icon>
             </v-list-item>
             <v-list-item
               :href="`/${files[showFullIndex].skylinks.thumbnail}`"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <v-list-item-title>
-                Thumbnail <v-icon>launch</v-icon>
-              </v-list-item-title>
+              <v-list-item-title>Thumbnail</v-list-item-title>
+              <v-list-item-icon>
+                <v-icon>launch</v-icon>
+              </v-list-item-icon>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -94,7 +96,7 @@
       >
         <v-icon size="64">navigate_next</v-icon>
       </div>
-      <div class="fullscreen-footer text-center">
+      <div class="fullscreen-header text-center">
         <span class="headline">{{ files[showFullIndex].name }}</span>
       </div>
     </div>
@@ -379,7 +381,7 @@
   filter: grayscale() blur(3px);
 }
 
-.fullscreen-footer {
+.fullscreen-header {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
@@ -387,7 +389,7 @@
   width: 100%;
 }
 
-.fullscreen-footer > .v-btn {
+.fullscreen-header > .v-btn {
   margin: 0 0.5rem;
 }
 
