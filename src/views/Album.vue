@@ -38,48 +38,6 @@
         loop
         autoplay
       ></video>
-      <div class="full-top-right">
-        <v-menu offset-y bottom transition="slide-y-transition">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              fab
-              text
-              small
-              class="full-menu-btn"
-              color="white"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              :href="`/${files[showFullIndex].skylinks.source}`"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <v-list-item-title>Original</v-list-item-title>
-              <v-list-item-icon>
-                <v-icon>launch</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-            <v-list-item
-              :href="`/${files[showFullIndex].skylinks.thumbnail}`"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <v-list-item-title>Thumbnail</v-list-item-title>
-              <v-list-item-icon>
-                <v-icon>launch</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-        <v-btn fab text small color="error" @click="showFullImg = false">
-          <v-icon>close</v-icon>
-        </v-btn>
-      </div>
       <div
         v-if="files.length > 1"
         :class="btnClass()"
@@ -98,6 +56,48 @@
       </div>
       <div class="fullscreen-header text-center">
         <span class="headline">{{ files[showFullIndex].name }}</span>
+        <div class="float-right">
+          <v-menu offset-y bottom transition="slide-y-transition">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                fab
+                text
+                small
+                class="full-menu-btn"
+                color="white"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>more_vert</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                :href="`/${files[showFullIndex].skylinks.source}`"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <v-list-item-title>Original</v-list-item-title>
+                <v-list-item-icon>
+                  <v-icon>launch</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+              <v-list-item
+                :href="`/${files[showFullIndex].skylinks.thumbnail}`"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <v-list-item-title>Thumbnail</v-list-item-title>
+                <v-list-item-icon>
+                  <v-icon>launch</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-btn fab text small color="error" @click="showFullImg = false">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </div>
       </div>
     </div>
     <v-row justify="center">
