@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog :value="item.status === 'showdialog'" persistent max-width="600px">
     <v-card :loading="loading">
       <v-card-title>
         <span class="headline" v-if="title">Add "{{ title }}"</span>
@@ -20,12 +20,15 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" v-if="items.length > 0">
-              <v-switch v-model="newTab" label="Open in new tab"></v-switch>
+              <v-switch
+                v-model="item.newTab"
+                label="Open in new tab"
+              ></v-switch>
             </v-col>
             <v-col cols="12" v-if="items.length > 0">
               <p class="text-h5 white--text">Select a layout</p>
               <v-row justify="center">
-                <v-col cols="3" @click="selectedLayout = 0">
+                <v-col cols="3" @click="item.layout = 0">
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
                       <v-row dense class="layout-selector">
@@ -41,7 +44,7 @@
                 <v-col
                   cols="3"
                   v-if="items.length > 1"
-                  @click="selectedLayout = 1"
+                  @click="item.layout = 1"
                 >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
@@ -63,7 +66,7 @@
                 <v-col
                   cols="3"
                   v-if="items.length > 2"
-                  @click="selectedLayout = 2"
+                  @click="item.layout = 2"
                 >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
@@ -90,7 +93,7 @@
                 <v-col
                   cols="3"
                   v-if="items.length > 3"
-                  @click="selectedLayout = 3"
+                  @click="item.layout = 3"
                 >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
@@ -125,7 +128,7 @@
                   cols="3"
                   offset="3"
                   v-if="items.length > 1"
-                  @click="selectedLayout = 4"
+                  @click="item.layout = 4"
                 >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
@@ -147,7 +150,7 @@
                 <v-col
                   cols="3"
                   v-if="items.length > 2"
-                  @click="selectedLayout = 5"
+                  @click="item.layout = 5"
                 >
                   <v-hover v-slot:default="{ hover }">
                     <v-responsive :aspect-ratio="4 / 3">
@@ -180,7 +183,12 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="error" text @click="cancelDialog">Cancel</v-btn>
-        <v-btn color="blue darken-1" text @click="save" :loading="loading">
+        <v-btn
+          color="blue darken-1"
+          text
+          @click="item.status = 'finished'"
+          :loading="loading"
+        >
           Save
         </v-btn>
       </v-card-actions>
@@ -205,21 +213,41 @@ let linkInputTimeout = null;
 
 export default {
   mixins: [utils],
-  props: ["dialog", "itemId"],
+  props: ["item"],
   data() {
     return {
-      linkInput: "",
+      linkInput: this.item.skylink ? `sia://${this.item.skylink}` : "",
       loading: false,
       inputError: "",
       items: [],
       title: "",
-      selectedLayout: 0,
       skylink: "",
-      newTab: false,
     };
   },
 
+  beforeMount() {
+    if (this.item.skylink) this.loadAlbum(this.item.skylink);
+  },
+
   methods: {
+    loadAlbum(skylink) {
+      this.getAlbumData(skylink)
+        .then((data) => {
+          this.loading = false;
+          this.items = data.files.filter((item) => {
+            return /^(image|video)$/.test(item.type);
+          });
+          if (this.items.length < 1) return (this.inputError = "Empty album");
+          this.title = data.title;
+          this.inputError = "";
+          this.item.skylink = skylink;
+        })
+        .catch(() => {
+          this.loading = false;
+          this.alertBox.send("error", "Error getting album data");
+        });
+    },
+
     onInput() {
       if (linkInputTimeout !== null) clearTimeout(linkInputTimeout);
       if (!this.linkInput) return (this.inputError = "Required.");
@@ -231,41 +259,17 @@ export default {
           this.inputError = "Invalid skylink";
           return;
         }
-        this.getAlbumData(skylink)
-          .then((data) => {
-            this.loading = false;
-            this.items = data.files.filter((item) => {
-              return /^(image|video)$/.test(item.type);
-            });
-            if (this.items.length < 1) return (this.inputError = "Empty album");
-            this.title = data.title;
-            this.inputError = "";
-            this.skylink = skylink;
-          })
-          .catch(() => {
-            this.loading = false;
-            this.alertBox.send("error", "Error getting album data");
-          });
+        this.loadAlbum(skylink);
       }, 250);
     },
 
     cancelDialog() {
-      this.$emit("removeItem");
-    },
-
-    save() {
-      this.$emit(
-        "updateAlbumItem",
-        this.itemId,
-        "finished",
-        this.skylink,
-        this.selectedLayout,
-        this.newTab
-      );
+      this.item.status = "finished";
+      if (!this.item.skylink) this.$emit("removeItem");
     },
 
     sheetColor(hover, id) {
-      return hover || this.selectedLayout === id ? "primary" : "grey";
+      return hover || this.item.layout === id ? "primary" : "grey";
     },
   },
 };

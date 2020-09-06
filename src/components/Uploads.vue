@@ -28,8 +28,7 @@
         :loading="item.status !== 'finished'"
       >
         <AlbumCardDialog
-          :dialog="item.status === 'showdialog'"
-          :itemId="item.id"
+          :item="item"
           @removeItem="items.splice(index, 1)"
           @updateAlbumItem="updateAlbumItem"
         />
@@ -376,14 +375,6 @@ export default {
       if (!id) return;
       const index = this.items.findIndex((item) => item.id === id);
       if (index > -1) this.items.splice(index, 1);
-    },
-
-    updateAlbumItem: function (id, status, skylink, layout, newTab) {
-      const index = this.items.findIndex((item) => item.id === id);
-      this.items[index].status = status;
-      this.items[index].skylink = skylink;
-      this.items[index].layout = layout;
-      this.items[index].newTab = newTab;
     },
 
     generateVideoThumbnail: function (item) {

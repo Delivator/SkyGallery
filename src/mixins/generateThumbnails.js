@@ -50,7 +50,7 @@ export const generateThumbnails = {
         if (!item.skylinks.thumbnail) {
           item.videoElement.currentTime = 0;
         }
-        await sleep(500);
+        await sleep(250);
         canvas
           .getContext("2d")
           .drawImage(item.videoElement, 0, 0, canvas.width, canvas.height);
