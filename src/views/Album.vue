@@ -305,7 +305,7 @@ export default {
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
 
-    loadAlbum: function (albumId) {
+    loadAlbum: async function (albumId) {
       if (!albumId) albumId = this.albumId;
       if (albumId === "") {
         this.$router.push("/");
@@ -314,16 +314,22 @@ export default {
       }
       this.albumId = albumId;
       this.loading = true;
-      this.getAlbumData(albumId)
-        .then((data) => {
-          this.loading = false;
-          this.showFullImg = false;
-          this.files = data.files;
-          this.albumTitle = data.title;
-          document.title = `${data.title.substr(0, 32)} - ${this.pageTitle}`;
-          this.$forceUpdate();
-        })
-        .catch(() => this.alertBox.send("error", "Error getting album data"));
+      try {
+        const data = await this.getAlbumData(albumId);
+        this.loading = false;
+        this.showFullImg = false;
+        this.files = data.files;
+        this.albumTitle = data.title;
+
+        if (data.title.length > 31)
+          data.title = `${data.title.substr(0, 32)}...`;
+
+        document.title = `"${data.title}" - ${this.pageTitle}`;
+
+        this.$forceUpdate();
+      } catch (error) {
+        this.alertBox.send("error", "Error getting album data");
+      }
     },
 
     directLink() {

@@ -29,7 +29,7 @@
         label="Change Skynet Portal"
         @change="changePortal"
         return-object
-        style="max-width: 12rem; top: 5px;"
+        style="max-width: 12rem; top: 5px"
         single-line
       ></v-select>
     </v-app-bar>
