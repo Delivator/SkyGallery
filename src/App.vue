@@ -8,7 +8,7 @@
           contain
           :src="require('./assets/skygallery_logo.svg')"
           transition="scale-transition"
-          width="40"
+          width="30"
         />
         <v-toolbar-title>SkyGallery</v-toolbar-title>
       </router-link>
@@ -29,7 +29,7 @@
         label="Change Skynet Portal"
         @change="changePortal"
         return-object
-        style="max-width: 12rem; top: 5px;"
+        style="max-width: 12rem; top: 5px"
         single-line
       ></v-select>
     </v-app-bar>
@@ -49,16 +49,16 @@
       </v-row>
     </v-container>
 
-    <v-content>
+    <v-main>
       <router-view
         :portals="portals"
-        :skylinkRegex="skylinkRegex"
         :version="version"
         :alertBox="alertBox"
         :showShare="showShare"
         :isEmbed="isEmbed"
+        :isMobile="isMobile"
       />
-    </v-content>
+    </v-main>
     <v-footer v-if="isEmbed" padless fixed>
       <v-row justify="center">
         <v-col class="py-3 text-center" cols="12" @click="openAlbum">
@@ -118,7 +118,7 @@
                 color="#FB542B"
                 small
                 dark
-                href="https://brave.com/sky969"
+                href="https://brave.com/sky643"
                 target="_blank"
                 rel="noopener noreferrer"
                 v-on="on"
@@ -145,13 +145,15 @@ html {
   overflow: auto;
 }
 
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar {
   background-color: #202020;
 }
 
 ::-webkit-scrollbar {
-  width: 13px;
-  background-color: #202020;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -193,7 +195,8 @@ html {
 </style>
 
 <script>
-import { MD5 } from "crypto-js";
+import sha256 from "crypto-js/sha256";
+import { isMobile } from "mobile-device-detect";
 import version from "../package.json";
 
 function inIframe() {
@@ -235,12 +238,12 @@ export default {
           link: "https://siasky.net",
         },
       ],
-      skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
       showShare: false,
       isEmbed: false,
       refHover: false,
       showRefTooltip: false,
       refVisible: false,
+      isMobile,
 
       alerts: [],
       alertBox: {
@@ -256,7 +259,7 @@ export default {
             console.error(message);
           }
 
-          let id = MD5(Math.random().toString()).toString();
+          let id = sha256(Math.random().toString()).toString();
 
           this.alerts.push({
             id,

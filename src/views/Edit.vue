@@ -1,5 +1,9 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
+    <uploadDialog
+      :unfinishedDialog.sync="unfinishedDialog"
+      :publish="publish"
+    />
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
         <v-progress-circular
@@ -10,14 +14,14 @@
         ></v-progress-circular>
       </v-col>
       <v-col v-else xl="4" md="6" cols="12">
-        <v-form @submit="publishAlbum($event)">
+        <v-form @submit="publish">
           <v-text-field
             class="headline"
             v-model="albumTitle"
             single-line
             :loading="loading"
             :disabled="loading"
-            @focus="selectTitle($event, 'Untitled Album')"
+            @focus="selectText($event, 'Untitled Album')"
             ref="titleInput"
             tabindex="100"
           >
@@ -27,7 +31,7 @@
                 text
                 icon
                 color="success"
-                @click="publishAlbum"
+                @click="publish"
                 :loading="loading"
               >
                 <v-icon>backup</v-icon>
@@ -39,19 +43,18 @@
     </v-row>
     <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" v-intersect="onIntersect" />
+        <dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
       </v-col>
     </v-row>
     <uploads
       v-if="!loading"
       :items="items"
-      :skylinkRegex="skylinkRegex"
       :setItems="setItems"
-      :selectTitle="selectTitle"
+      :drag.sync="drag"
     />
     <v-row v-if="!loading && !isIntersecting" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" />
+        <dropzone :items="items" :dragUpload="drag" />
       </v-col>
     </v-row>
     <v-row v-if="!loading && items.length > 0">
@@ -60,7 +63,7 @@
         <v-btn
           large
           color="success"
-          @click="publishAlbum"
+          @click="publish"
           :disabled="loading"
           :loading="loading"
           class="upload-btn"
@@ -81,18 +84,19 @@
 </style>
 
 <script>
+import uploadDialog from "@/components/UploadDialog.vue";
 import { publishAlbum } from "../mixins/publishAlbum";
 import { uploadBlob } from "../mixins/uploadBlob";
-import { getAlbum } from "../mixins/getAlbum";
+import { utils } from "../mixins/utils";
 import dropzone from "@/components/Dropzone.vue";
 import uploads from "@/components/Uploads.vue";
-import { MD5 } from "crypto-js";
+import sha256 from "crypto-js/sha256";
 
 export default {
   name: "Edit",
-  components: { uploads, dropzone },
-  mixins: [getAlbum, publishAlbum, uploadBlob],
-  props: ["alertBox", "skylinkRegex"],
+  components: { uploads, dropzone, uploadDialog },
+  mixins: [utils, publishAlbum, uploadBlob],
+  props: ["alertBox"],
   data() {
     return {
       albumId: "",
@@ -100,6 +104,8 @@ export default {
       albumTitle: "Album Title",
       loading: true,
       isIntersecting: false,
+      drag: false,
+      unfinishedDialog: false,
     };
   },
 
@@ -107,11 +113,27 @@ export default {
     setItems(newItems) {
       this.items = newItems;
     },
-    selectTitle(e, test) {
-      if (e.target.value === test) e.target.select();
-    },
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;
+    },
+    publish: function (event, force = false) {
+      if (event) event.preventDefault();
+
+      const unfinished = this.items.filter(
+        (item) => item.status !== "finished"
+      );
+      if (unfinished.length === 0 || force) {
+        const finished = this.items.filter(
+          (item) => item.status === "finished"
+        );
+        if (finished.length < 1) {
+          this.loading = false;
+          this.unfinishedDialog = false;
+          return;
+        }
+        this.publishAlbum();
+      }
+      this.unfinishedDialog = unfinished.length > 0;
     },
   },
 
@@ -124,15 +146,21 @@ export default {
         this.loading = false;
         data.files.forEach((file) => {
           let item = {
-            id: MD5(Math.random().toString()).toString(),
+            id: sha256(Math.random().toString()).toString(),
+            filename: file.filename,
             status: "finished",
             type: file.type,
             name: file.name,
             newName: file.name,
             skylinks: file.skylinks,
             log: "",
+            value: file.value,
+            layout: file.layout,
+            skylink: file.skylink,
+            newTab: file.newTab,
           };
-          if (file.skylinks.thumbnail) item.thumbnail = file.skylinks.thumbnail;
+          if (file.skylinks) item.thumbnail = file.skylinks.thumbnail;
+          if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;
           this.items.push(item);
         });
         this.albumTitle = data.title;

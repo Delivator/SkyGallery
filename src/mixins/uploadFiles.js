@@ -1,11 +1,11 @@
 export const uploadFiles = {
   methods: {
     async uploadFiles() {
-      // Max five uploads at once
+      // Max ten uploads at once
       if (
         this.items.filter(
           (item) => item.status === "uploading" || item.status === "uploaded"
-        ).length > 4
+        ).length > 9
       )
         return;
 
@@ -19,19 +19,21 @@ export const uploadFiles = {
       item.status = "uploading";
       item.log += "Uploading files... progress";
       let files = [[item.file, item.file.name]];
-      if (item.thumbnailBlob) {
+      if (item.thumbnailBlob && !item.skylinks.thumbnail) {
         let fileName = item.file.name.split(".").reverse();
+        fileName[0] = "jpg";
         fileName[1] += "-thumbnail";
         fileName = fileName.reverse().join(".");
         files.push([item.thumbnailBlob, fileName]);
       }
       await this.uploadBlobs(files, item.id, item)
         .then((skylinks) => {
+          Object.assign(item.skylinks, skylinks);
           if (skylinks.thumbnail) item.thumbnail = skylinks.thumbnail;
-          item.skylinks = skylinks;
           item.status = "finished";
           item.log = item.log.replace("progress", "");
           item.log += "done.\n";
+          this.$forceUpdate();
           this.uploadFiles();
         })
         .catch((error) => {

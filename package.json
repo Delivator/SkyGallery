@@ -1,14 +1,15 @@
 {
   "name": "skygallery",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "## Project setup ``` npm install ```",
   "author": "Delivator",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "publish": "vue-cli-service build && node upload_dist",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "vue-cli-service build && node deploy_skynet.js",
+    "publish": "node deploy_skynet.js"
   },
   "main": "src/main.js",
   "dependencies": {
@@ -16,6 +17,7 @@
     "browser-image-compression": "^1.0.12",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
+    "mobile-device-detect": "^0.4.3",
     "vue": "^2.6.12",
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.3",
@@ -23,7 +25,7 @@
     "vuetify": "^2.3.10"
   },
   "devDependencies": {
-    "@nebulous/skynet": "^2.0.0",
+    "@nebulous/skynet": "^1.1.0",
     "@vue/cli-plugin-babel": "~4.5.4",
     "@vue/cli-plugin-eslint": "~4.5.4",
     "@vue/cli-service": "~4.5.4",
@@ -33,6 +35,8 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^6.2.2",
+    "node-fetch": "^2.6.0",
+    "vue-cli-plugin-skynet": "~1.0.3",
     "prettier": "^2.1.1",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.2",

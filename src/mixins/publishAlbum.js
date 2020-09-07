@@ -1,9 +1,8 @@
-import { MD5 } from "crypto-js";
+import sha256 from "crypto-js/sha256";
 
 export const publishAlbum = {
   methods: {
-    publishAlbum(event) {
-      if (event) event.preventDefault();
+    publishAlbum() {
       let jsonData = {
         format: "skygallery",
         version: this.version,
@@ -17,15 +16,20 @@ export const publishAlbum = {
             type: file.type,
             skylinks: file.skylinks,
             name: file.newName,
+            filename: file.filename,
+            value: file.value,
+            layout: file.layout,
+            skylink: file.skylink,
+            newTab: file.newTab,
           });
         });
-      const blob = new Blob([JSON.stringify(jsonData)], {
+      const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
         type: "application/json",
       });
       this.loading = true;
       this.uploadBlob(
         blob,
-        `skygallery-${MD5(Math.random().toString()).toString()}.json`
+        `skygallery-${sha256(Math.random().toString()).toString()}.json`
       )
         .then((skylink) => {
           this.loading = false;

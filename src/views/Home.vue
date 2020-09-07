@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-center">
     <v-row>
-      <v-col cols="12" class="head">
+      <v-col cols="12" class="head" :class="`mobile-${isMobile}`">
         <h1 class="display-3">Welcome to SkyGallery</h1>
         <span class="subtitle-1"
           >Powered by
@@ -14,7 +14,7 @@
           ></span
         >
       </v-col>
-      <v-col cols="12" class="logo">
+      <v-col cols="12" class="logo" :class="`mobile-${isMobile}`">
         <v-img
           :src="require('../assets/skynet-logo-animated.svg')"
           contain
@@ -23,19 +23,20 @@
       </v-col>
       <v-col cols="12" class="subtext">
         <span class="display-1">
-          Start by creating a
+          Creating a
           <v-btn color="primary" to="new" outlined
             ><v-icon left>add</v-icon>new album</v-btn
           >
           or open an existing one
         </span>
         <v-text-field
-          single-line
-          placeholder="Paste Skynet or sia:// link"
-          outlined
-          style="width: 14rem;"
           @input="openAlbum"
+          outlined
+          single-line
+          autocomplete="off"
           v-model="linkInput"
+          style="width: 15rem;"
+          placeholder="Paste SkyGallery or sia:// link"
           :loading="loading"
           :error-messages="inputError"
         ></v-text-field>
@@ -51,29 +52,37 @@
 .subtext > span {
   margin-right: 1rem;
 }
-.head {
+.head.mobile-false {
   margin: 5rem 0;
 }
-.logo {
+.logo.mobile-false {
   margin-bottom: 5rem;
 }
 </style>
 
 <script>
-// @ is an alias to /src
-import { getAlbum } from "../mixins/getAlbum";
+import { utils } from "../mixins/utils";
 
 let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "skylinkRegex", "alertBox"],
-  mixins: [getAlbum],
+  props: ["portals", "alertBox", "isMobile"],
+  mixins: [utils],
   data: () => ({
     linkInput: "",
     loading: false,
     inputError: "",
   }),
+
+  mounted: function () {
+    document.addEventListener("dragenter", this.dragoverHandler);
+  },
+
+  beforeRouteLeave: function (to, from, next) {
+    document.removeEventListener("dragenter", this.dragoverHandler);
+    next();
+  },
 
   methods: {
     openAlbum: function () {
@@ -82,14 +91,8 @@ export default {
       if (!this.linkInput) return;
       openAlbumTimeout = setTimeout(() => {
         this.loading = true;
-        let skylink = this.linkInput.replace("sia://", "");
-        skylink = skylink.replace(document.location, "");
-        skylink = skylink.replace("a/", "");
-        this.portals.forEach((portal) => {
-          skylink = skylink.replace(portal.link, "");
-        });
-        skylink = skylink.replace(/\//g, "");
-        if (!this.skylinkRegex.test(skylink)) {
+        let skylink = this.extractAlbumSkylink(this.linkInput);
+        if (!skylink) {
           this.loading = false;
           this.inputError = "Invalid skylink";
           return (this.loading = false);
@@ -105,6 +108,11 @@ export default {
             this.loading = false;
           });
       }, 250);
+    },
+
+    dragoverHandler: function (event) {
+      if (event.dataTransfer && event.dataTransfer.files)
+        this.$router.push("/new");
     },
   },
 };
