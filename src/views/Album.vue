@@ -22,7 +22,7 @@
         <a
           v-if="isEmbed"
           class="display-2 title-link white--text"
-          :href="directLink"
+          :href="directLink()"
           target="_blank"
           rel="noopener noreferrer"
           >{{ albumTitle }}</a
@@ -57,20 +57,20 @@
                 <template v-slot:activator="{ on }">
                   <v-list-item
                     v-on="on"
-                    @click="copyLink($event, directLink)"
+                    @click="copyLink($event, directLink())"
                     @mouseover="selectLink($event)"
                   >
-                    <v-list-item-title @click="copyLink($event, directLink)"
-                      >Direct Link:
-                      <a class="share-link" :href="directLink">{{
-                        directLink
-                      }}</a></v-list-item-title
-                    >
+                    <v-list-item-title @click="copyLink($event, directLink())">
+                      Direct Link:
+                      <a class="share-link" :href="directLink()">
+                        {{ directLink() }}
+                      </a>
+                    </v-list-item-title>
                   </v-list-item>
                 </template>
                 <span>{{ tooltipText }}</span>
               </v-tooltip>
-              <v-tooltip top v-if="!directLink.includes('/hns/')">
+              <v-tooltip top v-if="!directLink().includes('/hns/')">
                 <template v-slot:activator="{ on }">
                   <v-list-item
                     v-on="on"
@@ -109,15 +109,13 @@
                 <template v-slot:activator="{ on }">
                   <v-list-item
                     v-on="on"
-                    @click="copyLink($event, embedCode)"
+                    @click="copyLink($event, embedCode())"
                     @mouseover="selectLink($event)"
                   >
-                    <v-list-item-title @click="copyLink($event, embedCode)"
-                      >Embed:
-                      <span class="embed-code">{{
-                        embedCode
-                      }}</span></v-list-item-title
-                    >
+                    <v-list-item-title @click="copyLink($event, embedCode())">
+                      Embed:
+                      <span class="embed-code">{{ embedCode() }}</span>
+                    </v-list-item-title>
                   </v-list-item>
                 </template>
                 <span>{{ tooltipText }}</span>
@@ -318,18 +316,24 @@ export default {
       this.getAlbumData(albumId)
         .then((data) => {
           this.loading = false;
+          this.showFullImg = false;
           this.files = data.files;
           this.albumTitle = data.title;
+          this.$forceUpdate();
         })
         .catch(() => this.alertBox.send("error", "Error getting album data"));
+    },
+
+    directLink() {
+      return location.href;
+    },
+
+    embedCode() {
+      return `<iframe src="${this.directLink()}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
     },
   },
 
   computed: {
-    directLink: () => {
-      return location.href;
-    },
-
     shortLink: function () {
       return `https://skygallery.xyz/a/${this.albumId}`;
     },
@@ -337,23 +341,18 @@ export default {
     hnsLink: function () {
       return `${location.origin}/hns/skygallery/#/a/${this.albumId}`;
     },
+  },
 
-    embedCode: () => {
-      return `<iframe src="${document.location}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
-    },
+  beforeRouteUpdate(to, from, next) {
+    const newSkylink = this.extractAlbumSkylink(to.path);
+    if (newSkylink && newSkylink !== this.albumId) this.loadAlbum(newSkylink);
+    next();
   },
 
   mounted: function () {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
     this.loadAlbum();
-
-    this.$router.beforeEach((to, from, next) => {
-      if (!to.path.startsWith("/a/")) return next();
-      const newSkylink = this.extractAlbumSkylink(to.path);
-      if (newSkylink) this.loadAlbum(newSkylink);
-      next();
-    });
   },
 };
 </script>
