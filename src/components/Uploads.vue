@@ -208,9 +208,12 @@
   margin-bottom: 1rem;
 }
 
-.drag-handle {
+.drag-handle,
+.v-input__icon--prepend {
   cursor: move;
   cursor: -webkit-grabbing;
+}
+.drag-handle {
   position: absolute;
   top: 0;
   width: 100%;
