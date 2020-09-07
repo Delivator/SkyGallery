@@ -270,6 +270,7 @@ export default {
       showFullIndex: 0,
       imgloaded: false,
       imgloading: false,
+      pageTitle: "SkyGallery - Media Gallery powered by Skynet",
     };
   },
 
@@ -319,6 +320,7 @@ export default {
           this.showFullImg = false;
           this.files = data.files;
           this.albumTitle = data.title;
+          document.title = `${data.title.substr(0, 32)} - ${this.pageTitle}`;
           this.$forceUpdate();
         })
         .catch(() => this.alertBox.send("error", "Error getting album data"));
@@ -331,6 +333,11 @@ export default {
     embedCode() {
       return `<iframe src="${this.directLink()}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
     },
+  },
+
+  beforeRouteLeave(to, from, next) {
+    document.title = this.pageTitle;
+    next();
   },
 
   computed: {
