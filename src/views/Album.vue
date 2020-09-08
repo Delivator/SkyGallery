@@ -136,6 +136,7 @@
         </h1>
         <v-card
           v-else-if="item.type === 'album' && item.newTab"
+          :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
           :href="`#/a/${item.skylink}`"
           target="_blank"
           rel="noopener noreferrer"
@@ -146,6 +147,7 @@
         </v-card>
         <v-card
           v-else-if="item.type === 'album' && !item.newTab"
+          :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
           :to="`/a/${item.skylink}`"
         >
           <v-responsive :aspect-ratio="4 / 3">

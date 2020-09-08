@@ -1,6 +1,10 @@
 <template>
   <div
-    v-if="files && files.length > 0"
+    v-if="
+      files &&
+      files.length > 0 &&
+      /^(image|video)$/.test(files[showFullIndex].type)
+    "
     class="fullscreen-image"
     v-touch="touchOptions"
     @mousewheel="fullscreenMousewheel($event)"
@@ -229,30 +233,26 @@ export default {
 
     showNext: function () {
       if (this.files.length < 2) return;
-      this.$emit(
-        "update:showFullIndex",
-        (this.showFullIndex + 1) % this.files.length
-      );
-      // skip one if item is not an image or video
-      if (!/^(image|video)$/.test(this.files[this.showFullIndex].type))
-        return this.showNext();
+      let newIndex = this.showFullIndex;
+      do {
+        newIndex = (newIndex + 1) % this.files.length;
+      } while (!/^(image|video)$/.test(this.files[newIndex].type));
+      this.$emit("update:showFullIndex", newIndex);
       this.$emit("setImgloading");
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
 
     showPrevious: function () {
       if (this.files.length < 2) return;
-      if (this.showFullIndex <= 0) {
-        this.$emit("update:showFullIndex", this.files.length - 1);
-      } else {
-        this.$emit(
-          "update:showFullIndex",
-          (this.showFullIndex - 1) % this.files.length
-        );
-      }
-      // skip one if item is not an image or video
-      if (!/^(image|video)$/.test(this.files[this.showFullIndex].type))
-        return this.showPrevious();
+      let newIndex = this.showFullIndex;
+      do {
+        if (newIndex <= 0) {
+          newIndex = this.files.length - 1;
+        } else {
+          newIndex--;
+        }
+      } while (!/^(image|video)$/.test(this.files[newIndex].type));
+      this.$emit("update:showFullIndex", newIndex);
       this.$emit("setImgloading");
       this.$vuetify.goTo(`#img-${this.showFullIndex}`);
     },
