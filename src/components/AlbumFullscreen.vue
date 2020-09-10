@@ -255,7 +255,7 @@ export default {
       } while (!/^(image|video)$/.test(this.files[newIndex].type));
       this.$emit("update:showFullIndex", newIndex);
       this.$emit("setImgloading");
-      this.$vuetify.goTo(`.img-${this.showFullIndex}`);
+      this.$vuetify.goTo(`.img-${newIndex}`);
     },
 
     fullscreenMousewheel(event) {
