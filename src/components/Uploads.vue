@@ -275,18 +275,12 @@ let addAlbumTimeout = null;
 
 export default {
   name: "Uploads",
-  components: { draggable, AlbumCardDialog, AlbumCardGrid },
   props: ["items", "setItems", "drag", "isMobile"],
+  components: { draggable, AlbumCardDialog, AlbumCardGrid },
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 
-  data() {
-    return {
-      addItemDialog: false,
-    };
-  },
-
   methods: {
-    thumbnailUrl: function (item) {
+    thumbnailUrl(item) {
       if (item.status === "editthumbnail") return "";
       let url = item.thumbnail;
       if (this.skylinkRegex.test(url)) {
@@ -296,7 +290,7 @@ export default {
       }
     },
 
-    changeName: function (id, newName) {
+    changeName(id, newName) {
       if (inputTimeout !== null) clearTimeout(inputTimeout);
       inputTimeout = setTimeout(() => {
         this.items.find((item) => item.id === id).newName = newName;
@@ -308,12 +302,12 @@ export default {
       this.setItems(this.items);
     },
 
-    uploadProgress: function (progress) {
+    uploadProgress(progress) {
       let prog = Math.floor(progress * 100);
       return prog === 100 ? "processing" : `${prog}%`;
     },
 
-    queueItem: function (item) {
+    queueItem(item) {
       if (item.type === "image") {
         item.status = "queued";
         this.generateThumbnails();
@@ -322,19 +316,19 @@ export default {
       }
     },
 
-    setThumbnail: function (item) {
+    setThumbnail(item) {
       item.status = "queued";
       this.generateThumbnails();
     },
 
-    videoCanplay: function (item, event) {
+    videoCanplay(item, event) {
       if (item.skylinks.thumbnail) return;
       item.canplay = true;
       item.videoElement = event.target;
       this.generateThumbnails();
     },
 
-    albumInput: function () {
+    albumInput() {
       if (addAlbumTimeout !== null) clearTimeout(addAlbumTimeout);
       this.inputError = "";
       if (!this.addAlbumURL) return;
@@ -366,7 +360,7 @@ export default {
       }, 250);
     },
 
-    addTitle: function () {
+    addTitle() {
       this.items.push({
         id: sha256(Math.random().toString()).toString(),
         type: "title",
@@ -375,7 +369,7 @@ export default {
       });
     },
 
-    addAlbumCard: function () {
+    addAlbumCard() {
       this.items.push({
         id: sha256(Math.random().toString()).toString(),
         type: "album",
@@ -385,13 +379,13 @@ export default {
       });
     },
 
-    removeItem: function (id) {
+    removeItem(id) {
       if (!id) return;
       const index = this.items.findIndex((item) => item.id === id);
       if (index > -1) this.items.splice(index, 1);
     },
 
-    generateVideoThumbnail: function (item) {
+    generateVideoThumbnail(item) {
       item.status = "queued";
       this.generateThumbnails();
     },

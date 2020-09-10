@@ -244,7 +244,6 @@ export default {
       showRefTooltip: false,
       refVisible: false,
       isMobile,
-
       alerts: [],
       alertBox: {
         show: false,
@@ -275,7 +274,37 @@ export default {
     };
   },
 
-  beforeMount: function () {
+  methods: {
+    changePortal(portal) {
+      let newUrl = new URL(portal.link);
+      document.location.href = document.location.href.replace(
+        document.location.origin,
+        newUrl.origin
+      );
+    },
+
+    openAlbum() {
+      let win = window.open(window.location);
+      win.focus();
+    },
+
+    refMouseover() {
+      this.showRefTooltip = false;
+      this.refHover = true;
+    },
+
+    refMouseleave() {
+      setTimeout(() => {
+        this.refHover = false;
+      }, 100);
+    },
+
+    refVisibility(isVisible) {
+      this.refVisible = isVisible;
+    },
+  },
+
+  beforeMount() {
     this.isEmbed = inIframe();
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
 
@@ -306,35 +335,5 @@ export default {
   //     this.showRefTooltip = true;
   //   }, 5000);
   // },
-
-  methods: {
-    changePortal: function (portal) {
-      let newUrl = new URL(portal.link);
-      document.location.href = document.location.href.replace(
-        document.location.origin,
-        newUrl.origin
-      );
-    },
-
-    openAlbum: function () {
-      let win = window.open(window.location);
-      win.focus();
-    },
-
-    refMouseover: function () {
-      this.showRefTooltip = false;
-      this.refHover = true;
-    },
-
-    refMouseleave: function () {
-      setTimeout(() => {
-        this.refHover = false;
-      }, 100);
-    },
-
-    refVisibility: function (isVisible) {
-      this.refVisible = isVisible;
-    },
-  },
 };
 </script>

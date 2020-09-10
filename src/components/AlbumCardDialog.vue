@@ -212,8 +212,9 @@ import { utils } from "../mixins/utils";
 let linkInputTimeout = null;
 
 export default {
-  mixins: [utils],
+  name: "AlbumCardDialog",
   props: ["item"],
+  mixins: [utils],
   data() {
     return {
       linkInput: this.item.skylink ? `sia://${this.item.skylink}` : "",
@@ -223,10 +224,6 @@ export default {
       title: "",
       skylink: "",
     };
-  },
-
-  beforeMount() {
-    if (this.item.skylink) this.loadAlbum(this.item.skylink);
   },
 
   methods: {
@@ -271,6 +268,10 @@ export default {
     sheetColor(hover, id) {
       return hover || this.item.layout === id ? "primary" : "grey";
     },
+  },
+
+  beforeMount() {
+    if (this.item.skylink) this.loadAlbum(this.item.skylink);
   },
 };
 </script>

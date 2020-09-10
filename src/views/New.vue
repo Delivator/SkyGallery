@@ -89,19 +89,17 @@ import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
   name: "New",
-  components: { Uploads, Dropzone, UploadDialog },
   props: ["version", "alertBox", "showShare", "isMobile"],
+  components: { Uploads, Dropzone, UploadDialog },
   mixins: [publishAlbum, uploadBlob, utils],
-  data() {
-    return {
-      items: [],
-      albumTitle: "Untitled Album",
-      loading: false,
-      isIntersecting: true,
-      unfinishedDialog: false,
-      drag: false,
-    };
-  },
+  data: () => ({
+    items: [],
+    albumTitle: "Untitled Album",
+    loading: false,
+    isIntersecting: true,
+    unfinishedDialog: false,
+    drag: false,
+  }),
 
   methods: {
     setItems(newItems) {
@@ -110,7 +108,7 @@ export default {
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;
     },
-    publish: function (event, force = false) {
+    publish(event, force = false) {
       if (event) event.preventDefault();
 
       const unfinished = this.items.filter(

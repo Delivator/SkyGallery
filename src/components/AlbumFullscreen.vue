@@ -201,6 +201,7 @@
 
 <script>
 export default {
+  name: "AlbumFullscreen",
   props: ["showFullIndex", "showFullImg", "imgloading", "imgloaded", "files"],
 
   data() {
@@ -215,14 +216,14 @@ export default {
   },
 
   methods: {
-    closeFullscreen: function (event) {
+    closeFullscreen(event) {
       if (!event) return;
       if (event.target.classList.contains("fullscreen-image")) {
         this.$emit("update:showFullImg", false);
       }
     },
 
-    btnClass: function () {
+    btnClass() {
       const file = this.files[this.showFullIndex];
       if (file.type === "image") {
         return "";
@@ -231,7 +232,7 @@ export default {
       }
     },
 
-    showNext: function () {
+    showNext() {
       if (this.files.length < 2) return;
       let newIndex = this.showFullIndex;
       do {
@@ -239,10 +240,10 @@ export default {
       } while (!/^(image|video)$/.test(this.files[newIndex].type));
       this.$emit("update:showFullIndex", newIndex);
       this.$emit("setImgloading");
-      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
+      this.$vuetify.goTo(`.img-${newIndex}`);
     },
 
-    showPrevious: function () {
+    showPrevious() {
       if (this.files.length < 2) return;
       let newIndex = this.showFullIndex;
       do {
@@ -254,10 +255,10 @@ export default {
       } while (!/^(image|video)$/.test(this.files[newIndex].type));
       this.$emit("update:showFullIndex", newIndex);
       this.$emit("setImgloading");
-      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
+      this.$vuetify.goTo(`.img-${this.showFullIndex}`);
     },
 
-    fullscreenMousewheel: function (event) {
+    fullscreenMousewheel(event) {
       if (!event) return;
       event.stopPropagation();
       event.preventDefault();

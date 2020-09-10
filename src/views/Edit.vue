@@ -94,20 +94,18 @@ import sha256 from "crypto-js/sha256";
 
 export default {
   name: "Edit",
+  props: ["alertBox"],
   components: { uploads, dropzone, uploadDialog },
   mixins: [utils, publishAlbum, uploadBlob],
-  props: ["alertBox"],
-  data() {
-    return {
-      albumId: "",
-      items: [],
-      albumTitle: "Album Title",
-      loading: true,
-      isIntersecting: false,
-      drag: false,
-      unfinishedDialog: false,
-    };
-  },
+  data: () => ({
+    albumId: "",
+    items: [],
+    albumTitle: "Album Title",
+    loading: true,
+    isIntersecting: false,
+    drag: false,
+    unfinishedDialog: false,
+  }),
 
   methods: {
     setItems(newItems) {
@@ -116,7 +114,7 @@ export default {
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;
     },
-    publish: function (event, force = false) {
+    publish(event, force = false) {
       if (event) event.preventDefault();
 
       const unfinished = this.items.filter(
@@ -137,7 +135,7 @@ export default {
     },
   },
 
-  beforeMount: function () {
+  beforeMount() {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
 

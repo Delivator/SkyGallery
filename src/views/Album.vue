@@ -154,12 +154,7 @@
             <AlbumCardGrid :layout="item.layout" :skylink="item.skylink" />
           </v-responsive>
         </v-card>
-        <v-card
-          v-else
-          @click="openFull(index)"
-          :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
-          :id="`img-${index}`"
-        >
+        <v-card v-else @click="openFull(index)" :class="cardClass(index)">
           <v-img
             :src="`/${item.skylinks.thumbnail}`"
             :aspect-ratio="4 / 3"
@@ -258,39 +253,37 @@ function selectTextRange(node) {
 
 export default {
   name: "Album",
-  mixins: [utils],
   props: ["showShare", "alertBox", "isEmbed"],
   components: { AlbumCardGrid, AlbumFullscreen },
-  data() {
-    return {
-      albumId: "",
-      files: [],
-      albumTitle: "Album Title",
-      loading: true,
-      tooltipText: "Click to copy to clipboard",
-      showFullImg: false,
-      showFullIndex: 0,
-      imgloaded: false,
-      imgloading: false,
-      pageTitle: "SkyGallery - Media Gallery powered by Skynet",
-    };
-  },
+  mixins: [utils],
+  data: () => ({
+    albumId: "",
+    files: [],
+    albumTitle: "Album Title",
+    loading: true,
+    tooltipText: "Click to copy to clipboard",
+    showFullImg: false,
+    showFullIndex: 0,
+    imgloaded: false,
+    imgloading: false,
+    pageTitle: "SkyGallery - Media Gallery powered by Skynet",
+  }),
 
   methods: {
-    setImgloading: function () {
+    setImgloading() {
       this.imgloaded = false;
       setTimeout(() => {
         if (!this.imgloaded) this.imgloading = true;
       }, 100);
     },
 
-    selectLink: function (event) {
+    selectLink(event) {
       this.tooltipText = "Click to copy to clipboard";
       let node = event.target.querySelector(".share-link, .embed-code");
       if (node) selectTextRange(node);
     },
 
-    copyLink: function (event, copyText) {
+    copyLink(event, copyText) {
       event.preventDefault();
       event.stopPropagation();
       if (!copyText) return;
@@ -300,16 +293,16 @@ export default {
         .catch((error) => this.alertBox.send("error", error));
     },
 
-    openFull: function (index) {
+    openFull(index) {
       this.setImgloading();
       this.showFullImg = true;
       this.showFullIndex = index;
-      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
+      this.$vuetify.goTo(`.img-${this.showFullIndex}`);
     },
 
-    loadAlbum: async function (albumId) {
+    async loadAlbum(albumId) {
       if (!albumId) albumId = this.albumId;
-      if (albumId === "") {
+      if (!albumId) {
         this.$router.push("/");
         this.alertBox.send("info", "No album ID provided");
         return;
@@ -329,6 +322,7 @@ export default {
         document.title = `"${data.title}" - ${this.pageTitle}`;
 
         this.$forceUpdate();
+        this.$vuetify.goTo(".v-main__wrap");
       } catch (error) {
         this.alertBox.send("error", "Error getting album data");
       }
@@ -341,21 +335,28 @@ export default {
     embedCode() {
       return `<iframe src="${this.directLink()}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
     },
+
+    cardClass(index) {
+      let className = `img-${index}`;
+      if (this.showFullImg && this.showFullIndex !== index)
+        className += " grayscale";
+      return className;
+    },
+  },
+
+  computed: {
+    shortLink() {
+      return `https://skygallery.xyz/a/${this.albumId}`;
+    },
+
+    hnsLink() {
+      return `${location.origin}/hns/skygallery/#/a/${this.albumId}`;
+    },
   },
 
   beforeRouteLeave(to, from, next) {
     document.title = this.pageTitle;
     next();
-  },
-
-  computed: {
-    shortLink: function () {
-      return `https://skygallery.xyz/a/${this.albumId}`;
-    },
-
-    hnsLink: function () {
-      return `${location.origin}/hns/skygallery/#/a/${this.albumId}`;
-    },
   },
 
   beforeRouteUpdate(to, from, next) {
@@ -364,7 +365,7 @@ export default {
     next();
   },
 
-  mounted: function () {
+  mounted() {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
     this.loadAlbum();

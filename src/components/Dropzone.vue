@@ -73,25 +73,11 @@ import { uploadBlob } from "../mixins/uploadBlob";
 
 export default {
   name: "Dropzone",
-  mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob],
   props: ["items", "dragUpload"],
-  data() {
-    return {
-      isDragOver: false,
-    };
-  },
-
-  created: function () {
-    document
-      .querySelector(".v-main__wrap")
-      .addEventListener("dragover", this.onDrag);
-  },
-
-  beforeDestroy: function () {
-    document
-      .querySelector(".v-main__wrap")
-      .removeEventListener("dragover", this.onDrag);
-  },
+  mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob],
+  data: () => ({
+    isDragOver: false,
+  }),
 
   methods: {
     preventEvent(e) {
@@ -117,6 +103,18 @@ export default {
       this.preventEvent(e);
       this.isDragOver = false;
     },
+  },
+
+  created() {
+    document
+      .querySelector(".v-main__wrap")
+      .addEventListener("dragover", this.onDrag);
+  },
+
+  beforeDestroy() {
+    document
+      .querySelector(".v-main__wrap")
+      .removeEventListener("dragover", this.onDrag);
   },
 };
 </script>

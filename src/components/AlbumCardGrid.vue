@@ -126,17 +126,16 @@
 import { utils } from "../mixins/utils";
 
 export default {
-  mixins: [utils],
+  name: "AlbumCardGrid",
   props: ["layout", "skylink"],
-  data: function () {
-    return {
-      items: [],
-      title: "",
-    };
-  },
+  mixins: [utils],
+  data: () => ({
+    items: [],
+    title: "",
+  }),
 
   methods: {
-    loadAlbum: function () {
+    loadAlbum() {
       if (!this.skylink) return;
       this.getAlbumData(this.skylink)
         .then((data) => {
@@ -150,12 +149,12 @@ export default {
   },
 
   watch: {
-    skylink: function () {
+    skylink() {
       this.loadAlbum();
     },
   },
 
-  beforeMount: function () {
+  beforeMount() {
     this.loadAlbum();
   },
 };

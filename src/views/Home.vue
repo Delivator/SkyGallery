@@ -75,17 +75,8 @@ export default {
     inputError: "",
   }),
 
-  mounted: function () {
-    document.addEventListener("dragenter", this.dragoverHandler);
-  },
-
-  beforeRouteLeave: function (to, from, next) {
-    document.removeEventListener("dragenter", this.dragoverHandler);
-    next();
-  },
-
   methods: {
-    openAlbum: function () {
+    openAlbum() {
       if (openAlbumTimeout !== null) clearTimeout(openAlbumTimeout);
       this.inputError = "";
       if (!this.linkInput) return;
@@ -110,10 +101,19 @@ export default {
       }, 250);
     },
 
-    dragoverHandler: function (event) {
+    dragoverHandler(event) {
       if (event.dataTransfer && event.dataTransfer.files)
         this.$router.push("/new");
     },
+  },
+
+  beforeRouteLeave(to, from, next) {
+    document.removeEventListener("dragenter", this.dragoverHandler);
+    next();
+  },
+
+  mounted() {
+    document.addEventListener("dragenter", this.dragoverHandler);
   },
 };
 </script>
