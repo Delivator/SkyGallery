@@ -39,11 +39,11 @@ export const utils = {
       });
     },
 
-    itemsClass(type) {
-      if (type === "title") {
-        return "title col-12";
+    itemsClass(item) {
+      if (item.type === "title") {
+        return `title col-12 item-${item.id}`;
       } else {
-        return "col-md-6 col-lg-4 col-xl-2 col-12";
+        return `col-md-6 col-lg-4 col-xl-2 col-12 item-${item.id}`;
       }
     },
 

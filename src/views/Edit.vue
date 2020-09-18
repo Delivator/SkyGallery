@@ -21,7 +21,7 @@
             single-line
             :loading="loading"
             :disabled="loading"
-            @focus="selectText($event, 'Untitled Album')"
+            @focus="selectText($event, albumTitle)"
             ref="titleInput"
             tabindex="100"
           >

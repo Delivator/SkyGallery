@@ -9,7 +9,7 @@
     <v-col
       v-for="(item, index) in items"
       :key="item.id"
-      :class="itemsClass(item.type)"
+      :class="itemsClass(item)"
       class="dragcol"
     >
       <v-text-field
@@ -360,6 +360,7 @@ export default {
         value: "New Title",
         status: "finished",
       });
+      this.$vuetify.goTo(".v-footer");
     },
 
     addAlbumCard() {
@@ -370,6 +371,7 @@ export default {
         layout: 0,
         status: "showdialog",
       });
+      this.$vuetify.goTo(".v-footer");
     },
 
     removeItem(id) {
