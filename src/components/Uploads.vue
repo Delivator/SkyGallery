@@ -86,7 +86,7 @@
               @click="item.status = 'finished'"
               v-if="item.type === 'video' && item.status === 'editthumbnail'"
             >
-              <v-icon>cancel</v-icon>
+              <v-icon>close</v-icon>
             </v-btn>
             <v-btn
               v-else
