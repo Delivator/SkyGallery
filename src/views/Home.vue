@@ -35,7 +35,7 @@
           single-line
           autocomplete="off"
           v-model="linkInput"
-          style="width: 15rem;"
+          style="width: 15rem"
           placeholder="Paste SkyGallery or sia:// link"
           :loading="loading"
           :error-messages="inputError"
