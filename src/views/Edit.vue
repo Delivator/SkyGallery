@@ -66,7 +66,7 @@
           @click="publish"
           :disabled="loading"
           :loading="loading"
-          class="upload-btn"
+          class="mt-4"
         >
           Publish your album
           <v-icon right>backup</v-icon>
@@ -76,12 +76,6 @@
     </v-row>
   </v-container>
 </template>
-
-<style scoped>
-.upload-btn {
-  margin-top: 1rem;
-}
-</style>
 
 <script>
 import uploadDialog from "@/components/UploadDialog.vue";

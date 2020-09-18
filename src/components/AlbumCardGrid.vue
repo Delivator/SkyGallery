@@ -1,6 +1,6 @@
 <template>
   <div v-if="skylink && items.length > 0">
-    <p class="title text-h5">{{ title }}</p>
+    <p class="title text-h5 pa-4">{{ title }}</p>
     <v-row v-if="layout === 0" no-gutters class="layout-selector">
       <v-col cols="12">
         <v-img
@@ -116,7 +116,6 @@
   position: absolute;
   z-index: 1;
   background-color: rgba(27, 27, 27, 0.3);
-  padding: 16px;
   display: flex;
   width: 100%;
 }

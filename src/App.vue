@@ -17,7 +17,7 @@
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-on="on" class="help-icon">help</v-icon>
+          <v-icon v-on="on" class="mr-4">help</v-icon>
         </template>
         <span>Got a slow portal?<br />Try a different one!</span>
       </v-tooltip>
@@ -187,10 +187,6 @@ html {
 
 .v-alert {
   pointer-events: all;
-}
-
-.help-icon {
-  margin-right: 1rem;
 }
 </style>
 

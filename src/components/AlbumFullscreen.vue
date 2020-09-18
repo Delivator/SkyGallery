@@ -49,7 +49,7 @@
     >
       <v-icon size="64">navigate_next</v-icon>
     </div>
-    <div class="fullscreen-header text-center">
+    <div class="fullscreen-header text-center pa-4">
       <span class="headline">{{ files[showFullIndex].name }}</span>
       <div class="float-right">
         <v-menu offset-y bottom transition="slide-y-transition">
@@ -58,7 +58,7 @@
               fab
               text
               small
-              class="full-menu-btn"
+              class="mr-4"
               color="white"
               v-bind="attrs"
               v-on="on"
@@ -108,12 +108,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
-  padding: 1rem;
   width: 100%;
-}
-
-.fullscreen-header > .v-btn {
-  margin: 0 0.5rem;
 }
 
 .fullscreen-image {
@@ -151,10 +146,6 @@
   position: fixed;
   top: 50%;
   left: 50%;
-}
-
-.full-menu-btn {
-  margin-right: 1rem;
 }
 
 .previous-btn,

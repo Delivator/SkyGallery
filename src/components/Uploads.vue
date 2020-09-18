@@ -35,7 +35,7 @@
         />
         <div class="remove-btn">
           <v-btn
-            class="edit-btn"
+            class="mr-4"
             fab
             small
             color="primary"
@@ -60,7 +60,7 @@
         >
           <div class="remove-btn">
             <v-btn
-              class="edit-btn"
+              class="mr-4"
               fab
               small
               color="success"
@@ -70,7 +70,7 @@
               <v-icon>done</v-icon>
             </v-btn>
             <v-btn
-              class="edit-btn"
+              class="mr-4"
               fab
               small
               color="primary"
@@ -80,7 +80,6 @@
               <v-icon>edit</v-icon>
             </v-btn>
             <v-btn
-              class="edit-btn"
               fab
               small
               color="error"
@@ -111,7 +110,7 @@
           <div v-else>
             <div class="drag-handle"></div>
             <code
-              class="file-log"
+              class="file-log pa-4"
               v-if="item.log && item.status !== 'editthumbnail'"
               >{{
                 item.log.replace("progress", uploadProgress(item.progress))
@@ -201,7 +200,6 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  padding: 1rem;
   white-space: pre;
 }
 
@@ -212,10 +210,6 @@
 .file-log::before,
 .file-log::after {
   content: none;
-}
-
-.bottom-text {
-  margin-bottom: 1rem;
 }
 
 .drag-handle,
@@ -256,10 +250,6 @@
 .add-extra-btn.mobile-true {
   bottom: 0.5rem;
   right: 0.5rem;
-}
-
-.edit-btn {
-  margin-right: 1rem;
 }
 </style>
 

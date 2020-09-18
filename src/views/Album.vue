@@ -131,7 +131,7 @@
         :key="index"
         :class="itemsClass(item.type)"
       >
-        <h1 v-if="item.type === 'title'" class="title text-h4">
+        <h1 v-if="item.type === 'title'" class="mt-6 text-h4">
           {{ item.value }}
         </h1>
         <v-card
@@ -162,7 +162,7 @@
           >
             <v-icon
               v-if="item.type === 'video'"
-              class="video-icon translate-center"
+              class="video-icon pa-4 translate-center"
               large
               >play_arrow</v-icon
             >
@@ -231,11 +231,6 @@
   top: 50%;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  padding: 1rem;
-}
-
-h1.title {
-  margin-top: 1rem;
 }
 </style>
 

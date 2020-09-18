@@ -22,7 +22,7 @@
         />
       </v-col>
       <v-col cols="12" class="subtext">
-        <span class="display-1">
+        <span class="display-1 mr-4">
           Creating a
           <v-btn color="primary" to="new" outlined
             ><v-icon left>add</v-icon>new album</v-btn
@@ -49,12 +49,11 @@
 .subtext > * {
   display: inline-block;
 }
-.subtext > span {
-  margin-right: 1rem;
-}
+
 .head.mobile-false {
   margin: 5rem 0;
 }
+
 .logo.mobile-false {
   margin-bottom: 5rem;
 }
