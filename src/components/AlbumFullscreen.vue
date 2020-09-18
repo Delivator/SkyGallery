@@ -35,7 +35,7 @@
     ></video>
     <div
       v-if="files.length > 1"
-      :class="btnClass"
+      :class="btnClass()"
       class="previous-btn"
       @click="showPrevious"
     >
@@ -43,7 +43,7 @@
     </div>
     <div
       v-if="files.length > 1"
-      :class="btnClass"
+      :class="btnClass()"
       class="next-btn"
       @click="showNext"
     >

@@ -58,32 +58,46 @@
           :aspect-ratio="4 / 3"
           class="align-end"
         >
-          <v-btn
-            class="remove-btn"
-            fab
-            small
-            color="error"
-            @click="items.splice(index, 1)"
-          >
-            <v-icon>delete</v-icon>
-          </v-btn>
-          <div v-if="item.type === 'video'">
+          <div class="remove-btn">
             <v-btn
-              v-if="item.status === 'editthumbnail'"
-              color="success"
+              class="edit-btn"
+              fab
               small
-              class="thumbnail-btn"
+              color="success"
               @click="generateVideoThumbnail(item)"
-              >Set as thumbnail</v-btn
+              v-if="item.type === 'video' && item.status === 'editthumbnail'"
             >
+              <v-icon>done</v-icon>
+            </v-btn>
             <v-btn
-              v-if="item.status === 'finished'"
-              color="success"
+              class="edit-btn"
+              fab
               small
-              class="thumbnail-btn"
+              color="primary"
               @click="item.status = 'editthumbnail'"
-              >Edit thumbnail</v-btn
+              v-if="item.type === 'video' && item.status === 'finished'"
             >
+              <v-icon>edit</v-icon>
+            </v-btn>
+            <v-btn
+              class="edit-btn"
+              fab
+              small
+              color="error"
+              @click="item.status = 'finished'"
+              v-if="item.type === 'video' && item.status === 'editthumbnail'"
+            >
+              <v-icon>cancel</v-icon>
+            </v-btn>
+            <v-btn
+              v-else
+              fab
+              small
+              color="error"
+              @click="items.splice(index, 1)"
+            >
+              <v-icon>delete</v-icon>
+            </v-btn>
           </div>
           <div v-if="item.status === 'toobig'" class="toobig">
             <h2 class="title">This file is bigger than 50MiB</h2>
@@ -98,7 +112,6 @@
             <div class="drag-handle"></div>
             <code
               class="file-log"
-              :class="`log-${item.status} log-${item.type}`"
               v-if="item.log && item.status !== 'editthumbnail'"
               >{{
                 item.log.replace("progress", uploadProgress(item.progress))
@@ -106,9 +119,10 @@
             >
             <video
               v-if="
-                item.type === 'video' && (item.videoUrl || item.skylinks.source)
+                item.type === 'video' &&
+                (item.videoUrl || item.skylinks.source) &&
+                item.status === 'editthumbnail'
               "
-              v-show="item.status === 'editthumbnail'"
               :src="item.videoUrl"
               class="video-card"
               muted
@@ -191,10 +205,6 @@
   white-space: pre;
 }
 
-.log-video.log-finished {
-  padding-top: 3rem;
-}
-
 .input-background {
   background-color: rgba(27, 27, 27, 0.3) !important;
 }
@@ -230,13 +240,6 @@
 
 .video-card {
   width: 100%;
-}
-
-.thumbnail-btn {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 3;
 }
 
 .dragcol.sortable-chosen.sortable-ghost.title {
