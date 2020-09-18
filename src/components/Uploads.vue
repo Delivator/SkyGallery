@@ -9,7 +9,7 @@
     <v-col
       v-for="(item, index) in items"
       :key="item.id"
-      :class="itemsClass(item)"
+      :class="itemsClass(item.type)"
       class="dragcol"
     >
       <v-text-field

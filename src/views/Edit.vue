@@ -88,7 +88,7 @@ import sha256 from "crypto-js/sha256";
 
 export default {
   name: "Edit",
-  props: ["alertBox"],
+  props: ["alertBox", "pageTitle"],
   components: { uploads, dropzone, uploadDialog },
   mixins: [utils, publishAlbum, uploadBlob],
   data: () => ({
@@ -156,8 +156,18 @@ export default {
           this.items.push(item);
         });
         this.albumTitle = data.title;
+
+        if (data.title.length > 31)
+          data.title = `${data.title.substr(0, 32)}...`;
+
+        document.title = `Editing "${data.title}" - ${this.pageTitle}`;
       })
       .catch((error) => this.alertBox.send("error", error));
+  },
+
+  beforeRouteLeave(to, from, next) {
+    document.title = this.pageTitle;
+    next();
   },
 };
 </script>

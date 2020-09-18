@@ -57,6 +57,7 @@
         :showShare="showShare"
         :isEmbed="isEmbed"
         :isMobile="isMobile"
+        :pageTitle="pageTitle"
       />
     </v-main>
     <v-footer v-if="isEmbed" padless fixed>
@@ -241,6 +242,7 @@ export default {
       refVisible: false,
       isMobile,
       alerts: [],
+      pageTitle: "SkyGallery - Media Gallery powered by Skynet",
       alertBox: {
         show: false,
         type: "info",

@@ -248,7 +248,7 @@ function selectTextRange(node) {
 
 export default {
   name: "Album",
-  props: ["showShare", "alertBox", "isEmbed"],
+  props: ["showShare", "alertBox", "isEmbed", "pageTitle"],
   components: { AlbumCardGrid, AlbumFullscreen },
   mixins: [utils],
   data: () => ({
@@ -261,7 +261,6 @@ export default {
     showFullIndex: 0,
     imgloaded: false,
     imgloading: false,
-    pageTitle: "SkyGallery - Media Gallery powered by Skynet",
   }),
 
   methods: {
