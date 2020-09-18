@@ -120,7 +120,7 @@
               v-if="
                 item.type === 'video' &&
                 (item.videoUrl || item.skylinks.source) &&
-                item.status === 'editthumbnail'
+                (item.status === 'editthumbnail' || item.status === 'queued')
               "
               :src="item.videoUrl"
               class="video-card"
