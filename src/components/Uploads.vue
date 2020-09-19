@@ -122,6 +122,7 @@
                 (item.videoUrl || item.skylinks.source) &&
                 (item.status === 'editthumbnail' || item.status === 'queued')
               "
+              v-show="item.status === 'editthumbnail'"
               :src="item.videoUrl"
               class="video-card"
               muted
