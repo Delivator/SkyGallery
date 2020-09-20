@@ -3,9 +3,8 @@ export const uploadFiles = {
     async uploadFiles() {
       // Max ten uploads at once
       if (
-        this.items.filter(
-          (item) => item.status === "uploading" || item.status === "uploaded"
-        ).length > 9
+        this.items.filter((item) => /^(uploading|uploaded)$/.test(item.status))
+          .length > 9
       )
         return;
 
