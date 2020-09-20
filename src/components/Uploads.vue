@@ -117,11 +117,7 @@
               }}</code
             >
             <video
-              v-if="
-                item.type === 'video' &&
-                (item.videoUrl || item.skylinks.source) &&
-                (item.status === 'editthumbnail' || item.status === 'queued')
-              "
+              v-if="showVideoElement(item)"
               v-show="item.status === 'editthumbnail'"
               :src="item.videoUrl"
               class="video-card"
@@ -265,7 +261,6 @@ import sha256 from "crypto-js/sha256";
 import draggable from "vuedraggable";
 
 let inputTimeout = null;
-let addAlbumTimeout = null;
 
 export default {
   name: "Uploads",
@@ -315,43 +310,9 @@ export default {
       this.generateThumbnails();
     },
 
-    videoCanplay(item, event) {
-      if (item.skylinks.thumbnail) return;
+    videoCanplay(item) {
       item.canplay = true;
-      item.videoElement = event.target;
       this.generateThumbnails();
-    },
-
-    albumInput() {
-      if (addAlbumTimeout !== null) clearTimeout(addAlbumTimeout);
-      this.inputError = "";
-      if (!this.addAlbumURL) return;
-      addAlbumTimeout = setTimeout(() => {
-        this.loading = true;
-        let skylink = this.linkInput.replace("sia://", "");
-        skylink = skylink.replace("https://skygallery.xyz/", "");
-        skylink = skylink.replace(document.location, "");
-        skylink = skylink.replace("a/", "");
-        this.portals.forEach((portal) => {
-          skylink = skylink.replace(portal.link, "");
-        });
-        skylink = skylink.replace(/\//g, "");
-        if (!this.skylinkRegex.test(skylink)) {
-          this.loading = false;
-          this.inputError = "Invalid skylink";
-          return (this.loading = false);
-        }
-        this.checkValidAlbum(skylink)
-          .then(() => {
-            this.loading = false;
-            this.$router.push("/a/" + skylink);
-          })
-          .catch((error) => {
-            this.alertBox.send("error", error);
-            this.inputError = "Error fetching album";
-            this.loading = false;
-          });
-      }, 250);
     },
 
     addTitle() {
@@ -384,6 +345,16 @@ export default {
     generateVideoThumbnail(item) {
       item.status = "queued";
       this.generateThumbnails();
+    },
+
+    showVideoElement(item) {
+      return (
+        item.type === "video" &&
+        (item.videoUrl || item.skylinks.source) &&
+        (item.status === "editthumbnail" ||
+          item.status === "processing" ||
+          item.status === "queued")
+      );
     },
   },
 };

@@ -4,6 +4,7 @@ export const utils = {
     albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
     albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
   }),
+
   methods: {
     extractAlbumSkylink(str) {
       if (!this.albumIdRegex.test(str)) return false;
