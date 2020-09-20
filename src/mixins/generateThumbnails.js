@@ -30,7 +30,7 @@ export const generateThumbnails = {
             item.thumbnailBlob = blob;
             item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
             item.status = "processed";
-            item.log += "done.\n";
+            item.log += "done.\nUploading files... ";
             this.$forceUpdate();
             this.uploadFiles();
             this.generateThumbnails();
@@ -61,27 +61,15 @@ export const generateThumbnails = {
           item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
           item.log += "done.\n";
 
-          let fileName = item.filename.split(".").reverse();
-          fileName[0] = "jpg";
-          fileName[1] += "-thumbnail";
-          fileName = fileName.reverse().join(".");
-
-          item.status = "uploading";
-          item.log += "Uploading thumbnail... ";
-
-          this.generateThumbnails();
-          let skylink = await this.uploadBlob(blob, fileName);
-          item.thumbnail = `${skylink}/${fileName}`;
-          item.skylinks.thumbnail = item.thumbnail;
-          item.log += "done.\n";
+          item.status = "processed";
 
           if (item.skylinks.source) {
-            item.status = "finished";
+            item.log += "Uploading thumbnail... ";
           } else {
-            item.status = "processed";
+            item.log += "Uploading files... ";
           }
-
           this.uploadFiles();
+          this.generateThumbnails();
         } catch (error) {
           console.error(error);
         }

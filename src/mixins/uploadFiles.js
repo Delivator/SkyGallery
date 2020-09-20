@@ -17,19 +17,21 @@ export const uploadFiles = {
       let item = this.items.find((el) => el.id === id);
 
       item.status = "uploading";
-      item.log += "Uploading files... progress";
+      item.log += "progress";
       let files = {};
 
       if (item.file && !item.skylinks.source)
         files.source = [item.file, item.file.name];
 
-      if (item.thumbnailBlob && !item.skylinks.thumbnail) {
+      if (item.thumbnailBlob) {
         let fileName = item.file.name.split(".").reverse();
         fileName[0] = "jpg";
         fileName[1] += "-thumbnail";
         fileName = fileName.reverse().join(".");
         files.thumbnail = [item.thumbnailBlob, fileName];
       }
+
+      if (files.length < 1) return;
       await this.uploadBlobs(files, item.id, item)
         .then((skylinks) => {
           console.log("uploadedBlobs", skylinks);
