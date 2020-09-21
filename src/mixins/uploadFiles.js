@@ -20,10 +20,10 @@ export const uploadFiles = {
       let files = {};
 
       if (item.file && !item.skylinks.source)
-        files.source = [item.file, item.file.name];
+        files.source = [item.file, item.filename];
 
       if (item.thumbnailBlob) {
-        let fileName = item.file.name.split(".").reverse();
+        let fileName = item.filename.split(".").reverse();
         fileName[0] = "jpg";
         fileName[1] += "-thumbnail";
         fileName = fileName.reverse().join(".");
@@ -33,7 +33,6 @@ export const uploadFiles = {
       if (files.length < 1) return;
       await this.uploadBlobs(files, item.id, item)
         .then((skylinks) => {
-          console.log("uploadedBlobs", skylinks);
           Object.assign(item.skylinks, skylinks);
           if (skylinks.thumbnail) item.thumbnail = skylinks.thumbnail;
           item.status = "finished";
