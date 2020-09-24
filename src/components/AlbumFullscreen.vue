@@ -32,6 +32,8 @@
       controls
       autoplay
       @ended="videoEnded"
+      @volumechange="volumechange"
+      @canplay="setvolume"
     ></video>
     <div
       v-if="files.length > 1"
@@ -69,7 +71,10 @@
           <v-list>
             <v-list-item>
               <v-list-item-action>
-                <v-switch @change="diashowSwitch" v-model="diashow">
+                <v-switch
+                  @change="diashowSwitch"
+                  v-model="userSettings.diashow"
+                >
                   <template v-slot:label>
                     <p class="ml-4 mb-0">Diashow/Autoplay</p>
                   </template>
@@ -214,7 +219,6 @@ export default {
         up: () => this.$emit("update:showFullImg", false),
         down: () => this.$emit("update:showFullImg", false),
       },
-      diashow: false,
     };
   },
 
@@ -276,7 +280,7 @@ export default {
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
       setTimeout(() => {
-        if (!this.diashow) return;
+        if (!this.userSettings.diashow) return;
         if (this.files[this.showFullIndex].type === "video") return;
         this.showNext();
       }, 5000);
@@ -285,17 +289,27 @@ export default {
     diashowSwitch(event) {
       this.setUserSettings({ diashow: event });
       setTimeout(() => {
-        if (!this.diashow) return;
+        if (!this.userSettings.diashow) return;
         if (this.files[this.showFullIndex].type === "video") return;
         this.showNext();
       }, 5000);
     },
 
     videoEnded(event) {
-      if (this.diashow) {
+      if (this.userSettings.diashow) {
         this.showNext();
       } else {
         event.target.play();
+      }
+    },
+
+    volumechange(event) {
+      this.setUserSettings({ volume: event.target.volume });
+    },
+
+    setvolume(event) {
+      if (this.userSettings.volume !== undefined) {
+        event.target.volume = this.userSettings.volume;
       }
     },
   },
@@ -317,8 +331,6 @@ export default {
           break;
       }
     });
-
-    if (this.userSettings.diashow) this.diashow = this.userSettings.diashow;
   },
 };
 </script>
