@@ -313,6 +313,7 @@ export default {
     setInterval(() => {
       if (!this.diashow) return;
       if (this.files[this.showFullIndex].type === "video") return;
+      if (this.imgloading) return;
       this.showNext();
     }, 5000);
   },
