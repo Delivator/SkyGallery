@@ -23,7 +23,7 @@
       class="fullscreen-img translate-center"
       :src="`/${files[showFullIndex].skylinks.source}`"
       :alt="files[showFullIndex].name"
-      @load="stopImgLoading"
+      @load="imgLoad"
     />
     <video
       class="fullscreen-video translate-center"
@@ -272,13 +272,23 @@ export default {
       }
     },
 
-    stopImgLoading() {
+    imgLoad() {
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
+      setTimeout(() => {
+        if (!this.diashow) return;
+        if (this.files[this.showFullIndex].type === "video") return;
+        this.showNext();
+      }, 5000);
     },
 
     diashowSwitch(event) {
       this.setUserSettings({ diashow: event });
+      setTimeout(() => {
+        if (!this.diashow) return;
+        if (this.files[this.showFullIndex].type === "video") return;
+        this.showNext();
+      }, 5000);
     },
 
     videoEnded(event) {
@@ -309,13 +319,6 @@ export default {
     });
 
     if (this.userSettings.diashow) this.diashow = this.userSettings.diashow;
-
-    setInterval(() => {
-      if (!this.diashow) return;
-      if (this.files[this.showFullIndex].type === "video") return;
-      if (this.imgloading) return;
-      this.showNext();
-    }, 5000);
   },
 };
 </script>
