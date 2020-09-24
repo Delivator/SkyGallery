@@ -219,6 +219,7 @@ export default {
         up: () => this.$emit("update:showFullImg", false),
         down: () => this.$emit("update:showFullImg", false),
       },
+      diashowTimeout: null,
     };
   },
 
@@ -279,7 +280,7 @@ export default {
     imgLoad() {
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
-      setTimeout(() => {
+      this.diashowTimeout = setTimeout(() => {
         if (!this.userSettings.diashow) return;
         if (this.files[this.showFullIndex].type === "video") return;
         this.showNext();
@@ -288,7 +289,8 @@ export default {
 
     diashowSwitch(event) {
       this.setUserSettings({ diashow: event });
-      setTimeout(() => {
+      clearTimeout(this.diashowTimeout);
+      this.diashowTimeout = setTimeout(() => {
         if (!this.userSettings.diashow) return;
         if (this.files[this.showFullIndex].type === "video") return;
         this.showNext();
