@@ -30,8 +30,8 @@
       v-if="files[showFullIndex].type === 'video'"
       :src="`/${files[showFullIndex].skylinks.source}`"
       controls
-      loop
       autoplay
+      @ended="videoEnded"
     ></video>
     <div
       v-if="files.length > 1"
@@ -67,6 +67,15 @@
             </v-btn>
           </template>
           <v-list>
+            <v-list-item>
+              <v-list-item-action>
+                <v-switch @change="diashowSwitch" v-model="diashow">
+                  <template v-slot:label>
+                    <p class="ml-4 mb-0">Diashow/Autoplay</p>
+                  </template>
+                </v-switch>
+              </v-list-item-action>
+            </v-list-item>
             <v-list-item
               :href="`/${files[showFullIndex].skylinks.source}`"
               target="_blank"
@@ -191,10 +200,12 @@
 </style>
 
 <script>
+import { utils } from "../mixins/utils";
+
 export default {
   name: "AlbumFullscreen",
   props: ["showFullIndex", "showFullImg", "imgloading", "imgloaded", "files"],
-
+  mixins: [utils],
   data() {
     return {
       touchOptions: {
@@ -203,6 +214,7 @@ export default {
         up: () => this.$emit("update:showFullImg", false),
         down: () => this.$emit("update:showFullImg", false),
       },
+      diashow: false,
     };
   },
 
@@ -264,6 +276,18 @@ export default {
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
     },
+
+    diashowSwitch(event) {
+      this.setUserSettings({ diashow: event });
+    },
+
+    videoEnded(event) {
+      if (this.diashow) {
+        this.showNext();
+      } else {
+        event.target.play();
+      }
+    },
   },
 
   mounted() {
@@ -283,6 +307,14 @@ export default {
           break;
       }
     });
+
+    if (this.userSettings.diashow) this.diashow = this.userSettings.diashow;
+
+    setInterval(() => {
+      if (!this.diashow) return;
+      if (this.files[this.showFullIndex].type === "video") return;
+      this.showNext();
+    }, 5000);
   },
 };
 </script>

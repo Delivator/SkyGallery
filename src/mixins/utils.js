@@ -3,6 +3,7 @@ export const utils = {
     skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
     albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
     albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
+    userSettings: {},
   }),
 
   methods: {
@@ -51,5 +52,24 @@ export const utils = {
     selectText(event, test) {
       if (event.target.value === test) event.target.select();
     },
+
+    loadUserSettings() {
+      const userSettings = localStorage.getItem("skygallery-settings");
+      if (userSettings) this.userSettings = JSON.parse(userSettings);
+      return userSettings;
+    },
+
+    setUserSettings(newSettings) {
+      if (!newSettings) return;
+      this.userSettings = Object.assign(this.userSettings, newSettings);
+      localStorage.setItem(
+        "skygallery-settings",
+        JSON.stringify(this.userSettings)
+      );
+    },
+  },
+
+  mounted() {
+    this.loadUserSettings();
   },
 };
