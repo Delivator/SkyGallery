@@ -17,6 +17,7 @@
     "browser-image-compression": "^1.0.12",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
+    "exif-js": "^2.3.0",
     "mobile-device-detect": "^0.4.3",
     "vue": "^2.6.12",
     "vue-observe-visibility": "^0.4.6",
