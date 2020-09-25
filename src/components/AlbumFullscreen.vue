@@ -7,8 +7,8 @@
     "
     class="fullscreen-image"
     v-touch="touchOptions"
-    @wheel="fullscreenMousewheel($event)"
-    @click="closeFullscreen($event)"
+    @wheel="fullscreenMousewheel"
+    @click="closeFullscreen"
   >
     <v-progress-circular
       indeterminate="true"
@@ -226,7 +226,6 @@ export default {
 
   methods: {
     closeFullscreen(event) {
-      if (!event) return;
       if (event.target.classList.contains("fullscreen-image")) {
         this.$emit("update:showFullImg", false);
       }
@@ -268,8 +267,6 @@ export default {
     },
 
     fullscreenMousewheel(event) {
-      if (!event) return;
-      event.stopPropagation();
       event.preventDefault();
       if (event.deltaY > 0) {
         this.showNext();

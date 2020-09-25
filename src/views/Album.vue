@@ -41,7 +41,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, shortLink)"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, shortLink)"
                       >Short Link:
@@ -58,7 +58,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, directLink())"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, directLink())">
                       Direct Link:
@@ -75,7 +75,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, hnsLink)"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, hnsLink)"
                       >HNS Link:
@@ -92,7 +92,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, `sia://${albumId}`)"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title
                       @click="copyLink($event, `sia://${albumId}`)"
@@ -110,7 +110,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, embedCode())"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, embedCode())">
                       Embed:

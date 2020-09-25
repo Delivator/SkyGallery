@@ -9,7 +9,7 @@
         <h1 class="display-2">Create a new Album</h1>
       </v-col>
       <v-col v-else xl="4" md="6" cols="12">
-        <v-form @submit="publish($event)">
+        <v-form @submit="publish">
           <v-text-field
             class="headline"
             v-model="albumTitle"
