@@ -7,7 +7,7 @@
     "
     class="fullscreen-image"
     v-touch="touchOptions"
-    @mousewheel="fullscreenMousewheel($event)"
+    @wheel="fullscreenMousewheel($event)"
     @click="closeFullscreen($event)"
   >
     <v-progress-circular
