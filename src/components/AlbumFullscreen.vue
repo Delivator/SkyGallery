@@ -206,6 +206,7 @@
 
 <script>
 import { utils } from "../mixins/utils";
+import EXIF from "exif-js";
 
 export default {
   name: "AlbumFullscreen",
@@ -277,7 +278,7 @@ export default {
       }
     },
 
-    imgLoad() {
+    imgLoad(event) {
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
       clearTimeout(this.diashowTimeout);
@@ -286,6 +287,10 @@ export default {
         if (this.files[this.showFullIndex].type === "video") return;
         this.showNext();
       }, 5000);
+      EXIF.getData(event.target, function () {
+        const allMetaData = EXIF.getAllTags(this);
+        console.log(JSON.stringify(allMetaData));
+      });
     },
 
     diashowSwitch(event) {
