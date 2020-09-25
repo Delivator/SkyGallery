@@ -280,6 +280,7 @@ export default {
     imgLoad() {
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
+      clearTimeout(this.diashowTimeout);
       this.diashowTimeout = setTimeout(() => {
         if (!this.userSettings.diashow) return;
         if (this.files[this.showFullIndex].type === "video") return;
