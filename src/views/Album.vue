@@ -9,7 +9,6 @@
       :files="files"
       @setImgloading="setImgloading"
     />
-    <FullscreenInfopanel v-if="showFullImg && userSettings.showInfo" />
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
         <v-progress-circular
@@ -239,7 +238,6 @@
 import { utils } from "../mixins/utils";
 import AlbumCardGrid from "../components/AlbumCardGrid";
 import AlbumFullscreen from "../components/AlbumFullscreen";
-import FullscreenInfopanel from "../components/FullscreenInfopanel";
 
 function selectTextRange(node) {
   const range = new Range();
@@ -251,7 +249,7 @@ function selectTextRange(node) {
 export default {
   name: "Album",
   props: ["showShare", "alertBox", "isEmbed", "pageTitle"],
-  components: { AlbumCardGrid, AlbumFullscreen, FullscreenInfopanel },
+  components: { AlbumCardGrid, AlbumFullscreen },
   mixins: [utils],
   data: () => ({
     albumId: "",

@@ -11,6 +11,7 @@
     @wheel="fullscreenMousewheel"
     @click="closeFullscreen"
   >
+    <FullscreenInfopanel :userSettings="userSettings" />
     <v-progress-circular
       indeterminate="true"
       v-if="imgloading && files[showFullIndex].type === 'image'"
@@ -54,7 +55,7 @@
     >
       <v-icon size="64">navigate_next</v-icon>
     </div>
-    <div class="fullscreen-header text-center pa-4">
+    <div class="fullscreen-header text-center pa-4" :class="showinfoClass()">
       <span class="headline">{{ files[showFullIndex].name }}</span>
       <div class="float-right">
         <v-btn
@@ -144,15 +145,17 @@
   transition: width 0.2s;
 }
 
-.fullscreen-view.showinfo.mobile-false {
-  width: 80vw;
-}
-
 .fullscreen-header {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
-  width: 100%;
+  width: 100vw;
+  transition: width 0.2s;
+}
+
+.fullscreen-view.showinfo.mobile-false,
+.fullscreen-header.showinfo.mobile-false {
+  width: calc(100vw - 360px);
 }
 
 .fullscreen-img {
@@ -160,11 +163,7 @@
   max-height: 100vh;
   position: fixed;
   top: 50%;
-}
-
-.fullscreen-img.showinfo.mobile-false,
-.fullscreen-video.showinfo.mobile-false {
-  max-width: 80vw;
+  transition: max-width 0.2s;
 }
 
 .fullscreen-video {
@@ -173,6 +172,12 @@
   outline: none;
   position: fixed;
   top: 50%;
+  transition: max-width 0.2s;
+}
+
+.fullscreen-img.showinfo.mobile-false,
+.fullscreen-video.showinfo.mobile-false {
+  max-width: calc(100vw - 360px);
 }
 
 .imgloading {
@@ -225,12 +230,14 @@
 </style>
 
 <script>
+import FullscreenInfopanel from "./FullscreenInfopanel";
 import { utils } from "../mixins/utils";
 import EXIF from "exif-js";
 
 export default {
   name: "AlbumFullscreen",
   props: ["showFullIndex", "showFullImg", "imgloading", "imgloaded", "files"],
+  components: { FullscreenInfopanel },
   mixins: [utils],
   data() {
     return {
