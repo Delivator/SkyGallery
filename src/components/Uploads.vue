@@ -154,7 +154,7 @@
           x-large
           v-on="on"
           v-bind="attrs"
-          :class="`mobile-${isMobile}`"
+          :class="`mobile-${$vuetify.breakpoint.mobile}`"
         >
           <v-icon>add</v-icon>
         </v-btn>

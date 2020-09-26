@@ -1,12 +1,9 @@
-import { isMobile } from "mobile-device-detect";
-
 export const utils = {
   data: () => ({
     skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
     albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
     albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
     userSettings: {},
-    isMobile,
   }),
 
   methods: {

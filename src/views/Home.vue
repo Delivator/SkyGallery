@@ -1,7 +1,11 @@
 <template>
   <v-container class="text-center">
     <v-row>
-      <v-col cols="12" class="head" :class="`mobile-${isMobile}`">
+      <v-col
+        cols="12"
+        class="head"
+        :class="`mobile-${$vuetify.breakpoint.mobile}`"
+      >
         <h1 class="display-3">Welcome to SkyGallery</h1>
         <span class="subtitle-1"
           >Powered by
@@ -14,7 +18,11 @@
           ></span
         >
       </v-col>
-      <v-col cols="12" class="logo" :class="`mobile-${isMobile}`">
+      <v-col
+        cols="12"
+        class="logo"
+        :class="`mobile-${$vuetify.breakpoint.mobile}`"
+      >
         <v-img
           :src="require('../assets/skynet-logo-animated.svg')"
           contain

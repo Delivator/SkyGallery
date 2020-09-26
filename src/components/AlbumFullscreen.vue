@@ -5,7 +5,7 @@
       files.length > 0 &&
       /^(image|video)$/.test(files[showFullIndex].type)
     "
-    class="fullscreen-image"
+    class="fullscreen-view"
     :class="showinfoClass()"
     v-touch="touchOptions"
     @wheel="fullscreenMousewheel"
@@ -130,14 +130,7 @@
 </template>
 
 <style scoped>
-.fullscreen-header {
-  background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-.fullscreen-image {
+.fullscreen-view {
   height: 100vh;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.7);
@@ -151,8 +144,15 @@
   transition: width 0.2s;
 }
 
-.fullscreen-image.showinfo.mobile-false {
+.fullscreen-view.showinfo.mobile-false {
   width: 80vw;
+}
+
+.fullscreen-header {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 .fullscreen-img {
@@ -246,7 +246,7 @@ export default {
 
   methods: {
     closeFullscreen(event) {
-      if (event.target.classList.contains("fullscreen-image")) {
+      if (event.target.classList.contains("fullscreen-view")) {
         this.$emit("update:showFullImg", false);
       }
     },
@@ -343,7 +343,7 @@ export default {
     },
 
     showinfoClass() {
-      let className = `mobile-${this.isMobile}`;
+      let className = `mobile-${this.$vuetify.breakpoint.mobile}`;
       if (this.userSettings.showInfo) className += " showinfo";
       return className;
     },

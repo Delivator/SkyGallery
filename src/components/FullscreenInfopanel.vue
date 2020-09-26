@@ -1,13 +1,27 @@
 <template>
-  
+  <div class="info-panel">
+    <!--  -->
+  </div>
 </template>
 
-<script>
-export default {
-  
+<style scoped>
+.info-panel {
+  position: fixed;
+  width: 20vw;
 }
-</script>
-
-<style>
-
 </style>
+
+<script>
+import { utils } from "../mixins/utils";
+
+export default {
+  name: "FullscreenInfopanel",
+  props: [],
+  mixins: [utils],
+  data() {
+    return {
+      diashowTimeout: null,
+    };
+  },
+};
+</script>
