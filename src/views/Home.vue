@@ -66,7 +66,7 @@ let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "alertBox", "isMobile"],
+  props: ["portals", "alertBox"],
   mixins: [utils],
   data: () => ({
     linkInput: "",

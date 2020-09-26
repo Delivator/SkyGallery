@@ -6,6 +6,7 @@
       /^(image|video)$/.test(files[showFullIndex].type)
     "
     class="fullscreen-image"
+    :class="showinfoClass()"
     v-touch="touchOptions"
     @wheel="fullscreenMousewheel"
     @click="closeFullscreen"
@@ -21,12 +22,14 @@
     <img
       v-if="files[showFullIndex].type === 'image'"
       class="fullscreen-img translate-center"
+      :class="showinfoClass()"
       :src="`/${files[showFullIndex].skylinks.source}`"
       :alt="files[showFullIndex].name"
       @load="imgLoad"
     />
     <video
       class="fullscreen-video translate-center"
+      :class="showinfoClass()"
       v-if="files[showFullIndex].type === 'video'"
       :src="`/${files[showFullIndex].skylinks.source}`"
       controls
@@ -54,6 +57,15 @@
     <div class="fullscreen-header text-center pa-4">
       <span class="headline">{{ files[showFullIndex].name }}</span>
       <div class="float-right">
+        <v-btn
+          fab
+          text
+          small
+          :color="userSettings.showInfo ? 'primary' : ''"
+          @click="toggleInfoPanel"
+        >
+          <v-icon>info</v-icon>
+        </v-btn>
         <v-menu offset-y bottom transition="slide-y-transition">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -136,13 +148,11 @@
   position: fixed;
   top: 0;
   left: 0;
+  transition: width 0.2s;
 }
 
-.imgloading {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
+.fullscreen-image.showinfo.mobile-false {
+  width: 80vw;
 }
 
 .fullscreen-img {
@@ -150,7 +160,11 @@
   max-height: 100vh;
   position: fixed;
   top: 50%;
-  left: 50%;
+}
+
+.fullscreen-img.showinfo.mobile-false,
+.fullscreen-video.showinfo.mobile-false {
+  max-width: 80vw;
 }
 
 .fullscreen-video {
@@ -159,7 +173,13 @@
   outline: none;
   position: fixed;
   top: 50%;
+}
+
+.imgloading {
+  position: fixed;
+  top: 50%;
   left: 50%;
+  z-index: 1;
 }
 
 .previous-btn,
@@ -193,7 +213,7 @@
 }
 
 .next-btn i {
-  position: fixed;
+  position: absolute;
   top: 50%;
   right: 1rem;
   z-index: 1;
@@ -316,6 +336,16 @@ export default {
       if (this.userSettings.volume !== undefined) {
         event.target.volume = this.userSettings.volume;
       }
+    },
+
+    toggleInfoPanel() {
+      this.setUserSettings({ showInfo: !this.userSettings.showInfo });
+    },
+
+    showinfoClass() {
+      let className = `mobile-${this.isMobile}`;
+      if (this.userSettings.showInfo) className += " showinfo";
+      return className;
     },
   },
 

@@ -264,7 +264,7 @@ let inputTimeout = null;
 
 export default {
   name: "Uploads",
-  props: ["items", "setItems", "drag", "isMobile"],
+  props: ["items", "setItems", "drag"],
   components: { draggable, AlbumCardDialog, AlbumCardGrid },
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
 

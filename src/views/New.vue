@@ -42,12 +42,7 @@
         <Dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
       </v-col>
     </v-row>
-    <Uploads
-      :items="items"
-      :setItems="setItems"
-      :drag.sync="drag"
-      :isMobile="isMobile"
-    />
+    <Uploads :items="items" :setItems="setItems" :drag.sync="drag" />
     <v-row justify="center" v-if="!isIntersecting">
       <v-col lg="4" md="6" cols="12">
         <Dropzone :items="items" :dragUpload="drag" />
@@ -83,7 +78,7 @@ import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
   name: "New",
-  props: ["version", "alertBox", "showShare", "isMobile"],
+  props: ["version", "alertBox", "showShare"],
   components: { Uploads, Dropzone, UploadDialog },
   mixins: [publishAlbum, uploadBlob, utils],
   data: () => ({

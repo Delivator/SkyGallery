@@ -56,7 +56,6 @@
         :alertBox="alertBox"
         :showShare="showShare"
         :isEmbed="isEmbed"
-        :isMobile="isMobile"
         :pageTitle="pageTitle"
       />
     </v-main>
@@ -193,7 +192,6 @@ html {
 
 <script>
 import sha256 from "crypto-js/sha256";
-import { isMobile } from "mobile-device-detect";
 import version from "../package.json";
 
 function inIframe() {
@@ -240,7 +238,6 @@ export default {
       refHover: false,
       showRefTooltip: false,
       refVisible: false,
-      isMobile,
       alerts: [],
       pageTitle: "SkyGallery - Media Gallery powered by Skynet",
       alertBox: {
