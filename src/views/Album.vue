@@ -1,6 +1,6 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
-    <AlbumFullscreen
+    <FullscreenView
       v-if="showFullImg"
       :showFullIndex.sync="showFullIndex"
       :showFullImg.sync="showFullImg"
@@ -237,7 +237,7 @@
 <script>
 import { utils } from "../mixins/utils";
 import AlbumCardGrid from "../components/AlbumCardGrid";
-import AlbumFullscreen from "../components/AlbumFullscreen";
+import FullscreenView from "../components/FullscreenView";
 
 function selectTextRange(node) {
   const range = new Range();
@@ -249,7 +249,7 @@ function selectTextRange(node) {
 export default {
   name: "Album",
   props: ["showShare", "alertBox", "isEmbed", "pageTitle"],
-  components: { AlbumCardGrid, AlbumFullscreen },
+  components: { AlbumCardGrid, FullscreenView },
   mixins: [utils],
   data: () => ({
     albumId: "",

@@ -235,7 +235,7 @@ import { utils } from "../mixins/utils";
 import EXIF from "exif-js";
 
 export default {
-  name: "AlbumFullscreen",
+  name: "FullscreenView",
   props: ["showFullIndex", "showFullImg", "imgloading", "imgloaded", "files"],
   components: { FullscreenInfopanel },
   mixins: [utils],

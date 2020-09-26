@@ -1,6 +1,6 @@
 <template>
   <div class="info-panel pa-6 text-left" :class="infoClass">
-    <span class="text-subtitle-1">File Info</span>
+    <span class="text-h6">File Info</span>
   </div>
 </template>
 
