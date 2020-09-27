@@ -316,6 +316,7 @@ export default {
 
         this.$forceUpdate();
         this.$vuetify.goTo(".v-main__wrap");
+        this.addRecentVisit(albumId, this.albumTitle);
       } catch (error) {
         this.alertBox.send("error", "Error getting album data");
       }
