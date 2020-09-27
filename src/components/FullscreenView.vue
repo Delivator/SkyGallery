@@ -46,6 +46,7 @@
       :class="btnClass()"
       class="previous-btn"
       @click="showPrevious"
+      v-touch="touchOptions"
     >
       <v-icon size="64">navigate_before</v-icon>
     </div>
@@ -54,6 +55,7 @@
       :class="btnClass()"
       class="next-btn"
       @click="showNext"
+      v-touch="touchOptions"
     >
       <v-icon size="64">navigate_next</v-icon>
     </div>
@@ -118,13 +120,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn
-          fab
-          text
-          small
-          color="error"
-          @click="$emit('update:showFullImg', false)"
-        >
+        <v-btn fab text small color="error" @click="closeFullscreen()">
           <v-icon>close</v-icon>
         </v-btn>
       </div>
@@ -246,8 +242,8 @@ export default {
       touchOptions: {
         left: () => this.showNext(),
         right: () => this.showPrevious(),
-        up: () => this.$emit("update:showFullImg", false),
-        down: () => this.$emit("update:showFullImg", false),
+        up: () => this.closeFullscreen(),
+        down: () => this.closeFullscreen(),
       },
       diashowTimeout: null,
     };
@@ -261,9 +257,9 @@ export default {
 
   methods: {
     closeFullscreen(event) {
-      if (event.target.classList.contains("fullscreen-view")) {
-        this.$emit("update:showFullImg", false);
-      }
+      if (event && !event.target.classList.contains("fullscreen-view")) return;
+      this.$emit("update:showFullImg", false);
+      clearTimeout(this.diashowTimeout);
     },
 
     btnClass() {
@@ -333,7 +329,6 @@ export default {
 
     diashowSwitch(event) {
       this.setUserSettings({ diashow: event });
-      clearTimeout(this.diashowTimeout);
       this.startDiashow();
     },
 
@@ -371,7 +366,7 @@ export default {
       if (!this.showFullImg || this.files.length < 0) return;
       switch (event.key) {
         case "Escape":
-          this.$emit("update:showFullImg", false);
+          this.closeFullscreen();
           break;
         case "ArrowLeft":
           this.showPrevious();
