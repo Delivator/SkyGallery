@@ -3,14 +3,13 @@
     v-if="files && files.length > 0 && /^(image|video)$/.test(item.type)"
     class="fullscreen-view"
     :class="showinfoClass()"
-    v-touch="touchOptions"
     @wheel="fullscreenMousewheel"
     @click="closeFullscreen"
   >
     <FullscreenInfopanel
       :userSettings="userSettings"
       :item="item"
-      :dimensions="[item.width, item.height]"
+      ref="infoPanel"
     />
     <v-progress-circular
       indeterminate="true"
@@ -28,6 +27,7 @@
       :alt="item.name"
       @load="imgLoad"
       :id="item.id"
+      v-touch="touchOptions"
     />
     <video
       class="fullscreen-video translate-center"
@@ -39,6 +39,7 @@
       @ended="videoEnded"
       @volumechange="volumechange"
       @canplay="setvolume"
+      v-touch="touchOptions"
     ></video>
     <div
       v-if="files.length > 1"
@@ -130,6 +131,12 @@
     </div>
   </div>
 </template>
+
+<style>
+html {
+  overflow: hidden !important;
+}
+</style>
 
 <style scoped>
 .fullscreen-view {
@@ -323,6 +330,7 @@ export default {
       });
       this.item.width = event.target.naturalWidth;
       this.item.height = event.target.naturalHeight;
+      this.$refs.infoPanel.$forceUpdate();
     },
 
     diashowSwitch(event) {

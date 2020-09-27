@@ -11,8 +11,11 @@
         <v-icon>image</v-icon>
       </v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-title>{{ item.filename }}</v-list-item-title>
-        <v-list-item-subtitle>{{ imageSize() }}</v-list-item-subtitle>
+        <v-list-item-title
+          :title="item.filename"
+          v-text="item.filename"
+        ></v-list-item-title>
+        <v-list-item-subtitle v-html="imageSize()"></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
   </div>
@@ -45,7 +48,7 @@ import { utils } from "../mixins/utils";
 
 export default {
   name: "FullscreenInfopanel",
-  props: ["userSettings", "item", "dimensions"],
+  props: ["userSettings", "item"],
   mixins: [utils],
 
   computed: {
@@ -55,9 +58,18 @@ export default {
   },
 
   methods: {
+    pxToMP() {
+      let mp = (this.item.width * this.item.height) / 10 ** 5;
+      mp = Math.round(mp) / 10;
+      return mp;
+    },
+
     imageSize() {
-      if (this.dimensions[0]) {
-        return `${this.dimensions[0]} x ${this.dimensions[1]}`;
+      if (this.item.width) {
+        const text =
+          `<span class="mr-3">${this.pxToMP()} MP</span>` +
+          `<span>${this.item.width} x ${this.item.height}</span>`;
+        return text;
       } else {
         return "Loading...";
       }
