@@ -78,19 +78,25 @@ export const utils = {
       return userSettings;
     },
 
-    addRecentVisit(albumId) {
+    addRecentVisit(albumId, title) {
       let recentVisits = this.userSettings.recentVisits;
       recentVisits = recentVisits.filter((id) => id !== albumId);
-      recentVisits.unshift(albumId);
-      recentVisits.slice(0, 10);
+      recentVisits.unshift({
+        id: albumId,
+        title,
+        time: Date.now(),
+      });
+      recentVisits.slice(0, 25);
       this.setUserSettings({ recentVisits });
     },
 
-    addRecentCreated(albumId) {
+    addRecentCreated(albumId, title) {
       let recentCreated = this.userSettings.recentCreated;
-      recentCreated = recentCreated.filter((id) => id !== albumId);
-      recentCreated.unshift(albumId);
-      recentCreated.slice(0, 10);
+      recentCreated.unshift({
+        id: albumId,
+        title,
+        time: Date.now(),
+      });
       this.setUserSettings({ recentCreated });
     },
   },
