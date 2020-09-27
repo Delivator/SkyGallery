@@ -1,38 +1,39 @@
 <template>
   <div
-    v-if="
-      files &&
-      files.length > 0 &&
-      /^(image|video)$/.test(files[showFullIndex].type)
-    "
+    v-if="files && files.length > 0 && /^(image|video)$/.test(item.type)"
     class="fullscreen-view"
     :class="showinfoClass()"
     v-touch="touchOptions"
     @wheel="fullscreenMousewheel"
     @click="closeFullscreen"
   >
-    <FullscreenInfopanel :userSettings="userSettings" />
+    <FullscreenInfopanel
+      :userSettings="userSettings"
+      :item="item"
+      :dimensions="[item.width, item.height]"
+    />
     <v-progress-circular
       indeterminate="true"
-      v-if="imgloading && files[showFullIndex].type === 'image'"
+      v-if="imgloading && item.type === 'image'"
       class="imgloading translate-center"
       color="primary"
       size="100"
       width="7"
     ></v-progress-circular>
     <img
-      v-if="files[showFullIndex].type === 'image'"
+      v-if="item.type === 'image'"
       class="fullscreen-img translate-center"
       :class="showinfoClass()"
-      :src="`/${files[showFullIndex].skylinks.source}`"
-      :alt="files[showFullIndex].name"
+      :src="`/${item.skylinks.source}`"
+      :alt="item.name"
       @load="imgLoad"
+      :id="item.id"
     />
     <video
       class="fullscreen-video translate-center"
       :class="showinfoClass()"
-      v-if="files[showFullIndex].type === 'video'"
-      :src="`/${files[showFullIndex].skylinks.source}`"
+      v-if="item.type === 'video'"
+      :src="`/${item.skylinks.source}`"
       controls
       autoplay
       @ended="videoEnded"
@@ -56,7 +57,7 @@
       <v-icon size="64">navigate_next</v-icon>
     </div>
     <div class="fullscreen-header text-center pa-4" :class="showinfoClass()">
-      <span class="headline">{{ files[showFullIndex].name }}</span>
+      <span class="headline">{{ item.name }}</span>
       <div class="float-right">
         <v-btn
           fab
@@ -95,7 +96,7 @@
               </v-list-item-action>
             </v-list-item>
             <v-list-item
-              :href="`/${files[showFullIndex].skylinks.source}`"
+              :href="`/${item.skylinks.source}`"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -105,7 +106,7 @@
               </v-list-item-icon>
             </v-list-item>
             <v-list-item
-              :href="`/${files[showFullIndex].skylinks.thumbnail}`"
+              :href="`/${item.skylinks.thumbnail}`"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -251,6 +252,12 @@ export default {
     };
   },
 
+  computed: {
+    item() {
+      return this.files[this.showFullIndex];
+    },
+  },
+
   methods: {
     closeFullscreen(event) {
       if (event.target.classList.contains("fullscreen-view")) {
@@ -259,10 +266,9 @@ export default {
     },
 
     btnClass() {
-      const file = this.files[this.showFullIndex];
-      if (file.type === "image") {
+      if (this.item.type === "image") {
         return "";
-      } else if (file.type === "video") {
+      } else if (this.item.type === "video") {
         return "short";
       }
     },
@@ -308,13 +314,15 @@ export default {
       clearTimeout(this.diashowTimeout);
       this.diashowTimeout = setTimeout(() => {
         if (!this.userSettings.diashow) return;
-        if (this.files[this.showFullIndex].type === "video") return;
+        if (this.item.type === "video") return;
         this.showNext();
       }, 5000);
       EXIF.getData(event.target, function () {
         const allMetaData = EXIF.getAllTags(this);
         console.log(JSON.stringify(allMetaData));
       });
+      this.item.width = event.target.naturalWidth;
+      this.item.height = event.target.naturalHeight;
     },
 
     diashowSwitch(event) {
@@ -322,7 +330,7 @@ export default {
       clearTimeout(this.diashowTimeout);
       this.diashowTimeout = setTimeout(() => {
         if (!this.userSettings.diashow) return;
-        if (this.files[this.showFullIndex].type === "video") return;
+        if (this.item.type === "video") return;
         this.showNext();
       }, 5000);
     },

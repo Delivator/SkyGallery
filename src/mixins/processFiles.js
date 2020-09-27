@@ -13,6 +13,7 @@ export const processFiles = {
           progress: 0.0,
           skylinks: {},
         };
+        console.log(file);
         if (/^image\//.test(file.type)) {
           item.type = "image";
           // if file is larger than 50MiB
