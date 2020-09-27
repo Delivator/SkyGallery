@@ -53,12 +53,6 @@ export const utils = {
       if (event.target.value === test) event.target.select();
     },
 
-    loadUserSettings() {
-      const userSettings = localStorage.getItem("skygallery-settings");
-      if (userSettings) this.userSettings = JSON.parse(userSettings);
-      return userSettings;
-    },
-
     setUserSettings(newSettings) {
       if (!newSettings) return;
       this.userSettings = Object.assign(this.userSettings, newSettings);
@@ -66,6 +60,38 @@ export const utils = {
         "skygallery-settings",
         JSON.stringify(this.userSettings)
       );
+    },
+
+    loadUserSettings() {
+      let userSettings = localStorage.getItem("skygallery-settings");
+      if (!userSettings) {
+        this.setUserSettings({
+          diashow: false,
+          volume: 0.5,
+          showInfo: false,
+          recentVisits: [],
+          recentCreated: [],
+        });
+        userSettings = localStorage.getItem("skygallery-settings");
+      }
+      this.userSettings = JSON.parse(userSettings);
+      return userSettings;
+    },
+
+    addRecentVisit(albumId) {
+      let recentVisits = this.userSettings.recentVisits;
+      recentVisits = recentVisits.filter((id) => id !== albumId);
+      recentVisits.unshift(albumId);
+      recentVisits.slice(0, 10);
+      this.setUserSettings({ recentVisits });
+    },
+
+    addRecentCreated(albumId) {
+      let recentCreated = this.userSettings.recentCreated;
+      recentCreated = recentCreated.filter((id) => id !== albumId);
+      recentCreated.unshift(albumId);
+      recentCreated.slice(0, 10);
+      this.setUserSettings({ recentCreated });
     },
   },
 

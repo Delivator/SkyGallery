@@ -18,7 +18,7 @@
           width="7"
         ></v-progress-circular>
       </v-col>
-      <v-col v-else cols="12">
+      <v-col v-else cols="12 my-4">
         <a
           v-if="isEmbed"
           class="display-2 title-link white--text"
@@ -178,13 +178,12 @@
           outlined
           :to="`/edit/${albumId}`"
           :loading="loading"
-          class="upload-btn"
+          class="upload-btn my-6"
         >
           Edit album
           <v-icon right>create</v-icon>
         </v-btn>
       </v-col>
-      <v-col cols="12"></v-col>
     </v-row>
   </v-container>
 </template>
