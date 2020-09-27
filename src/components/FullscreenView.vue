@@ -132,12 +132,6 @@
   </div>
 </template>
 
-<style>
-html {
-  overflow: hidden !important;
-}
-</style>
-
 <style scoped>
 .fullscreen-view {
   height: 100vh;
@@ -315,15 +309,18 @@ export default {
       }
     },
 
-    imgLoad(event) {
-      this.$emit("update:imgloading", false);
-      this.$emit("update:imgloaded", true);
+    startDiashow() {
       clearTimeout(this.diashowTimeout);
       this.diashowTimeout = setTimeout(() => {
         if (!this.userSettings.diashow) return;
         if (this.item.type === "video") return;
         this.showNext();
       }, 5000);
+    },
+
+    imgLoad(event) {
+      this.$emit("update:imgloading", false);
+      this.$emit("update:imgloaded", true);
       EXIF.getData(event.target, function () {
         const allMetaData = EXIF.getAllTags(this);
         console.log(JSON.stringify(allMetaData));
@@ -331,16 +328,13 @@ export default {
       this.item.width = event.target.naturalWidth;
       this.item.height = event.target.naturalHeight;
       this.$refs.infoPanel.$forceUpdate();
+      this.startDiashow();
     },
 
     diashowSwitch(event) {
       this.setUserSettings({ diashow: event });
       clearTimeout(this.diashowTimeout);
-      this.diashowTimeout = setTimeout(() => {
-        if (!this.userSettings.diashow) return;
-        if (this.item.type === "video") return;
-        this.showNext();
-      }, 5000);
+      this.startDiashow();
     },
 
     videoEnded(event) {
@@ -389,6 +383,12 @@ export default {
           break;
       }
     });
+
+    document.querySelector("html").className = "noscroll";
+  },
+
+  beforeDestroy() {
+    document.querySelector("html").className = "";
   },
 };
 </script>

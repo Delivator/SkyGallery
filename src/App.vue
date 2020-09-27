@@ -145,6 +145,10 @@ html {
   overflow: auto;
 }
 
+html.noscroll {
+  overflow: hidden;
+}
+
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-corner,
 ::-webkit-scrollbar {
