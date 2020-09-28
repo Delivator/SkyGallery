@@ -32,9 +32,9 @@
       <v-col cols="12" class="subtext">
         <span class="display-1 mr-4">
           Creating a
-          <v-btn color="primary" to="new" outlined
-            ><v-icon left>add</v-icon>new album</v-btn
-          >
+          <v-btn color="primary" to="new" outlined>
+            <v-icon left>add</v-icon>new album
+          </v-btn>
           or open an existing one
         </span>
         <v-text-field

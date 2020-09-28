@@ -38,7 +38,7 @@
       autoplay
       @ended="videoEnded"
       @volumechange="volumechange"
-      @canplay="setvolume"
+      @canplay="videoCanplay"
       v-touch="touchOptions"
     ></video>
     <div
@@ -315,15 +315,23 @@ export default {
     },
 
     imgLoad(event) {
+      const item = this.item;
+      const infoPanel = this.$refs.infoPanel;
+
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
+      item.width = event.target.naturalWidth;
+      item.height = event.target.naturalHeight;
+
       EXIF.getData(event.target, function () {
-        const allMetaData = EXIF.getAllTags(this);
-        console.log(JSON.stringify(allMetaData));
+        console.log(this);
+        if (Object.keys(this.exifdata).length < 1) return;
+        item.exifdata = this.exifdata;
+        item.cameraModel = `${item.exifdata.Make} ${item.exifdata.Model}`;
+        infoPanel.$forceUpdate();
       });
-      this.item.width = event.target.naturalWidth;
-      this.item.height = event.target.naturalHeight;
-      this.$refs.infoPanel.$forceUpdate();
+
+      infoPanel.$forceUpdate();
       this.startDiashow();
     },
 
@@ -344,10 +352,11 @@ export default {
       this.setUserSettings({ volume: event.target.volume });
     },
 
-    setvolume(event) {
-      if (this.userSettings.volume !== undefined) {
-        event.target.volume = this.userSettings.volume;
-      }
+    videoCanplay(event) {
+      event.target.volume = this.userSettings.volume;
+      this.item.width = event.target.videoWidth;
+      this.item.height = event.target.videoHeight;
+      this.$refs.infoPanel.$forceUpdate();
     },
 
     toggleInfoPanel() {
