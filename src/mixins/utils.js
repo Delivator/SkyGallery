@@ -79,6 +79,8 @@ export const utils = {
     },
 
     addRecentVisit(albumId, title) {
+      if (!this.userSettings.recentVisits)
+        this.setUserSettings({ recentVisits: [] });
       let recentVisits = this.userSettings.recentVisits;
       recentVisits = recentVisits.filter((item) => item.id !== albumId);
       recentVisits.unshift({
@@ -91,6 +93,8 @@ export const utils = {
     },
 
     addRecentCreated(albumId, title) {
+      if (!this.userSettings.recentCreated)
+        this.setUserSettings({ recentCreated: [] });
       let recentCreated = this.userSettings.recentCreated;
       recentCreated.unshift({
         id: albumId,
