@@ -15,7 +15,16 @@
           :title="item.filename"
           v-text="item.filename"
         ></v-list-item-title>
-        <v-list-item-subtitle v-html="imageSize()"></v-list-item-subtitle>
+        <v-list-item-subtitle v-html="fileSize()"></v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+    <v-list-item two-line v-if="item.exif && item.exif.CreateDate">
+      <v-list-item-avatar>
+        <v-icon>today</v-icon>
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title v-text="shortDate"></v-list-item-title>
+        <v-list-item-subtitle v-text="longDate"></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-list-item two-line v-if="item.exif">
@@ -81,6 +90,24 @@ export default {
     infoClass() {
       return `mobile-${this.$vuetify.breakpoint.mobile} showinfo-${this.userSettings.showInfo}`;
     },
+
+    shortDate() {
+      return this.item.exif.CreateDate.toLocaleDateString(undefined, {
+        day: "numeric",
+        month: "short",
+      });
+    },
+
+    longDate() {
+      return this.item.exif.CreateDate.toLocaleDateString(undefined, {
+        hour: "numeric",
+        minute: "numeric",
+        weekday: "short",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    },
   },
 
   methods: {
@@ -96,7 +123,7 @@ export default {
       }`;
     },
 
-    imageSize() {
+    fileSize() {
       if (this.item.width) {
         const text =
           `<span class="mr-3">${this.pxToMP()} MP</span>` +
