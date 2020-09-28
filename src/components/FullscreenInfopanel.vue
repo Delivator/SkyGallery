@@ -29,6 +29,21 @@
         <v-list-item-subtitle v-html="exifData()"></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+    <v-list-item
+      two-line
+      v-if="item.exif && item.exif.latitude"
+      :href="`https://www.google.com/maps/search/${readbleGps()}`"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <v-list-item-avatar>
+        <v-icon>place</v-icon>
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title>GPS Location</v-list-item-title>
+        <v-list-item-subtitle v-html="readbleGps()"></v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
   </div>
 </template>
 
@@ -73,6 +88,12 @@ export default {
       let mp = (this.item.width * this.item.height) / 10 ** 5;
       mp = Math.round(mp) / 10;
       return mp;
+    },
+
+    readbleGps() {
+      return `${Math.round(this.item.exif.latitude * 10 ** 5) / 10 ** 5}, ${
+        Math.round(this.item.exif.longitude * 10 ** 5) / 10 ** 5
+      }`;
     },
 
     imageSize() {

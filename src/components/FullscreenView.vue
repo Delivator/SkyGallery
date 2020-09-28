@@ -322,6 +322,7 @@ export default {
 
       exifr.parse(event.target).then((data) => {
         if (!data) return;
+        console.log(data);
         this.item.exif = data;
         this.item.cameraModel = `${data.Make} ${data.Model}`;
         this.$refs.infoPanel.$forceUpdate();
