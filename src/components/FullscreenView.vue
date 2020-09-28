@@ -230,7 +230,7 @@
 <script>
 import FullscreenInfopanel from "./FullscreenInfopanel";
 import { utils } from "../mixins/utils";
-import EXIF from "exif-js";
+import exifr from "exifr";
 
 export default {
   name: "FullscreenView",
@@ -315,23 +315,19 @@ export default {
     },
 
     imgLoad(event) {
-      const item = this.item;
-      const infoPanel = this.$refs.infoPanel;
-
       this.$emit("update:imgloading", false);
       this.$emit("update:imgloaded", true);
-      item.width = event.target.naturalWidth;
-      item.height = event.target.naturalHeight;
+      this.item.width = event.target.naturalWidth;
+      this.item.height = event.target.naturalHeight;
 
-      EXIF.getData(event.target, function () {
-        console.log(this);
-        if (Object.keys(this.exifdata).length < 1) return;
-        item.exifdata = this.exifdata;
-        item.cameraModel = `${item.exifdata.Make} ${item.exifdata.Model}`;
-        infoPanel.$forceUpdate();
+      exifr.parse(event.target).then((data) => {
+        if (!data) return;
+        this.item.exif = data;
+        this.item.cameraModel = `${data.Make} ${data.Model}`;
+        this.$refs.infoPanel.$forceUpdate();
       });
 
-      infoPanel.$forceUpdate();
+      this.$refs.infoPanel.$forceUpdate();
       this.startDiashow();
     },
 

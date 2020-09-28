@@ -18,15 +18,14 @@
         <v-list-item-subtitle v-html="imageSize()"></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-    <v-list-item two-line>
+    <v-list-item two-line v-if="item.exif">
       <v-list-item-avatar>
         <v-icon>camera</v-icon>
       </v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-title
-          :title="item.cameraModel"
-          v-text="item.cameraModel"
-        ></v-list-item-title>
+        <v-list-item-title :title="`${item.exif.Make} ${item.exif.Model}`">
+          {{ item.exif.Make }} {{ item.exif.Model }}
+        </v-list-item-title>
         <v-list-item-subtitle v-html="exifData()"></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -89,13 +88,12 @@ export default {
 
     exifData() {
       if (this.item.type !== "image") return false;
-      if (this.item.exifdata) {
-        const exifdata = this.item.exifdata;
+      if (this.item.exif) {
         const text =
-          `<span class="mr-2">ƒ/${exifdata.FNumber}</span>` +
-          `<span class="mr-2">1/${1 / exifdata.ExposureTime}</span>` +
-          `<span class="mr-2">${exifdata.FocalLength} mm</span>` +
-          `<span>ISO ${exifdata.ISOSpeedRatings}</span>`;
+          `<span class="mr-2">ƒ/${this.item.exif.FNumber}</span>` +
+          `<span class="mr-2">1/${1 / this.item.exif.ExposureTime}</span>` +
+          `<span class="mr-2">${this.item.exif.FocalLength} mm</span>` +
+          `<span>ISO ${this.item.exif.ISO}</span>`;
         return text;
       } else {
         return "Loading...";
