@@ -154,7 +154,12 @@
             <AlbumCardGrid :layout="item.layout" :skylink="item.skylink" />
           </v-responsive>
         </v-card>
-        <v-card v-else @click="openFull(index)" :class="cardClass(index)">
+        <v-card
+          v-else
+          @click="openFull($event, index)"
+          :class="cardClass(index)"
+          :href="`/${item.skylinks.source}`"
+        >
           <v-img
             :src="`/${item.skylinks.thumbnail}`"
             :aspect-ratio="4 / 3"
@@ -286,7 +291,8 @@ export default {
         .catch((error) => this.alertBox.send("error", error));
     },
 
-    openFull(index) {
+    openFull(event, index) {
+      event.preventDefault();
       this.setImgloading();
       this.showFullImg = true;
       this.showFullIndex = index;
