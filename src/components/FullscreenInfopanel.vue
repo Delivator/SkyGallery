@@ -1,7 +1,7 @@
 <template>
   <div class="info-panel pa-4 text-left" :class="infoClass">
     <h6 class="text-h6">
-      <v-btn fab text small @click="setUserSettings({ showInfo: false })" top>
+      <v-btn fab text small @click="localStorage.showInfo = false" top>
         <v-icon>close</v-icon>
       </v-btn>
       File Info
@@ -83,14 +83,10 @@ import { utils } from "../mixins/utils";
 
 export default {
   name: "FullscreenInfopanel",
-  props: ["userSettings", "item"],
+  props: ["item", "showInfo"],
   mixins: [utils],
 
   computed: {
-    infoClass() {
-      return `mobile-${this.$vuetify.breakpoint.mobile} showinfo-${this.userSettings.showInfo}`;
-    },
-
     shortDate() {
       return this.item.exif.CreateDate.toLocaleDateString(undefined, {
         day: "numeric",
@@ -107,6 +103,10 @@ export default {
         month: "2-digit",
         year: "numeric",
       });
+    },
+
+    infoClass() {
+      return `mobile-${this.$vuetify.breakpoint.mobile} showinfo-${this.showInfo}`;
     },
   },
 

@@ -6,11 +6,7 @@
     @wheel="fullscreenMousewheel"
     @click="closeFullscreen"
   >
-    <FullscreenInfopanel
-      :userSettings="userSettings"
-      :item="item"
-      ref="infoPanel"
-    />
+    <FullscreenInfopanel :item="item" ref="infoPanel" :showInfo="showInfo" />
     <v-progress-circular
       indeterminate="true"
       v-if="imgloading && item.type === 'image'"
@@ -66,7 +62,7 @@
           fab
           text
           small
-          :color="userSettings.showInfo ? 'primary' : ''"
+          :color="showInfo ? 'primary' : ''"
           @click="toggleInfoPanel"
         >
           <v-icon>info</v-icon>
@@ -88,10 +84,7 @@
           <v-list>
             <v-list-item>
               <v-list-item-action>
-                <v-switch
-                  @change="diashowSwitch"
-                  v-model="userSettings.diashow"
-                >
+                <v-switch @change="diashowSwitch" v-model="diashow">
                   <template v-slot:label>
                     <p class="ml-4 mb-0">Diashow/Autoplay</p>
                   </template>
@@ -246,12 +239,29 @@ export default {
         down: () => this.closeFullscreen(),
       },
       diashowTimeout: null,
+      volume: JSON.parse(localStorage.getItem("volume")),
+      diashow: JSON.parse(localStorage.getItem("diashow")),
+      showInfo: JSON.parse(localStorage.getItem("showInfo")),
     };
   },
 
   computed: {
     item() {
       return this.files[this.showFullIndex];
+    },
+  },
+
+  watch: {
+    volume(val) {
+      localStorage.volume = val;
+    },
+
+    diashow(val) {
+      localStorage.diashow = val;
+    },
+
+    showInfo(val) {
+      localStorage.showInfo = val;
     },
   },
 
@@ -308,7 +318,7 @@ export default {
     startDiashow() {
       clearTimeout(this.diashowTimeout);
       this.diashowTimeout = setTimeout(() => {
-        if (!this.userSettings.diashow) return;
+        if (!this.diashow) return;
         if (this.item.type === "video") return;
         this.showNext();
       }, 5000);
@@ -322,7 +332,6 @@ export default {
 
       exifr.parse(event.target).then((data) => {
         if (!data) return;
-        console.log(data);
         this.item.exif = data;
         this.item.cameraModel = `${data.Make} ${data.Model}`;
         this.$refs.infoPanel.$forceUpdate();
@@ -333,12 +342,12 @@ export default {
     },
 
     diashowSwitch(event) {
-      this.setUserSettings({ diashow: event });
+      this.diashow = event;
       this.startDiashow();
     },
 
     videoEnded(event) {
-      if (this.userSettings.diashow) {
+      if (this.diashow) {
         this.showNext();
       } else {
         event.target.play();
@@ -346,23 +355,24 @@ export default {
     },
 
     volumechange(event) {
-      this.setUserSettings({ volume: event.target.volume });
+      this.volume = event.target.volume;
     },
 
     videoCanplay(event) {
-      event.target.volume = this.userSettings.volume;
+      event.target.volume = this.volume;
       this.item.width = event.target.videoWidth;
       this.item.height = event.target.videoHeight;
       this.$refs.infoPanel.$forceUpdate();
     },
 
     toggleInfoPanel() {
-      this.setUserSettings({ showInfo: !this.userSettings.showInfo });
+      this.showInfo = !this.showInfo;
+      this.$refs.infoPanel.$forceUpdate();
     },
 
     showinfoClass() {
       let className = `mobile-${this.$vuetify.breakpoint.mobile}`;
-      if (this.userSettings.showInfo) className += " showinfo";
+      if (this.showInfo) className += " showinfo";
       return className;
     },
   },

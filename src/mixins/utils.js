@@ -53,59 +53,53 @@ export const utils = {
       if (event.target.value === test) event.target.select();
     },
 
-    setUserSettings(newSettings) {
-      if (!newSettings) return;
-      this.userSettings = Object.assign(this.userSettings, newSettings);
-      localStorage.setItem(
-        "skygallery-settings",
-        JSON.stringify(this.userSettings)
-      );
-    },
+    // setUserSettings(newSettings) {
+    //   if (!newSettings) return;
+    //   console.log("setUserSettings", newSettings);
+    //   Object.assign(this.userSettings, newSettings);
+    //   localStorage.setItem(
+    //     "skygallery-settings",
+    //     JSON.stringify(this.userSettings)
+    //   );
+    // },
 
-    loadUserSettings() {
-      let userSettings = localStorage.getItem("skygallery-settings");
-      if (!userSettings) {
-        this.setUserSettings({
-          diashow: false,
-          volume: 0.5,
-          showInfo: false,
-          recentVisits: [],
-          recentCreated: [],
-        });
-        userSettings = localStorage.getItem("skygallery-settings");
-      }
-      this.userSettings = JSON.parse(userSettings);
-      return userSettings;
-    },
+    // loadUserSettings() {
+    //   let userSettings = localStorage.getItem("skygallery-settings");
+    //   if (!userSettings) {
+    //     this.setUserSettings({});
+    //   }
+    //   this.userSettings = JSON.parse(userSettings);
+    //   return userSettings;
+    // },
 
-    addRecentVisit(albumId, title) {
-      if (!this.userSettings.recentVisits)
-        this.setUserSettings({ recentVisits: [] });
-      let recentVisits = this.userSettings.recentVisits;
-      recentVisits = recentVisits.filter((item) => item.id !== albumId);
-      recentVisits.unshift({
-        id: albumId,
-        time: Date.now(),
-        title,
-      });
-      recentVisits.slice(0, 25);
-      this.setUserSettings({ recentVisits });
-    },
+    // addRecentVisit(albumId, title) {
+    //   if (!this.userSettings.recentVisits)
+    //     this.setUserSettings({ recentVisits: [] });
+    //   let recentVisits = this.userSettings.recentVisits;
+    //   recentVisits = recentVisits.filter((item) => item.id !== albumId);
+    //   recentVisits.unshift({
+    //     id: albumId,
+    //     time: Date.now(),
+    //     title,
+    //   });
+    //   recentVisits.slice(0, 25);
+    //   this.setUserSettings({ recentVisits });
+    // },
 
-    addRecentCreated(albumId, title) {
-      if (!this.userSettings.recentCreated)
-        this.setUserSettings({ recentCreated: [] });
-      let recentCreated = this.userSettings.recentCreated;
-      recentCreated.unshift({
-        id: albumId,
-        time: Date.now(),
-        title,
-      });
-      this.setUserSettings({ recentCreated });
-    },
+    //   addRecentCreated(albumId, title) {
+    //     if (!this.userSettings.recentCreated)
+    //       this.setUserSettings({ recentCreated: [] });
+    //     let recentCreated = this.userSettings.recentCreated;
+    //     recentCreated.unshift({
+    //       id: albumId,
+    //       time: Date.now(),
+    //       title,
+    //     });
+    //     this.setUserSettings({ recentCreated });
+    //   },
   },
 
-  mounted() {
-    this.loadUserSettings();
-  },
+  // mounted() {
+  //   if (Object.keys(this.userSettings).length < 1) this.loadUserSettings();
+  // },
 };
