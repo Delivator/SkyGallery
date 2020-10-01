@@ -3,8 +3,19 @@ export const utils = {
     skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
     albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
     albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
-    userSettings: {},
+    recentVisits: JSON.parse(localStorage.getItem("recentVisits")),
+    recentCreated: JSON.parse(localStorage.getItem("recentCreated")),
   }),
+
+  watch: {
+    recentVisits(val) {
+      localStorage.recentVisits = JSON.stringify(val);
+    },
+
+    recentCreated(val) {
+      localStorage.recentCreated = JSON.stringify(val);
+    },
+  },
 
   methods: {
     extractAlbumSkylink(str) {
@@ -53,53 +64,28 @@ export const utils = {
       if (event.target.value === test) event.target.select();
     },
 
-    // setUserSettings(newSettings) {
-    //   if (!newSettings) return;
-    //   console.log("setUserSettings", newSettings);
-    //   Object.assign(this.userSettings, newSettings);
-    //   localStorage.setItem(
-    //     "skygallery-settings",
-    //     JSON.stringify(this.userSettings)
-    //   );
-    // },
+    addRecentVisit(albumId, title) {
+      if (!this.recentVisits) this.recentVisits = [];
+      let recentVisits = this.recentVisits.filter(
+        (item) => item.id !== albumId
+      );
+      recentVisits.unshift({
+        id: albumId,
+        time: Date.now(),
+        title,
+      });
 
-    // loadUserSettings() {
-    //   let userSettings = localStorage.getItem("skygallery-settings");
-    //   if (!userSettings) {
-    //     this.setUserSettings({});
-    //   }
-    //   this.userSettings = JSON.parse(userSettings);
-    //   return userSettings;
-    // },
+      recentVisits.slice(0, 25);
+      this.recentVisits = recentVisits;
+    },
 
-    // addRecentVisit(albumId, title) {
-    //   if (!this.userSettings.recentVisits)
-    //     this.setUserSettings({ recentVisits: [] });
-    //   let recentVisits = this.userSettings.recentVisits;
-    //   recentVisits = recentVisits.filter((item) => item.id !== albumId);
-    //   recentVisits.unshift({
-    //     id: albumId,
-    //     time: Date.now(),
-    //     title,
-    //   });
-    //   recentVisits.slice(0, 25);
-    //   this.setUserSettings({ recentVisits });
-    // },
-
-    //   addRecentCreated(albumId, title) {
-    //     if (!this.userSettings.recentCreated)
-    //       this.setUserSettings({ recentCreated: [] });
-    //     let recentCreated = this.userSettings.recentCreated;
-    //     recentCreated.unshift({
-    //       id: albumId,
-    //       time: Date.now(),
-    //       title,
-    //     });
-    //     this.setUserSettings({ recentCreated });
-    //   },
+    addRecentCreated(albumId, title) {
+      if (!this.recentCreated) this.recentCreated = [];
+      this.recentCreated.unshift({
+        id: albumId,
+        time: Date.now(),
+        title,
+      });
+    },
   },
-
-  // mounted() {
-  //   if (Object.keys(this.userSettings).length < 1) this.loadUserSettings();
-  // },
 };
