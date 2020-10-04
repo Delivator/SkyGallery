@@ -1,7 +1,7 @@
 <template>
   <div class="info-panel pa-4 text-left" :class="infoClass">
     <h6 class="text-h6">
-      <v-btn fab text small @click="localStorage.showInfo = false" top>
+      <v-btn fab text small @click="$emit('update:showInfo', false)" top>
         <v-icon>close</v-icon>
       </v-btn>
       File Info

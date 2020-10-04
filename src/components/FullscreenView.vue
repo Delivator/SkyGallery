@@ -6,7 +6,11 @@
     @wheel="fullscreenMousewheel"
     @click="closeFullscreen"
   >
-    <FullscreenInfopanel :item="item" ref="infoPanel" :showInfo="showInfo" />
+    <FullscreenInfopanel
+      :showInfo.sync="showInfo"
+      :item="item"
+      ref="infoPanel"
+    />
     <v-progress-circular
       indeterminate="true"
       v-if="imgloading && item.type === 'image'"
@@ -63,7 +67,7 @@
           text
           small
           :color="showInfo ? 'primary' : ''"
-          @click="toggleInfoPanel"
+          @click="showInfo = !showInfo"
         >
           <v-icon>info</v-icon>
         </v-btn>
@@ -362,11 +366,6 @@ export default {
       event.target.volume = this.volume;
       this.item.width = event.target.videoWidth;
       this.item.height = event.target.videoHeight;
-      this.$refs.infoPanel.$forceUpdate();
-    },
-
-    toggleInfoPanel() {
-      this.showInfo = !this.showInfo;
       this.$refs.infoPanel.$forceUpdate();
     },
 
