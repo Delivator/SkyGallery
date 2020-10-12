@@ -22,8 +22,10 @@ Example video: https://skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkvSNUt
 
 <img src="src/assets/skygallery.gif?raw=true" width="100%">
 
-![Homepage](https://skyportal.xyz/dAD_sdc4v1L0MW3FvPSkmZnVgyY-FgC5pkjgGsbFruO4ng)
-![New Album Page](https://skyportal.xyz/fADx1p3Ar6eVfG-Rkjy-CmnL91qnKe1o5RWvYYkML3G8qw)
+![Homepage with portal selector](https://skyportal.xyz/TABU16Lx2h-ibArlejKa_ziYUa2Td2xwMjj07YXzRAhRVQ)
+![New Album Page](https://skyportal.xyz/fAcjmBg0tco6gn5FBCz-tYNtufEc-9dY29S-5oeqD258gg)
+![Link existing albums](https://skyportal.xyz/_AAvHeqddp9cvarGVRYIIwJ4g08tXHpwVR62V2KOBRppCQ)
+![Fullscreen view with exif data](https://skyportal.xyz/PAC0y100KKW-HPWuRAqr7dZOQpM464qO_K_hko6Mwowmhg)
 
 ## Upcoming features
 - Adding a location/map
