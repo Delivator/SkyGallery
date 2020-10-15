@@ -275,11 +275,24 @@ export default {
 
   methods: {
     changePortal(portal) {
-      let newUrl = new URL(portal.link);
-      document.location.href = document.location.href.replace(
-        document.location.origin,
-        newUrl.origin
-      );
+      const hnsRegex = /^(.*)\.hns\..*$/;
+      const base32Regex = /^([a-z0-9]{55})\..*$/;
+      const newUrl = new URL(location);
+      const newPortal = new URL(portal.link);
+
+      if (hnsRegex.test(newUrl.hostname)) {
+        const hnsSub = newUrl.hostname.match(hnsRegex)[1];
+        newPortal.hostname = newPortal.hostname.replace("www.", "");
+        newUrl.hostname = `${hnsSub}.hns.${newPortal.hostname}`;
+      } else if (base32Regex.test(newUrl.hostname)) {
+        const base32Sub = newUrl.hostname.match(base32Regex)[1];
+        newPortal.hostname = newPortal.hostname.replace("www.", "");
+        newUrl.hostname = `${base32Sub}.${newPortal.hostname}`;
+      } else {
+        newUrl.hostname = newPortal.hostname;
+      }
+
+      location.href = newUrl.href;
     },
 
     openAlbum() {
