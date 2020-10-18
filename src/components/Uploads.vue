@@ -133,10 +133,10 @@
               :class="item.log ? '' : 'input-background'"
             >
               <v-text-field
+                dark
                 dense
                 single-line
                 autocomplete="off"
-                color="white"
                 :value="item.newName"
                 :tabindex="index + 101"
                 @input="changeName(item.id, $event)"
