@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar v-if="!isEmbed" app color="secondary">
-      <router-link to="/" class="white--text title-link">
+    <v-app-bar v-if="!isEmbed" app>
+      <router-link to="/" class="title-link" :class="themedText">
         <v-img
           alt="Skynet Logo"
           class="shrink mr-2"
@@ -56,22 +56,24 @@
         :alertBox="alertBox"
         :isEmbed="isEmbed"
         :pageTitle="pageTitle"
+        :darkMode="darkMode"
+        :themedText="themedText"
       />
     </v-main>
     <v-footer v-if="isEmbed" padless fixed>
       <v-row justify="center">
         <v-col class="py-3 text-center" cols="12" @click="openAlbum">
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator/SkyGallery"
             target="_blank"
             rel="noopener noreferrer"
             >SkyGallery</a
           >
-          <span class="white--text version-tag"> v{{ version }}</span>
+          <span :class="themedText" class="version-tag"> v{{ version }}</span>
           &ndash; Hosted on
           <a
-            class="white--text"
+            :class="themedText"
             href="https://siasky.net/"
             target="_blank"
             rel="noopener noreferrer"
@@ -79,7 +81,7 @@
           >
           &ndash; Made by
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator"
             target="_blank"
             rel="noopener noreferrer"
@@ -93,7 +95,7 @@
         <v-col class="py-3 text-center" cols="12">
           Made with 💚 by
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator"
             target="_blank"
             rel="noopener noreferrer"
@@ -101,14 +103,14 @@
           >
           &ndash;
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator/SkyGallery"
             target="_blank"
             rel="noopener noreferrer"
             >Source code</a
           >
           &ndash;
-          <span class="white--text version-tag">v{{ version }}</span>
+          <span :class="themedText" class="version-tag">v{{ version }}</span>
           &ndash;
           <v-tooltip :value="showRefTooltip && refVisible" top>
             <template v-slot:activator="{ on }">
@@ -133,6 +135,11 @@
                 : "Earn crypto by browsing the internet"
             }}</span>
           </v-tooltip>
+          <v-btn @click="darkMode = !darkMode" absolute right icon>
+            <v-icon>{{
+              darkMode ? "brightness_low" : "brightness_high"
+            }}</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-footer>
@@ -242,6 +249,7 @@ export default {
       refVisible: false,
       alerts: [],
       pageTitle: "SkyGallery - Media Gallery powered by Skynet",
+      darkMode: JSON.parse(localStorage.getItem("darkMode")) ?? true,
       alertBox: {
         show: false,
         type: "info",
@@ -269,6 +277,19 @@ export default {
         },
       },
     };
+  },
+
+  watch: {
+    darkMode(val) {
+      this.$vuetify.theme.dark = this.darkMode;
+      localStorage.darkMode = val;
+    },
+  },
+
+  computed: {
+    themedText() {
+      return this.darkMode ? "white--text" : "black--text";
+    },
   },
 
   methods: {
@@ -317,6 +338,7 @@ export default {
   beforeMount() {
     this.isEmbed = inIframe();
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
+    this.$vuetify.theme.dark = this.darkMode;
 
     fetch(trustedPortals)
       .then((response) => {

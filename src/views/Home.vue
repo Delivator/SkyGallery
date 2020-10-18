@@ -13,7 +13,7 @@
             href="https://siasky.net/"
             target="_blank"
             rel="noopener noreferrer"
-            class="white--text"
+            :class="themedText"
             >Skynet</a
           ></span
         >
@@ -74,7 +74,7 @@ let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "alertBox"],
+  props: ["portals", "alertBox", "themedText"],
   mixins: [utils],
   data: () => ({
     linkInput: "",

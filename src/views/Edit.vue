@@ -43,7 +43,12 @@
     </v-row>
     <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
+        <dropzone
+          :items="items"
+          :dragUpload="drag"
+          v-intersect="onIntersect"
+          :darkMode="darkMode"
+        />
       </v-col>
     </v-row>
     <uploads
@@ -54,7 +59,7 @@
     />
     <v-row v-if="!loading && !isIntersecting" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" :dragUpload="drag" />
+        <dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
       </v-col>
     </v-row>
     <v-row v-if="!loading && items.length > 0">
@@ -88,7 +93,7 @@ import sha256 from "crypto-js/sha256";
 
 export default {
   name: "Edit",
-  props: ["alertBox", "pageTitle"],
+  props: ["alertBox", "pageTitle", "darkMode"],
   components: { uploads, dropzone, uploadDialog },
   mixins: [utils, publishAlbum, uploadBlob],
   data: () => ({

@@ -2,7 +2,7 @@
   <div
     id="dropzone"
     class="dropzone"
-    :class="isDragOver ? 'is-dragover' : ''"
+    :class="`dragover-${isDragOver} darkmode-${darkMode}`"
     @drop="onDrop"
     @dragover="onDrag"
     @dragenter="onDrag"
@@ -27,7 +27,7 @@
 
 <style scoped>
 .dropzone {
-  background-color: rgb(24, 26, 27);
+  background-color: white;
   border: 2px dashed rgb(88, 181, 96);
   border-radius: 5px;
   padding: 3rem 0;
@@ -36,7 +36,11 @@
   place-items: center;
 }
 
-.is-dragover {
+.darkmode-true {
+  background-color: rgb(24, 26, 27);
+}
+
+.dragover-true {
   position: fixed;
   height: 100vh;
   width: 100vw;
@@ -45,8 +49,13 @@
   z-index: 5;
 }
 
-.dropzone:hover,
-.is-dragover {
+.dropzone:hover.darkmode-false,
+.is-dragover.darkmode-false {
+  background-color: #eee;
+}
+
+.dropzone:hover.darkmode-true,
+.is-dragover.darkmode-true {
   background-color: #121212;
 }
 
@@ -73,7 +82,7 @@ import { uploadBlob } from "../mixins/uploadBlob";
 
 export default {
   name: "Dropzone",
-  props: ["items", "dragUpload"],
+  props: ["items", "dragUpload", "darkMode"],
   mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob],
   data: () => ({
     isDragOver: false,

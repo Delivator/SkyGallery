@@ -167,11 +167,11 @@
           >
             <v-icon
               v-if="item.type === 'video'"
-              class="video-icon pa-4 translate-center"
+              class="video-icon pa-4 translate-center white--text"
               large
               >play_arrow</v-icon
             >
-            <v-card-title>{{ item.name }}</v-card-title>
+            <v-card-title class="white--text">{{ item.name }}</v-card-title>
           </v-img>
         </v-card>
       </v-col>

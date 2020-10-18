@@ -17,11 +17,11 @@
         v-model="item.value"
         autocomplete="off"
         outlined
+        class="title"
         label="Title"
         prepend-icon="open_with"
         append-outer-icon="delete"
         @click:append-outer="items.splice(index, 1)"
-        class="title"
         @focus="selectText($event, item.value)"
       ></v-text-field>
       <v-card
@@ -129,16 +129,18 @@
             ></video>
             <v-card-title
               v-show="item.status !== 'editthumbnail'"
+              class="white--text"
               :class="item.log ? '' : 'input-background'"
             >
               <v-text-field
-                single-line
                 dense
+                single-line
+                autocomplete="off"
+                color="white"
                 :value="item.newName"
+                :tabindex="index + 101"
                 @input="changeName(item.id, $event)"
                 @focus="selectText($event, item.newName)"
-                autocomplete="off"
-                :tabindex="index + 101"
               ></v-text-field>
             </v-card-title>
           </div>

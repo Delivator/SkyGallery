@@ -66,7 +66,7 @@
           fab
           text
           small
-          :color="showInfo ? 'primary' : ''"
+          :color="showInfo ? 'primary' : 'white'"
           @click="showInfo = !showInfo"
         >
           <v-icon>info</v-icon>

@@ -39,13 +39,18 @@
     </v-row>
     <v-row justify="center">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
+        <Dropzone
+          :items="items"
+          :dragUpload="drag"
+          v-intersect="onIntersect"
+          :darkMode="darkMode"
+        />
       </v-col>
     </v-row>
     <Uploads :myItems.sync="items" :setItems="setItems" :drag.sync="drag" />
     <v-row justify="center" v-if="!isIntersecting">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone :items="items" :dragUpload="drag" />
+        <Dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
       </v-col>
     </v-row>
     <v-row v-if="items.length > 0">
@@ -78,7 +83,7 @@ import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
   name: "New",
-  props: ["version", "alertBox"],
+  props: ["version", "alertBox", "darkMode"],
   components: { Uploads, Dropzone, UploadDialog },
   mixins: [publishAlbum, uploadBlob, utils],
   data: () => ({

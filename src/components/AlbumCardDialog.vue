@@ -10,13 +10,13 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                label="Link to existing SkyGallery album"
                 required
                 autocomplete="off"
+                v-model="linkInput"
+                label="Link to existing SkyGallery album"
                 :error-messages="inputError"
                 :loading="loading"
                 @input="onInput"
-                v-model="linkInput"
               ></v-text-field>
             </v-col>
             <v-col cols="12" v-if="items.length > 0">
