@@ -213,17 +213,24 @@ let linkInputTimeout = null;
 
 export default {
   name: "AlbumCardDialog",
-  props: ["item"],
+  props: ["myItem"],
   mixins: [utils],
   data() {
     return {
-      linkInput: this.item.skylink ? `sia://${this.item.skylink}` : "",
+      linkInput: this.myItem.skylink ? `sia://${this.myItem.skylink}` : "",
       loading: false,
       inputError: "",
       items: [],
       title: "",
       skylink: "",
+      item: this.myItem,
     };
+  },
+
+  watch: {
+    item(newValue) {
+      this.$emit("update-item", newValue);
+    },
   },
 
   methods: {
@@ -262,16 +269,21 @@ export default {
 
     cancelDialog() {
       this.item.status = "finished";
-      if (!this.item.skylink) this.$emit("removeItem");
+      if (!this.item.skylink) this.$emit("removeitem");
     },
 
     sheetColor(hover, id) {
       return hover || this.item.layout === id ? "primary" : "grey";
     },
+
+    toggleNewtab(value) {
+      console.log(value);
+      this.item.newTab = value;
+    },
   },
 
   beforeMount() {
-    if (this.item.skylink) this.loadAlbum(this.item.skylink);
+    if (this.myItem.skylink) this.loadAlbum(this.myItem.skylink);
   },
 };
 </script>

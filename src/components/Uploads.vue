@@ -29,9 +29,9 @@
         :loading="item.status !== 'finished'"
       >
         <AlbumCardDialog
-          :item="item"
-          @removeItem="items.splice(index, 1)"
-          @updateAlbumItem="updateAlbumItem"
+          :myItem="item"
+          @removeitem="items.splice(index, 1)"
+          @update-item="updateItem"
         />
         <div class="remove-btn">
           <v-btn
@@ -264,9 +264,21 @@ let inputTimeout = null;
 
 export default {
   name: "Uploads",
-  props: ["items", "setItems", "drag"],
+  props: ["myItems", "setItems", "drag"],
   components: { draggable, AlbumCardDialog, AlbumCardGrid },
   mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
+
+  data() {
+    return {
+      items: this.myItems,
+    };
+  },
+
+  watch: {
+    items(newValue) {
+      this.$emit("update:myItems", newValue);
+    },
+  },
 
   methods: {
     thumbnailUrl(item) {
@@ -355,6 +367,12 @@ export default {
           item.status === "processing" ||
           item.status === "queued")
       );
+    },
+
+    updateItem(newItem) {
+      const index = this.items.findIndex((item) => item.id == newItem.id);
+      if (!index) return;
+      this.items[index] = newItem;
     },
   },
 };

@@ -7,7 +7,7 @@
       :imgloading.sync="imgloading"
       :imgloaded.sync="imgloaded"
       :files="files"
-      @setImgloading="setImgloading"
+      @set-imgloading="setImgloading"
     />
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
@@ -29,7 +29,7 @@
         >
         <span v-else class="display-2">
           {{ albumTitle }}
-          <v-menu offset-y v-model="showShare">
+          <v-menu offset-y>
             <template v-slot:activator="{ on }">
               <v-btn fab small top outlined color="primary" v-on="on">
                 <v-icon>share</v-icon>
@@ -252,7 +252,7 @@ function selectTextRange(node) {
 
 export default {
   name: "Album",
-  props: ["showShare", "alertBox", "isEmbed", "pageTitle"],
+  props: ["alertBox", "isEmbed", "pageTitle"],
   components: { AlbumCardGrid, FullscreenView },
   mixins: [utils],
   data: () => ({

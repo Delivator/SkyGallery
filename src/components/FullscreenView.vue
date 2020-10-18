@@ -291,7 +291,7 @@ export default {
         newIndex = (newIndex + 1) % this.files.length;
       } while (!/^(image|video)$/.test(this.files[newIndex].type));
       this.$emit("update:showFullIndex", newIndex);
-      this.$emit("setImgloading");
+      this.$emit("set-imgloading");
       this.$vuetify.goTo(`.img-${newIndex}`);
     },
 
@@ -306,7 +306,7 @@ export default {
         }
       } while (!/^(image|video)$/.test(this.files[newIndex].type));
       this.$emit("update:showFullIndex", newIndex);
-      this.$emit("setImgloading");
+      this.$emit("set-imgloading");
       this.$vuetify.goTo(`.img-${newIndex}`);
     },
 

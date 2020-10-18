@@ -48,7 +48,7 @@
     </v-row>
     <uploads
       v-if="!loading"
-      :items="items"
+      :myItems.sync="items"
       :setItems="setItems"
       :drag.sync="drag"
     />

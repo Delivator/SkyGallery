@@ -54,7 +54,6 @@
         :portals="portals"
         :version="version"
         :alertBox="alertBox"
-        :showShare="showShare"
         :isEmbed="isEmbed"
         :pageTitle="pageTitle"
       />
@@ -237,7 +236,6 @@ export default {
           link: "https://siasky.net",
         },
       ],
-      showShare: false,
       isEmbed: false,
       refHover: false,
       showRefTooltip: false,
