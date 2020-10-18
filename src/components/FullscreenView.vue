@@ -243,9 +243,9 @@ export default {
         down: () => this.closeFullscreen(),
       },
       diashowTimeout: null,
-      volume: JSON.parse(localStorage.getItem("volume")),
-      diashow: JSON.parse(localStorage.getItem("diashow")),
-      showInfo: JSON.parse(localStorage.getItem("showInfo")),
+      volume: JSON.parse(localStorage.getItem("volume")) ?? 1,
+      diashow: JSON.parse(localStorage.getItem("diashow")) ?? false,
+      showInfo: JSON.parse(localStorage.getItem("showInfo")) ?? false,
     };
   },
 
