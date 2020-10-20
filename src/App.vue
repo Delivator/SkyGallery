@@ -38,11 +38,11 @@
         <v-col md="4" sm="6" xs="12">
           <v-alert
             v-for="alert in alerts"
-            :key="alert.id"
             v-model="alert.show"
-            :type="alert.type"
             dismissible
             transition="slide-y-transition"
+            :key="alert.id"
+            :type="alert.type"
             >{{ alert.text }}</v-alert
           >
         </v-col>

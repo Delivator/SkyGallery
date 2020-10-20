@@ -50,6 +50,16 @@
         ></v-text-field>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="12" md="6" v-if="recentVisits.length > 0">
+        <h1 class="text-left subtitle-1 ma-2">Recently visited albums</h1>
+        <RecentAlbumTable :items="recentVisits" headerText="Visited" />
+      </v-col>
+      <v-col cols="12" md="6" v-if="recentCreated.length > 0">
+        <h1 class="text-left subtitle-1 ma-2">Newly created albums</h1>
+        <RecentAlbumTable :items="recentCreated" headerText="Creation date" />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -69,12 +79,14 @@
 
 <script>
 import { utils } from "../mixins/utils";
+import RecentAlbumTable from "../components/RecentAlbumTable";
 
 let openAlbumTimeout = null;
 
 export default {
   name: "Home",
   props: ["portals", "alertBox", "themedText"],
+  components: { RecentAlbumTable },
   mixins: [utils],
   data: () => ({
     linkInput: "",
@@ -114,13 +126,13 @@ export default {
     },
   },
 
+  mounted() {
+    document.addEventListener("dragenter", this.dragoverHandler);
+  },
+
   beforeRouteLeave(to, from, next) {
     document.removeEventListener("dragenter", this.dragoverHandler);
     next();
-  },
-
-  mounted() {
-    document.addEventListener("dragenter", this.dragoverHandler);
   },
 };
 </script>

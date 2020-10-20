@@ -44,12 +44,12 @@
     ></video>
     <div
       v-if="files.length > 1"
-      :class="btnClass()"
-      class="previous-btn"
-      @click="showPrevious"
       v-touch="touchOptions"
+      class="previous-btn"
+      :class="btnClass()"
+      @click="showPrevious"
     >
-      <v-icon size="64">navigate_before</v-icon>
+      <v-icon size="64" color="white">navigate_before</v-icon>
     </div>
     <div
       v-if="files.length > 1"
@@ -58,7 +58,7 @@
       @click="showNext"
       v-touch="touchOptions"
     >
-      <v-icon size="64">navigate_next</v-icon>
+      <v-icon size="64" color="white">navigate_next</v-icon>
     </div>
     <div class="fullscreen-header text-center pa-4" :class="showinfoClass()">
       <span class="headline white--text">{{ item.name }}</span>

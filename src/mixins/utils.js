@@ -3,8 +3,8 @@ export const utils = {
     skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
     albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
     albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
-    recentVisits: JSON.parse(localStorage.getItem("recentVisits")),
-    recentCreated: JSON.parse(localStorage.getItem("recentCreated")),
+    recentVisits: JSON.parse(localStorage.getItem("recentVisits")) ?? [],
+    recentCreated: JSON.parse(localStorage.getItem("recentCreated")) ?? [],
   }),
 
   watch: {
@@ -65,26 +65,40 @@ export const utils = {
     },
 
     addRecentVisit(albumId, title) {
-      if (!this.recentVisits) this.recentVisits = [];
-      let recentVisits = this.recentVisits.filter(
+      this.recentVisits = this.recentVisits.filter(
         (item) => item.id !== albumId
       );
-      recentVisits.unshift({
+
+      this.recentVisits.unshift({
         id: albumId,
         time: Date.now(),
         title,
       });
-
-      recentVisits.slice(0, 25);
-      this.recentVisits = recentVisits;
     },
 
     addRecentCreated(albumId, title) {
-      if (!this.recentCreated) this.recentCreated = [];
       this.recentCreated.unshift({
         id: albumId,
         time: Date.now(),
         title,
+      });
+    },
+
+    shortDate(date) {
+      return new Date(date).toLocaleDateString(undefined, {
+        day: "numeric",
+        month: "short",
+      });
+    },
+
+    longDate(date) {
+      return new Date(date).toLocaleDateString(undefined, {
+        hour: "numeric",
+        minute: "numeric",
+        weekday: "short",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       });
     },
   },

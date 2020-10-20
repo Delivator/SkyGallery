@@ -23,8 +23,12 @@
         <v-icon>today</v-icon>
       </v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-title v-text="shortDate"></v-list-item-title>
-        <v-list-item-subtitle v-text="longDate"></v-list-item-subtitle>
+        <v-list-item-title
+          v-text="shortDate(item.exif.CreateDate)"
+        ></v-list-item-title>
+        <v-list-item-subtitle
+          v-text="longDate(item.exif.CreateDate)"
+        ></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-list-item two-line v-if="item.exif">
@@ -91,24 +95,6 @@ export default {
   mixins: [utils],
 
   computed: {
-    shortDate() {
-      return this.item.exif.CreateDate.toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "short",
-      });
-    },
-
-    longDate() {
-      return this.item.exif.CreateDate.toLocaleDateString(undefined, {
-        hour: "numeric",
-        minute: "numeric",
-        weekday: "short",
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-    },
-
     infoClass() {
       return `mobile-${this.$vuetify.breakpoint.mobile} showinfo-${this.showInfo} dark-${this.darkMode}`;
     },
