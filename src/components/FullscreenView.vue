@@ -7,9 +7,10 @@
     @click="closeFullscreen"
   >
     <FullscreenInfopanel
-      :showInfo.sync="showInfo"
-      :item="item"
       ref="infoPanel"
+      :item="item"
+      :darkMode="darkMode"
+      :showInfo.sync="showInfo"
     />
     <v-progress-circular
       indeterminate="true"
@@ -60,7 +61,7 @@
       <v-icon size="64">navigate_next</v-icon>
     </div>
     <div class="fullscreen-header text-center pa-4" :class="showinfoClass()">
-      <span class="headline">{{ item.name }}</span>
+      <span class="headline white--text">{{ item.name }}</span>
       <div class="float-right">
         <v-btn
           fab
@@ -231,7 +232,14 @@ import exifr from "exifr";
 
 export default {
   name: "FullscreenView",
-  props: ["showFullIndex", "showFullImg", "imgloading", "imgloaded", "files"],
+  props: [
+    "showFullIndex",
+    "showFullImg",
+    "imgloading",
+    "imgloaded",
+    "files",
+    "darkMode",
+  ],
   components: { FullscreenInfopanel },
   mixins: [utils],
   data() {

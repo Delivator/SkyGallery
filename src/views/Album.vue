@@ -7,6 +7,7 @@
       :imgloading.sync="imgloading"
       :imgloaded.sync="imgloaded"
       :files="files"
+      :darkMode="darkMode"
       @set-imgloading="setImgloading"
     />
     <v-row justify="center">
@@ -252,7 +253,7 @@ function selectTextRange(node) {
 
 export default {
   name: "Album",
-  props: ["alertBox", "isEmbed", "pageTitle"],
+  props: ["alertBox", "isEmbed", "pageTitle", "darkMode"],
   components: { AlbumCardGrid, FullscreenView },
   mixins: [utils],
   data: () => ({

@@ -63,9 +63,13 @@
   right: -360px;
   width: 360px;
   height: 100vh;
-  background-color: black;
+  background-color: white;
   transition: right 0.2s;
   z-index: 1;
+}
+
+.info-panel.dark-true {
+  background-color: black;
 }
 
 .info-panel.mobile-true {
@@ -83,7 +87,7 @@ import { utils } from "../mixins/utils";
 
 export default {
   name: "FullscreenInfopanel",
-  props: ["item", "showInfo"],
+  props: ["item", "showInfo", "darkMode"],
   mixins: [utils],
 
   computed: {
@@ -106,7 +110,7 @@ export default {
     },
 
     infoClass() {
-      return `mobile-${this.$vuetify.breakpoint.mobile} showinfo-${this.showInfo}`;
+      return `mobile-${this.$vuetify.breakpoint.mobile} showinfo-${this.showInfo} dark-${this.darkMode}`;
     },
   },
 

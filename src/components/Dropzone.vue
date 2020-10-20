@@ -2,7 +2,7 @@
   <div
     id="dropzone"
     class="dropzone"
-    :class="`dragover-${isDragOver} darkmode-${darkMode}`"
+    :class="`dragover-${isDragOver} dark-${darkMode}`"
     @drop="onDrop"
     @dragover="onDrag"
     @dragenter="onDrag"
@@ -36,7 +36,7 @@
   place-items: center;
 }
 
-.darkmode-true {
+.dark-true {
   background-color: rgb(24, 26, 27);
 }
 
@@ -49,13 +49,13 @@
   z-index: 5;
 }
 
-.dropzone:hover.darkmode-false,
-.is-dragover.darkmode-false {
+.dropzone:hover.dark-false,
+.is-dragover.dark-false {
   background-color: #eee;
 }
 
-.dropzone:hover.darkmode-true,
-.is-dragover.darkmode-true {
+.dropzone:hover.dark-true,
+.is-dragover.dark-true {
   background-color: #121212;
 }
 
