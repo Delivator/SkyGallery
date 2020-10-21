@@ -10,13 +10,13 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                label="Link to existing SkyGallery album"
                 required
                 autocomplete="off"
+                v-model="linkInput"
+                label="Link to existing SkyGallery album"
                 :error-messages="inputError"
                 :loading="loading"
                 @input="onInput"
-                v-model="linkInput"
               ></v-text-field>
             </v-col>
             <v-col cols="12" v-if="items.length > 0">
@@ -212,21 +212,25 @@ import { utils } from "../mixins/utils";
 let linkInputTimeout = null;
 
 export default {
+  name: "AlbumCardDialog",
+  props: ["myItem"],
   mixins: [utils],
-  props: ["item"],
   data() {
     return {
-      linkInput: this.item.skylink ? `sia://${this.item.skylink}` : "",
+      linkInput: this.myItem.skylink ? `sia://${this.myItem.skylink}` : "",
       loading: false,
       inputError: "",
       items: [],
       title: "",
       skylink: "",
+      item: this.myItem,
     };
   },
 
-  beforeMount() {
-    if (this.item.skylink) this.loadAlbum(this.item.skylink);
+  watch: {
+    item(newValue) {
+      this.$emit("update-item", newValue);
+    },
   },
 
   methods: {
@@ -265,12 +269,20 @@ export default {
 
     cancelDialog() {
       this.item.status = "finished";
-      if (!this.item.skylink) this.$emit("removeItem");
+      if (!this.item.skylink) this.$emit("removeitem");
     },
 
     sheetColor(hover, id) {
       return hover || this.item.layout === id ? "primary" : "grey";
     },
+
+    toggleNewtab(value) {
+      this.item.newTab = value;
+    },
+  },
+
+  beforeMount() {
+    if (this.myItem.skylink) this.loadAlbum(this.myItem.skylink);
   },
 };
 </script>

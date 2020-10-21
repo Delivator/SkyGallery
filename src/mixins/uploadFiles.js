@@ -3,9 +3,8 @@ export const uploadFiles = {
     async uploadFiles() {
       // Max ten uploads at once
       if (
-        this.items.filter(
-          (item) => item.status === "uploading" || item.status === "uploaded"
-        ).length > 9
+        this.items.filter((item) => /^(uploading|uploaded)$/.test(item.status))
+          .length > 9
       )
         return;
 
@@ -17,15 +16,21 @@ export const uploadFiles = {
       let item = this.items.find((el) => el.id === id);
 
       item.status = "uploading";
-      item.log += "Uploading files... progress";
-      let files = [[item.file, item.file.name]];
-      if (item.thumbnailBlob && !item.skylinks.thumbnail) {
-        let fileName = item.file.name.split(".").reverse();
+      item.log += "progress";
+      let files = {};
+
+      if (item.file && !item.skylinks.source)
+        files.source = [item.file, item.filename];
+
+      if (item.thumbnailBlob) {
+        let fileName = item.filename.split(".").reverse();
         fileName[0] = "jpg";
         fileName[1] += "-thumbnail";
         fileName = fileName.reverse().join(".");
-        files.push([item.thumbnailBlob, fileName]);
+        files.thumbnail = [item.thumbnailBlob, fileName];
       }
+
+      if (files.length < 1) return;
       await this.uploadBlobs(files, item.id, item)
         .then((skylinks) => {
           Object.assign(item.skylinks, skylinks);
@@ -37,7 +42,7 @@ export const uploadFiles = {
           this.uploadFiles();
         })
         .catch((error) => {
-          this.alertBox.send("error", error);
+          console.error(error);
           item.status = "error";
           item.log = item.log.replace("progress", "");
           item.log += "Error.\n";

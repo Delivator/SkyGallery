@@ -9,7 +9,7 @@
         <h1 class="display-2">Create a new Album</h1>
       </v-col>
       <v-col v-else xl="4" md="6" cols="12">
-        <v-form @submit="publish($event)">
+        <v-form @submit="publish">
           <v-text-field
             class="headline"
             v-model="albumTitle"
@@ -39,18 +39,18 @@
     </v-row>
     <v-row justify="center">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
+        <Dropzone
+          :items="items"
+          :dragUpload="drag"
+          v-intersect="onIntersect"
+          :darkMode="darkMode"
+        />
       </v-col>
     </v-row>
-    <Uploads
-      :items="items"
-      :setItems="setItems"
-      :drag.sync="drag"
-      :isMobile="isMobile"
-    />
+    <Uploads :myItems.sync="items" :setItems="setItems" :drag.sync="drag" />
     <v-row justify="center" v-if="!isIntersecting">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone :items="items" :dragUpload="drag" />
+        <Dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
       </v-col>
     </v-row>
     <v-row v-if="items.length > 0">
@@ -62,7 +62,7 @@
           @click="publish"
           :disabled="loading"
           :loading="loading"
-          class="upload-btn"
+          class="mt-4"
         >
           Publish your album
           <v-icon right>backup</v-icon>
@@ -72,12 +72,6 @@
     </v-row>
   </v-container>
 </template>
-
-<style scoped>
-.upload-btn {
-  margin-top: 1rem;
-}
-</style>
 
 <script>
 import { publishAlbum } from "../mixins/publishAlbum";
@@ -89,19 +83,17 @@ import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
   name: "New",
+  props: ["version", "alertBox", "darkMode"],
   components: { Uploads, Dropzone, UploadDialog },
-  props: ["version", "alertBox", "showShare", "isMobile"],
   mixins: [publishAlbum, uploadBlob, utils],
-  data() {
-    return {
-      items: [],
-      albumTitle: "Untitled Album",
-      loading: false,
-      isIntersecting: true,
-      unfinishedDialog: false,
-      drag: false,
-    };
-  },
+  data: () => ({
+    items: [],
+    albumTitle: "Untitled Album",
+    loading: false,
+    isIntersecting: true,
+    unfinishedDialog: false,
+    drag: false,
+  }),
 
   methods: {
     setItems(newItems) {
@@ -110,7 +102,7 @@ export default {
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;
     },
-    publish: function (event, force = false) {
+    publish(event, force = false) {
       if (event) event.preventDefault();
 
       const unfinished = this.items.filter(

@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar v-if="!isEmbed" app color="secondary">
-      <router-link to="/" class="white--text title-link">
+    <v-app-bar v-if="!isEmbed" app>
+      <router-link to="/" class="title-link" :class="themedText">
         <v-img
           alt="Skynet Logo"
           class="shrink mr-2"
@@ -17,7 +17,7 @@
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-on="on" class="help-icon">help</v-icon>
+          <v-icon v-on="on" class="mr-4">help</v-icon>
         </template>
         <span>Got a slow portal?<br />Try a different one!</span>
       </v-tooltip>
@@ -38,11 +38,11 @@
         <v-col md="4" sm="6" xs="12">
           <v-alert
             v-for="alert in alerts"
-            :key="alert.id"
             v-model="alert.show"
-            :type="alert.type"
             dismissible
             transition="slide-y-transition"
+            :key="alert.id"
+            :type="alert.type"
             >{{ alert.text }}</v-alert
           >
         </v-col>
@@ -54,25 +54,26 @@
         :portals="portals"
         :version="version"
         :alertBox="alertBox"
-        :showShare="showShare"
         :isEmbed="isEmbed"
-        :isMobile="isMobile"
+        :pageTitle="pageTitle"
+        :darkMode="darkMode"
+        :themedText="themedText"
       />
     </v-main>
     <v-footer v-if="isEmbed" padless fixed>
       <v-row justify="center">
         <v-col class="py-3 text-center" cols="12" @click="openAlbum">
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator/SkyGallery"
             target="_blank"
             rel="noopener noreferrer"
             >SkyGallery</a
           >
-          <span class="white--text version-tag"> v{{ version }}</span>
+          <span :class="themedText" class="version-tag"> v{{ version }}</span>
           &ndash; Hosted on
           <a
-            class="white--text"
+            :class="themedText"
             href="https://siasky.net/"
             target="_blank"
             rel="noopener noreferrer"
@@ -80,7 +81,7 @@
           >
           &ndash; Made by
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator"
             target="_blank"
             rel="noopener noreferrer"
@@ -94,7 +95,7 @@
         <v-col class="py-3 text-center" cols="12">
           Made with 💚 by
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator"
             target="_blank"
             rel="noopener noreferrer"
@@ -102,14 +103,14 @@
           >
           &ndash;
           <a
-            class="white--text"
+            :class="themedText"
             href="https://github.com/Delivator/SkyGallery"
             target="_blank"
             rel="noopener noreferrer"
             >Source code</a
           >
           &ndash;
-          <span class="white--text version-tag">v{{ version }}</span>
+          <span :class="themedText" class="version-tag">v{{ version }}</span>
           &ndash;
           <v-tooltip :value="showRefTooltip && refVisible" top>
             <template v-slot:activator="{ on }">
@@ -134,6 +135,11 @@
                 : "Earn crypto by browsing the internet"
             }}</span>
           </v-tooltip>
+          <v-btn @click="darkMode = !darkMode" absolute right icon>
+            <v-icon>{{
+              darkMode ? "brightness_low" : "brightness_high"
+            }}</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-footer>
@@ -143,6 +149,10 @@
 <style>
 html {
   overflow: auto;
+}
+
+html.noscroll {
+  overflow: hidden;
 }
 
 ::-webkit-scrollbar-track,
@@ -188,15 +198,10 @@ html {
 .v-alert {
   pointer-events: all;
 }
-
-.help-icon {
-  margin-right: 1rem;
-}
 </style>
 
 <script>
 import sha256 from "crypto-js/sha256";
-import { isMobile } from "mobile-device-detect";
 import version from "../package.json";
 
 function inIframe() {
@@ -238,14 +243,13 @@ export default {
           link: "https://siasky.net",
         },
       ],
-      showShare: false,
       isEmbed: false,
       refHover: false,
       showRefTooltip: false,
       refVisible: false,
-      isMobile,
-
       alerts: [],
+      pageTitle: "SkyGallery - Media Gallery powered by Skynet",
+      darkMode: JSON.parse(localStorage.getItem("darkMode")) ?? true,
       alertBox: {
         show: false,
         type: "info",
@@ -275,9 +279,66 @@ export default {
     };
   },
 
-  beforeMount: function () {
+  watch: {
+    darkMode(val) {
+      this.$vuetify.theme.dark = this.darkMode;
+      localStorage.darkMode = val;
+    },
+  },
+
+  computed: {
+    themedText() {
+      return this.darkMode ? "white--text" : "black--text";
+    },
+  },
+
+  methods: {
+    changePortal(portal) {
+      const hnsRegex = /^(.*)\.hns\..*$/;
+      const base32Regex = /^([a-z0-9]{55})\..*$/;
+      const newUrl = new URL(location);
+      const newPortal = new URL(portal.link);
+
+      if (hnsRegex.test(newUrl.hostname)) {
+        const hnsSub = newUrl.hostname.match(hnsRegex)[1];
+        newPortal.hostname = newPortal.hostname.replace("www.", "");
+        newUrl.hostname = `${hnsSub}.hns.${newPortal.hostname}`;
+      } else if (base32Regex.test(newUrl.hostname)) {
+        const base32Sub = newUrl.hostname.match(base32Regex)[1];
+        newPortal.hostname = newPortal.hostname.replace("www.", "");
+        newUrl.hostname = `${base32Sub}.${newPortal.hostname}`;
+      } else {
+        newUrl.hostname = newPortal.hostname;
+      }
+
+      location.href = newUrl.href;
+    },
+
+    openAlbum() {
+      let win = window.open(window.location);
+      win.focus();
+    },
+
+    refMouseover() {
+      this.showRefTooltip = false;
+      this.refHover = true;
+    },
+
+    refMouseleave() {
+      setTimeout(() => {
+        this.refHover = false;
+      }, 100);
+    },
+
+    refVisibility(isVisible) {
+      this.refVisible = isVisible;
+    },
+  },
+
+  beforeMount() {
     this.isEmbed = inIframe();
     const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
+    this.$vuetify.theme.dark = this.darkMode;
 
     fetch(trustedPortals)
       .then((response) => {
@@ -306,35 +367,5 @@ export default {
   //     this.showRefTooltip = true;
   //   }, 5000);
   // },
-
-  methods: {
-    changePortal: function (portal) {
-      let newUrl = new URL(portal.link);
-      document.location.href = document.location.href.replace(
-        document.location.origin,
-        newUrl.origin
-      );
-    },
-
-    openAlbum: function () {
-      let win = window.open(window.location);
-      win.focus();
-    },
-
-    refMouseover: function () {
-      this.showRefTooltip = false;
-      this.refHover = true;
-    },
-
-    refMouseleave: function () {
-      setTimeout(() => {
-        this.refHover = false;
-      }, 100);
-    },
-
-    refVisibility: function (isVisible) {
-      this.refVisible = isVisible;
-    },
-  },
 };
 </script>

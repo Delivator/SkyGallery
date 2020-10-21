@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-center">
     <v-row>
-      <v-col cols="12" class="head" :class="`mobile-${isMobile}`">
+      <v-col cols="12" :class="headerClass">
         <h1 class="display-3">Welcome to SkyGallery</h1>
         <span class="subtitle-1"
           >Powered by
@@ -9,12 +9,12 @@
             href="https://siasky.net/"
             target="_blank"
             rel="noopener noreferrer"
-            class="white--text"
+            :class="themedText"
             >Skynet</a
           ></span
         >
       </v-col>
-      <v-col cols="12" class="logo" :class="`mobile-${isMobile}`">
+      <v-col cols="12" :class="logoClass">
         <v-img
           :src="require('../assets/skynet-logo-animated.svg')"
           contain
@@ -22,24 +22,35 @@
         />
       </v-col>
       <v-col cols="12" class="subtext">
-        <span class="display-1">
+        <span class="display-1 mr-4">
           Creating a
-          <v-btn color="primary" to="new" outlined
-            ><v-icon left>add</v-icon>new album</v-btn
-          >
+          <v-btn color="primary" to="new" outlined>
+            <v-icon left>add</v-icon>new album
+          </v-btn>
           or open an existing one
         </span>
         <v-text-field
           @input="openAlbum"
           outlined
           single-line
-          autocomplete="off"
+          class="mt-2"
+          autocomplete="off album-input"
           v-model="linkInput"
-          style="width: 15rem;"
+          style="width: 15rem"
           placeholder="Paste SkyGallery or sia:// link"
           :loading="loading"
           :error-messages="inputError"
         ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" md="6" v-if="recentVisits.length > 0">
+        <h1 class="text-left subtitle-1 ma-2">Recently visited albums</h1>
+        <RecentAlbumTable :items="recentVisits" headerText="Visited" />
+      </v-col>
+      <v-col cols="12" md="6" v-if="recentCreated.length > 0">
+        <h1 class="text-left subtitle-1 ma-2">Newly created albums</h1>
+        <RecentAlbumTable :items="recentCreated" headerText="Creation date" />
       </v-col>
     </v-row>
   </v-container>
@@ -49,25 +60,18 @@
 .subtext > * {
   display: inline-block;
 }
-.subtext > span {
-  margin-right: 1rem;
-}
-.head.mobile-false {
-  margin: 5rem 0;
-}
-.logo.mobile-false {
-  margin-bottom: 5rem;
-}
 </style>
 
 <script>
+import RecentAlbumTable from "../components/RecentAlbumTable";
 import { utils } from "../mixins/utils";
 
 let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "alertBox", "isMobile"],
+  props: ["portals", "alertBox", "themedText"],
+  components: { RecentAlbumTable },
   mixins: [utils],
   data: () => ({
     linkInput: "",
@@ -75,17 +79,26 @@ export default {
     inputError: "",
   }),
 
-  mounted: function () {
-    document.addEventListener("dragenter", this.dragoverHandler);
-  },
+  computed: {
+    headerClass() {
+      return this.$vuetify.breakpoint.mobile ||
+        this.recentVisits.length > 0 ||
+        this.recentCreated.length > 0
+        ? ""
+        : "my-16";
+    },
 
-  beforeRouteLeave: function (to, from, next) {
-    document.removeEventListener("dragenter", this.dragoverHandler);
-    next();
+    logoClass() {
+      return this.$vuetify.breakpoint.mobile ||
+        this.recentVisits.length > 0 ||
+        this.recentCreated.length > 0
+        ? ""
+        : "mb-16";
+    },
   },
 
   methods: {
-    openAlbum: function () {
+    openAlbum() {
       if (openAlbumTimeout !== null) clearTimeout(openAlbumTimeout);
       this.inputError = "";
       if (!this.linkInput) return;
@@ -110,10 +123,19 @@ export default {
       }, 250);
     },
 
-    dragoverHandler: function (event) {
+    dragoverHandler(event) {
       if (event.dataTransfer && event.dataTransfer.files)
         this.$router.push("/new");
     },
+  },
+
+  mounted() {
+    document.addEventListener("dragenter", this.dragoverHandler);
+  },
+
+  beforeRouteLeave(to, from, next) {
+    document.removeEventListener("dragenter", this.dragoverHandler);
+    next();
   },
 };
 </script>

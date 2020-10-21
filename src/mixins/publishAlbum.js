@@ -33,8 +33,10 @@ export const publishAlbum = {
       )
         .then((skylink) => {
           this.loading = false;
-          this.showShare = true;
-          this.$router.push("/a/" + skylink);
+          this.addRecentCreated(skylink, this.albumTitle);
+          setTimeout(() => {
+            this.$router.push("/a/" + skylink);
+          }, 50);
         })
         .catch((err) => {
           this.loading = false;

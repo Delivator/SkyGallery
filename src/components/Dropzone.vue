@@ -2,7 +2,7 @@
   <div
     id="dropzone"
     class="dropzone"
-    :class="isDragOver ? 'is-dragover' : ''"
+    :class="`dragover-${isDragOver} dark-${darkMode}`"
     @drop="onDrop"
     @dragover="onDrag"
     @dragenter="onDrag"
@@ -27,7 +27,7 @@
 
 <style scoped>
 .dropzone {
-  background-color: rgb(24, 26, 27);
+  background-color: white;
   border: 2px dashed rgb(88, 181, 96);
   border-radius: 5px;
   padding: 3rem 0;
@@ -36,7 +36,11 @@
   place-items: center;
 }
 
-.is-dragover {
+.dark-true {
+  background-color: rgb(24, 26, 27);
+}
+
+.dragover-true {
   position: fixed;
   height: 100vh;
   width: 100vw;
@@ -45,8 +49,13 @@
   z-index: 5;
 }
 
-.dropzone:hover,
-.is-dragover {
+.dropzone:hover.dark-false,
+.is-dragover.dark-false {
+  background-color: #eee;
+}
+
+.dropzone:hover.dark-true,
+.is-dragover.dark-true {
   background-color: #121212;
 }
 
@@ -73,25 +82,11 @@ import { uploadBlob } from "../mixins/uploadBlob";
 
 export default {
   name: "Dropzone",
+  props: ["items", "dragUpload", "darkMode"],
   mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob],
-  props: ["items", "dragUpload"],
-  data() {
-    return {
-      isDragOver: false,
-    };
-  },
-
-  created: function () {
-    document
-      .querySelector(".v-main__wrap")
-      .addEventListener("dragover", this.onDrag);
-  },
-
-  beforeDestroy: function () {
-    document
-      .querySelector(".v-main__wrap")
-      .removeEventListener("dragover", this.onDrag);
-  },
+  data: () => ({
+    isDragOver: false,
+  }),
 
   methods: {
     preventEvent(e) {
@@ -117,6 +112,18 @@ export default {
       this.preventEvent(e);
       this.isDragOver = false;
     },
+  },
+
+  created() {
+    document
+      .querySelector(".v-main__wrap")
+      .addEventListener("dragover", this.onDrag);
+  },
+
+  beforeDestroy() {
+    document
+      .querySelector(".v-main__wrap")
+      .removeEventListener("dragover", this.onDrag);
   },
 };
 </script>

@@ -1,13 +1,14 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
-    <AlbumFullscreen
+    <FullscreenView
       v-if="showFullImg"
       :showFullIndex.sync="showFullIndex"
       :showFullImg.sync="showFullImg"
       :imgloading.sync="imgloading"
       :imgloaded.sync="imgloaded"
       :files="files"
-      @setImgloading="setImgloading"
+      :darkMode="darkMode"
+      @set-imgloading="setImgloading"
     />
     <v-row justify="center">
       <v-col v-if="loading" cols="12">
@@ -18,7 +19,7 @@
           width="7"
         ></v-progress-circular>
       </v-col>
-      <v-col v-else cols="12">
+      <v-col v-else cols="12 my-4">
         <a
           v-if="isEmbed"
           class="display-2 title-link white--text"
@@ -29,7 +30,7 @@
         >
         <span v-else class="display-2">
           {{ albumTitle }}
-          <v-menu offset-y v-model="showShare">
+          <v-menu offset-y>
             <template v-slot:activator="{ on }">
               <v-btn fab small top outlined color="primary" v-on="on">
                 <v-icon>share</v-icon>
@@ -41,7 +42,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, shortLink)"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, shortLink)"
                       >Short Link:
@@ -58,7 +59,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, directLink())"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, directLink())">
                       Direct Link:
@@ -75,7 +76,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, hnsLink)"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, hnsLink)"
                       >HNS Link:
@@ -92,7 +93,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, `sia://${albumId}`)"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title
                       @click="copyLink($event, `sia://${albumId}`)"
@@ -110,7 +111,7 @@
                   <v-list-item
                     v-on="on"
                     @click="copyLink($event, embedCode())"
-                    @mouseover="selectLink($event)"
+                    @mouseover="selectLink"
                   >
                     <v-list-item-title @click="copyLink($event, embedCode())">
                       Embed:
@@ -131,7 +132,7 @@
         :key="index"
         :class="itemsClass(item.type)"
       >
-        <h1 v-if="item.type === 'title'" class="title text-h4">
+        <h1 v-if="item.type === 'title'" class="mt-6 text-h4">
           {{ item.value }}
         </h1>
         <v-card
@@ -156,9 +157,9 @@
         </v-card>
         <v-card
           v-else
-          @click="openFull(index)"
-          :class="showFullImg && showFullIndex !== index ? 'grayscale' : ''"
-          :id="`img-${index}`"
+          @click="openFull($event, index)"
+          :class="cardClass(index)"
+          :href="`/${item.skylinks.source}`"
         >
           <v-img
             :src="`/${item.skylinks.thumbnail}`"
@@ -167,11 +168,11 @@
           >
             <v-icon
               v-if="item.type === 'video'"
-              class="video-icon translate-center"
+              class="video-icon pa-4 translate-center white--text"
               large
               >play_arrow</v-icon
             >
-            <v-card-title>{{ item.name }}</v-card-title>
+            <v-card-title class="white--text">{{ item.name }}</v-card-title>
           </v-img>
         </v-card>
       </v-col>
@@ -183,13 +184,12 @@
           outlined
           :to="`/edit/${albumId}`"
           :loading="loading"
-          class="upload-btn"
+          class="upload-btn my-6"
         >
           Edit album
           <v-icon right>create</v-icon>
         </v-btn>
       </v-col>
-      <v-col cols="12"></v-col>
     </v-row>
   </v-container>
 </template>
@@ -236,18 +236,13 @@
   top: 50%;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  padding: 1rem;
-}
-
-h1.title {
-  margin-top: 1rem;
 }
 </style>
 
 <script>
 import { utils } from "../mixins/utils";
 import AlbumCardGrid from "../components/AlbumCardGrid";
-import AlbumFullscreen from "../components/AlbumFullscreen";
+import FullscreenView from "../components/FullscreenView";
 
 function selectTextRange(node) {
   const range = new Range();
@@ -258,39 +253,36 @@ function selectTextRange(node) {
 
 export default {
   name: "Album",
+  props: ["alertBox", "isEmbed", "pageTitle", "darkMode"],
+  components: { AlbumCardGrid, FullscreenView },
   mixins: [utils],
-  props: ["showShare", "alertBox", "isEmbed"],
-  components: { AlbumCardGrid, AlbumFullscreen },
-  data() {
-    return {
-      albumId: "",
-      files: [],
-      albumTitle: "Album Title",
-      loading: true,
-      tooltipText: "Click to copy to clipboard",
-      showFullImg: false,
-      showFullIndex: 0,
-      imgloaded: false,
-      imgloading: false,
-      pageTitle: "SkyGallery - Media Gallery powered by Skynet",
-    };
-  },
+  data: () => ({
+    albumId: "",
+    files: [],
+    albumTitle: "Album Title",
+    loading: true,
+    tooltipText: "Click to copy to clipboard",
+    showFullImg: false,
+    showFullIndex: 0,
+    imgloaded: false,
+    imgloading: false,
+  }),
 
   methods: {
-    setImgloading: function () {
+    setImgloading() {
       this.imgloaded = false;
       setTimeout(() => {
         if (!this.imgloaded) this.imgloading = true;
       }, 100);
     },
 
-    selectLink: function (event) {
+    selectLink(event) {
       this.tooltipText = "Click to copy to clipboard";
       let node = event.target.querySelector(".share-link, .embed-code");
       if (node) selectTextRange(node);
     },
 
-    copyLink: function (event, copyText) {
+    copyLink(event, copyText) {
       event.preventDefault();
       event.stopPropagation();
       if (!copyText) return;
@@ -300,16 +292,17 @@ export default {
         .catch((error) => this.alertBox.send("error", error));
     },
 
-    openFull: function (index) {
+    openFull(event, index) {
+      event.preventDefault();
       this.setImgloading();
       this.showFullImg = true;
       this.showFullIndex = index;
-      this.$vuetify.goTo(`#img-${this.showFullIndex}`);
+      this.$vuetify.goTo(`.img-${this.showFullIndex}`);
     },
 
-    loadAlbum: async function (albumId) {
+    async loadAlbum(albumId) {
       if (!albumId) albumId = this.albumId;
-      if (albumId === "") {
+      if (!albumId) {
         this.$router.push("/");
         this.alertBox.send("info", "No album ID provided");
         return;
@@ -329,6 +322,8 @@ export default {
         document.title = `"${data.title}" - ${this.pageTitle}`;
 
         this.$forceUpdate();
+        this.$vuetify.goTo(".v-main__wrap");
+        this.addRecentVisit(albumId, this.albumTitle);
       } catch (error) {
         this.alertBox.send("error", "Error getting album data");
       }
@@ -341,21 +336,28 @@ export default {
     embedCode() {
       return `<iframe src="${this.directLink()}" id="skygallery-embed" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
     },
+
+    cardClass(index) {
+      let className = `img-${index}`;
+      if (this.showFullImg && this.showFullIndex !== index)
+        className += " grayscale";
+      return className;
+    },
+  },
+
+  computed: {
+    shortLink() {
+      return `https://skygallery.xyz/a/${this.albumId}`;
+    },
+
+    hnsLink() {
+      return `${location.origin}/hns/skygallery/#/a/${this.albumId}`;
+    },
   },
 
   beforeRouteLeave(to, from, next) {
     document.title = this.pageTitle;
     next();
-  },
-
-  computed: {
-    shortLink: function () {
-      return `https://skygallery.xyz/a/${this.albumId}`;
-    },
-
-    hnsLink: function () {
-      return `${location.origin}/hns/skygallery/#/a/${this.albumId}`;
-    },
   },
 
   beforeRouteUpdate(to, from, next) {
@@ -364,7 +366,7 @@ export default {
     next();
   },
 
-  mounted: function () {
+  mounted() {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
     this.loadAlbum();

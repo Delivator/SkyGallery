@@ -1,11 +1,22 @@
 export const utils = {
-  data() {
-    return {
-      skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
-      albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
-      albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
-    };
+  data: () => ({
+    skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
+    albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
+    albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
+    recentVisits: JSON.parse(localStorage.getItem("recentVisits")) ?? [],
+    recentCreated: JSON.parse(localStorage.getItem("recentCreated")) ?? [],
+  }),
+
+  watch: {
+    recentVisits(val) {
+      localStorage.recentVisits = JSON.stringify(val);
+    },
+
+    recentCreated(val) {
+      localStorage.recentCreated = JSON.stringify(val);
+    },
   },
+
   methods: {
     extractAlbumSkylink(str) {
       if (!this.albumIdRegex.test(str)) return false;
@@ -41,7 +52,7 @@ export const utils = {
       });
     },
 
-    itemsClass: function (type) {
+    itemsClass(type) {
       if (type === "title") {
         return "title col-12";
       } else {
@@ -51,6 +62,44 @@ export const utils = {
 
     selectText(event, test) {
       if (event.target.value === test) event.target.select();
+    },
+
+    addRecentVisit(albumId, title) {
+      this.recentVisits = this.recentVisits.filter(
+        (item) => item.id !== albumId
+      );
+
+      this.recentVisits.unshift({
+        id: albumId,
+        time: Date.now(),
+        title,
+      });
+    },
+
+    addRecentCreated(albumId, title) {
+      this.recentCreated.unshift({
+        id: albumId,
+        time: Date.now(),
+        title,
+      });
+    },
+
+    shortDate(date) {
+      return new Date(date).toLocaleDateString(undefined, {
+        day: "numeric",
+        month: "short",
+      });
+    },
+
+    longDate(date) {
+      return new Date(date).toLocaleDateString(undefined, {
+        hour: "numeric",
+        minute: "numeric",
+        weekday: "short",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
     },
   },
 };

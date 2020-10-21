@@ -21,7 +21,7 @@
             single-line
             :loading="loading"
             :disabled="loading"
-            @focus="selectText($event, 'Untitled Album')"
+            @focus="selectText($event, albumTitle)"
             ref="titleInput"
             tabindex="100"
           >
@@ -43,18 +43,23 @@
     </v-row>
     <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" :dragUpload="drag" v-intersect="onIntersect" />
+        <dropzone
+          :items="items"
+          :dragUpload="drag"
+          v-intersect="onIntersect"
+          :darkMode="darkMode"
+        />
       </v-col>
     </v-row>
     <uploads
       v-if="!loading"
-      :items="items"
+      :myItems.sync="items"
       :setItems="setItems"
       :drag.sync="drag"
     />
     <v-row v-if="!loading && !isIntersecting" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" :dragUpload="drag" />
+        <dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
       </v-col>
     </v-row>
     <v-row v-if="!loading && items.length > 0">
@@ -66,7 +71,7 @@
           @click="publish"
           :disabled="loading"
           :loading="loading"
-          class="upload-btn"
+          class="mt-4"
         >
           Publish your album
           <v-icon right>backup</v-icon>
@@ -76,12 +81,6 @@
     </v-row>
   </v-container>
 </template>
-
-<style scoped>
-.upload-btn {
-  margin-top: 1rem;
-}
-</style>
 
 <script>
 import uploadDialog from "@/components/UploadDialog.vue";
@@ -94,20 +93,18 @@ import sha256 from "crypto-js/sha256";
 
 export default {
   name: "Edit",
+  props: ["alertBox", "pageTitle", "darkMode"],
   components: { uploads, dropzone, uploadDialog },
   mixins: [utils, publishAlbum, uploadBlob],
-  props: ["alertBox"],
-  data() {
-    return {
-      albumId: "",
-      items: [],
-      albumTitle: "Album Title",
-      loading: true,
-      isIntersecting: false,
-      drag: false,
-      unfinishedDialog: false,
-    };
-  },
+  data: () => ({
+    albumId: "",
+    items: [],
+    albumTitle: "Album Title",
+    loading: true,
+    isIntersecting: false,
+    drag: false,
+    unfinishedDialog: false,
+  }),
 
   methods: {
     setItems(newItems) {
@@ -116,7 +113,7 @@ export default {
     onIntersect(entries) {
       this.isIntersecting = entries[0].isIntersecting;
     },
-    publish: function (event, force = false) {
+    publish(event, force = false) {
       if (event) event.preventDefault();
 
       const unfinished = this.items.filter(
@@ -137,7 +134,7 @@ export default {
     },
   },
 
-  beforeMount: function () {
+  beforeMount() {
     if (this.$route.params && this.$route.params.id)
       this.albumId = this.$route.params.id;
 
@@ -164,8 +161,18 @@ export default {
           this.items.push(item);
         });
         this.albumTitle = data.title;
+
+        if (data.title.length > 31)
+          data.title = `${data.title.substr(0, 32)}...`;
+
+        document.title = `Editing "${data.title}" - ${this.pageTitle}`;
       })
       .catch((error) => this.alertBox.send("error", error));
+  },
+
+  beforeRouteLeave(to, from, next) {
+    document.title = this.pageTitle;
+    next();
   },
 };
 </script>

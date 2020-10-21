@@ -30,58 +30,46 @@ export const generateThumbnails = {
             item.thumbnailBlob = blob;
             item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
             item.status = "processed";
-            item.log += "done.\n";
+            item.log += "done.\nUploading files... ";
             this.$forceUpdate();
             this.uploadFiles();
             this.generateThumbnails();
           })
           .catch(console.error);
       } else if (item.type === "video") {
-        if (!item.videoElement)
-          item.videoElement = document.querySelector(`#video-${item.id}`);
-        if (!item.videoElement) return;
+        const videoElement = document.querySelector(`#video-${item.id}`);
+        if (!videoElement) return;
+        if (!item.canplay) return;
         item.status = "processing";
         item.log = item.log.replace(/^Up.*thu.*\.(\n|$)/gm, "");
         item.log = item.log.replace(/^Gen.*\.(\n|$)/gm, "");
         item.log += "Generating thumbnail... ";
-        let canvas = document.createElement("canvas");
-        canvas.width = item.videoElement.videoWidth;
-        canvas.height = item.videoElement.videoHeight;
+        const canvas = document.createElement("canvas");
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
         if (!item.skylinks.thumbnail) {
-          item.videoElement.currentTime = 0;
+          videoElement.currentTime = 0;
+          await sleep(250);
         }
-        await sleep(250);
         canvas
           .getContext("2d")
-          .drawImage(item.videoElement, 0, 0, canvas.width, canvas.height);
+          .drawImage(videoElement, 0, 0, canvas.width, canvas.height);
         try {
           let file = await imageCompression.canvasToFile(canvas, "image/jpeg");
           let blob = await imageCompression(file, options);
           item.thumbnailBlob = blob;
           item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
           item.log += "done.\n";
-          this.$forceUpdate();
 
-          let fileName = item.filename.split(".").reverse();
-          fileName[0] = "jpg";
-          fileName[1] += "-thumbnail";
-          fileName = fileName.reverse().join(".");
-
-          item.log += "Uploading thumbnail... ";
-          let skylink = await this.uploadBlob(blob, fileName);
-          item.thumbnail = `${skylink}/${fileName}`;
-          item.skylinks.thumbnail = item.thumbnail;
-          item.log += "done.\n";
+          item.status = "processed";
 
           if (item.skylinks.source) {
-            item.status = "finished";
+            item.log += "Uploading thumbnail... ";
           } else {
-            item.status = "processed";
+            item.log += "Uploading files... ";
           }
-
           this.uploadFiles();
           this.generateThumbnails();
-          this.$forceUpdate();
         } catch (error) {
           console.error(error);
         }

@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="unfinishedDialog"
+    :value="unfinishedDialog"
     max-width="500"
     @input="$emit('update:unfinishedDialog', unfinishedDialog)"
   >
