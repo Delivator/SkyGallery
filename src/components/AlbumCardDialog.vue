@@ -277,7 +277,6 @@ export default {
     },
 
     toggleNewtab(value) {
-      console.log(value);
       this.item.newTab = value;
     },
   },
