@@ -1,11 +1,7 @@
 <template>
   <v-container class="text-center">
     <v-row>
-      <v-col
-        cols="12"
-        class="head"
-        :class="`mobile-${$vuetify.breakpoint.mobile}`"
-      >
+      <v-col cols="12" :class="headerClass">
         <h1 class="display-3">Welcome to SkyGallery</h1>
         <span class="subtitle-1"
           >Powered by
@@ -18,11 +14,7 @@
           ></span
         >
       </v-col>
-      <v-col
-        cols="12"
-        class="logo"
-        :class="`mobile-${$vuetify.breakpoint.mobile}`"
-      >
+      <v-col cols="12" :class="logoClass">
         <v-img
           :src="require('../assets/skynet-logo-animated.svg')"
           contain
@@ -68,14 +60,6 @@
 .subtext > * {
   display: inline-block;
 }
-
-.head.mobile-false {
-  margin: 5rem 0;
-}
-
-.logo.mobile-false {
-  margin-bottom: 5rem;
-}
 </style>
 
 <script>
@@ -94,6 +78,24 @@ export default {
     loading: false,
     inputError: "",
   }),
+
+  computed: {
+    headerClass() {
+      return this.$vuetify.breakpoint.mobile ||
+        this.recentVisits.length > 0 ||
+        this.recentCreated.length > 0
+        ? ""
+        : "my-16";
+    },
+
+    logoClass() {
+      return this.$vuetify.breakpoint.mobile ||
+        this.recentVisits.length > 0 ||
+        this.recentCreated.length > 0
+        ? ""
+        : "mb-16";
+    },
+  },
 
   methods: {
     openAlbum() {
