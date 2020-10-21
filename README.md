@@ -1,7 +1,7 @@
 # SkyGallery
 Powered by [Skynet](https://siasky.net/)
 
-Example album: https://skygallery.xyz/a/AAAtpYuAvllPMKe-eKYGC4MLX2ASJrLyFMGg2YfRF8BwsQ
+Example album: https://skygallery.xyz/a/AAD2afVSNvnGJ_pgqq9yWIQd374Bkyr2ie-S0uIqT6vHVA
 
 ## Why use SkyGallery?
 - Files are stored with a 10x redundancy on a decentralized storage network called [Sia](https://sia.tech/) for high availability and speed
@@ -16,7 +16,7 @@ Example album: https://skygallery.xyz/a/AAAtpYuAvllPMKe-eKYGC4MLX2ASJrLyFMGg2YfR
 - Totally client side, files are processed (compressed and resized for thumbnails) by the browser before uploading
 
 
-Example video: https://skygallery.xyz/a/AAD2afVSNvnGJ_pgqq9yWIQd374Bkyr2ie-S0uIqT6vHVA
+Example video: https://skyportal.xyz/AAAm08XnTmP4BtcMGaLeVWZSvScnPCDgEWJtgkvSNUtgVw
 
 ## Screenshots
 
