@@ -41,7 +41,8 @@
           @input="openAlbum"
           outlined
           single-line
-          autocomplete="off"
+          class="mt-2"
+          autocomplete="off album-input"
           v-model="linkInput"
           style="width: 15rem"
           placeholder="Paste SkyGallery or sia:// link"
@@ -78,8 +79,8 @@
 </style>
 
 <script>
-import { utils } from "../mixins/utils";
 import RecentAlbumTable from "../components/RecentAlbumTable";
+import { utils } from "../mixins/utils";
 
 let openAlbumTimeout = null;
 
