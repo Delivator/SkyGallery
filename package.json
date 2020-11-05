@@ -17,7 +17,7 @@
     "browser-image-compression": "^1.0.12",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
-    "exifr": "^5.0.6",
+    "exifr": "^6.0.0",
     "vue": "^2.6.12",
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.6",
