@@ -13,7 +13,7 @@
   },
   "main": "src/main.js",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "browser-image-compression": "^1.0.12",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
