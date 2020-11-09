@@ -20,7 +20,7 @@
     "exifr": "^6.0.0",
     "vue": "^2.6.12",
     "vue-observe-visibility": "^0.4.6",
-    "vue-router": "^3.4.8",
+    "vue-router": "^3.4.9",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.3.16"
   },
