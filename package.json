@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "browser-image-compression": "^1.0.13",
-    "core-js": "^3.6.5",
+    "core-js": "^3.7.0",
     "crypto-js": "^4.0.0",
     "exifr": "^6.0.0",
     "vue": "^2.6.12",
