@@ -1,15 +1,29 @@
-const skynet = require("@nebulous/skynet");
+const { SkynetClient } = require("@nebulous/skynet");
 const config = require("./vue-skynet_config");
 const fetch = require("node-fetch");
+const base64js = require("base64-js");
+const base32Encode = require("base32-encode");
+
+const client = new SkynetClient(config.portal);
 
 const path = "./dist";
 
-let opts = skynet.defaultOptions;
-
-opts.portalUrl = config.portal;
 console.log(`Uploading ${path} to ${config.portal}`);
 
+// from https://github.com/kwypchlo/base32/blob/a68c5d5efab177688bea8368cf7efd03b130a0fa/src/crypto.ts
+function toBase32(skylink) {
+  const decodedSkylink = base64js.toByteArray(
+    skylink.padEnd(skylink.length + 4 - (skylink.length % 4), "=")
+  );
+  return base32Encode(decodedSkylink, "RFC4648-HEX", {
+    padding: false,
+  }).toLowerCase();
+}
+
 function updateNamebaseDomain(skylink) {
+  console.log(
+    `Updating TXT record of ${config.namebaseDomain} to sia://${skylink}`
+  );
   if (!config.namebaseDomain)
     return console.error("config.namebaseDomain cannot be empty");
   if (!config.namebaseAPIKey)
@@ -67,15 +81,19 @@ function updateNamebaseDomain(skylink) {
     });
 }
 
-skynet
-  .uploadDirectory(path, opts)
+client
+  .uploadDirectory(path)
   .then((resp) => {
     const skylink = resp.replace("sia://", "");
+    const base32Skylink = toBase32(skylink);
+
+    let base32Url = new URL(config.portal);
+    base32Url.hostname = base32Url.hostname.replace("www.", "");
+    base32Url.hostname = `${base32Skylink}.${base32Url.hostname}`;
+
     console.log(`Done: ${config.portal}/${skylink}/`);
+    console.log(`Base32: ${base32Url}`);
     if (config.enableNamebase) {
-      console.log(
-        `Updating TXT record of ${config.namebaseDomain} to ${skylink}`
-      );
       updateNamebaseDomain(skylink);
     }
   })
