@@ -135,11 +135,23 @@
                 : "Earn crypto by browsing the internet"
             }}</span>
           </v-tooltip>
-          <v-btn @click="darkMode = !darkMode" absolute right icon>
-            <v-icon>{{
-              darkMode ? "brightness_low" : "brightness_high"
-            }}</v-icon>
-          </v-btn>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-on="on"
+                v-bind="attrs"
+                @click="darkMode = !darkMode"
+                absolute
+                right
+                icon
+              >
+                <v-icon>{{
+                  darkMode ? "brightness_high" : "brightness_low"
+                }}</v-icon>
+              </v-btn>
+            </template>
+            <span>Toggle dark mode</span>
+          </v-tooltip>
         </v-col>
       </v-row>
     </v-footer>

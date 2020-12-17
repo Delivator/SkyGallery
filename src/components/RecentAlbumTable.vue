@@ -17,11 +17,15 @@
       <template v-slot:item="{ item }">
         <tr>
           <td
-            @click="$router.push(`a/${item.id}`)"
+            @click="openAlbum(item.id)"
             v-text="item.title"
             class="text-start"
           ></td>
-          <td class="text-start" v-text="longDate(item.time)"></td>
+          <td
+            @click="openAlbum(item.id)"
+            class="text-start"
+            v-text="longDate(item.time)"
+          ></td>
         </tr>
       </template>
     </v-data-table>
@@ -52,6 +56,12 @@ export default {
       ],
       search: "",
     };
+  },
+
+  methods: {
+    openAlbum(id) {
+      this.$router.push(`a/${id}`);
+    },
   },
 };
 </script>
