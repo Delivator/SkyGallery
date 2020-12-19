@@ -51,30 +51,6 @@
           >
           &ndash;
           <span :class="themedText" class="version-tag">v{{ version }}</span>
-          &ndash;
-          <v-tooltip :value="showRefTooltip && refVisible" top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                :outlined="!(showRefTooltip && refVisible)"
-                color="#FB542B"
-                small
-                dark
-                href="https://brave.com/sky643"
-                target="_blank"
-                rel="noopener noreferrer"
-                v-on="on"
-                @mouseover="refMouseover"
-                @mouseleave="refMouseleave"
-                v-observe-visibility="refVisibility"
-                >Try Brave Browser*</v-btn
-              >
-            </template>
-            <span :class="refHover ? '' : 'green--text'">{{
-              refHover
-                ? "*This is a Brave creators refferal link"
-                : "Earn crypto by browsing the internet"
-            }}</span>
-          </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -108,32 +84,5 @@
 export default {
   name: "Footer",
   props: ["darkMode", "themedText", "version"],
-  data: () => ({
-    showRefTooltip: false,
-    refVisible: false,
-    refHover: false,
-  }),
-  methods: {
-    refMouseover() {
-      this.showRefTooltip = false;
-      this.refHover = true;
-    },
-
-    refMouseleave() {
-      setTimeout(() => {
-        this.refHover = false;
-      }, 100);
-    },
-
-    refVisibility(isVisible) {
-      this.refVisible = isVisible;
-    },
-  },
-
-  // mounted: function() {
-  //   setTimeout(() => {
-  //     this.showRefTooltip = true;
-  //   }, 5000);
-  // },
 };
 </script>
