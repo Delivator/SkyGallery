@@ -114,11 +114,11 @@ export default {
     },
 
     recentVisits() {
-      return this.$store.state.recentVisits;
+      return this.$store.state.userSettings.recentVisits;
     },
 
     recentCreated() {
-      return this.$store.state.recentCreated;
+      return this.$store.state.userSettings.recentCreated;
     },
   },
 

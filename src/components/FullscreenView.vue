@@ -10,7 +10,8 @@
       ref="infoPanel"
       :item="item"
       :darkMode="darkMode"
-      :showInfo.sync="showInfo"
+      :showInfo="showInfo"
+      :toggleInfoPanel="toggleInfoPanel"
     />
     <v-progress-circular
       indeterminate="true"
@@ -68,7 +69,7 @@
           text
           small
           :color="showInfo ? 'primary' : 'white'"
-          @click="showInfo = !showInfo"
+          @click="toggleInfoPanel"
         >
           <v-icon>info</v-icon>
         </v-btn>
@@ -251,9 +252,6 @@ export default {
         down: () => this.closeFullscreen(),
       },
       diashowTimeout: null,
-      volume: JSON.parse(localStorage.getItem("volume")) ?? 1,
-      diashow: JSON.parse(localStorage.getItem("diashow")) ?? false,
-      showInfo: JSON.parse(localStorage.getItem("showInfo")) ?? false,
     };
   },
 
@@ -261,19 +259,17 @@ export default {
     item() {
       return this.files[this.showFullIndex];
     },
-  },
 
-  watch: {
-    volume(val) {
-      localStorage.volume = val;
+    volume() {
+      return this.$store.state.userSettings.volume;
     },
 
-    diashow(val) {
-      localStorage.diashow = val;
+    diashow() {
+      return this.$store.state.userSettings.diashow;
     },
 
-    showInfo(val) {
-      localStorage.showInfo = val;
+    showInfo() {
+      return this.$store.state.userSettings.showInfo;
     },
   },
 
@@ -354,7 +350,7 @@ export default {
     },
 
     diashowSwitch(event) {
-      this.diashow = event;
+      this.$store.commit("setUserSettings", { diashow: !!event });
       this.startDiashow();
     },
 
@@ -367,7 +363,7 @@ export default {
     },
 
     volumechange(event) {
-      this.volume = event.target.volume;
+      this.$store.commit("setUserSettings", { volume: event.target.volume });
     },
 
     videoCanplay(event) {
@@ -381,6 +377,10 @@ export default {
       let className = `mobile-${this.$vuetify.breakpoint.mobile}`;
       if (this.showInfo) className += " showinfo";
       return className;
+    },
+
+    toggleInfoPanel() {
+      this.$store.commit("setUserSettings", { showInfo: !this.showInfo });
     },
   },
 

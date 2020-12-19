@@ -29,11 +29,7 @@
         :themedText="themedText"
       />
     </v-main>
-    <Footer
-      :darkMode.sync="darkMode"
-      :themedText="themedText"
-      :version="version"
-    />
+    <Footer :themedText="themedText" :version="version" />
   </v-app>
 </template>
 
@@ -107,7 +103,6 @@ export default {
       isEmbed: false,
       alerts: [],
       pageTitle: "SkyGallery - Media Gallery powered by Skynet",
-      darkMode: JSON.parse(localStorage.getItem("darkMode")) ?? true,
       alertBox: {
         show: false,
         type: "info",
@@ -137,14 +132,10 @@ export default {
     };
   },
 
-  watch: {
-    darkMode(val) {
-      this.$vuetify.theme.dark = this.darkMode;
-      localStorage.darkMode = val;
-    },
-  },
-
   computed: {
+    darkMode() {
+      return this.$store.state.userSettings.darkMode;
+    },
     themedText() {
       return this.darkMode ? "white--text" : "black--text";
     },

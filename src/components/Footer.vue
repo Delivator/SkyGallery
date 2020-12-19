@@ -56,7 +56,7 @@
               <v-btn
                 v-on="on"
                 v-bind="attrs"
-                @click="$emit('update:darkMode', !darkMode)"
+                @click="toggleDarkMode"
                 absolute
                 right
                 icon
@@ -83,6 +83,16 @@
 <script>
 export default {
   name: "Footer",
-  props: ["darkMode", "themedText", "version"],
+  props: ["themedText", "version"],
+  computed: {
+    darkMode() {
+      return this.$store.state.userSettings.darkMode;
+    },
+  },
+  methods: {
+    toggleDarkMode() {
+      this.$store.commit("setUserSettings", { darkMode: !this.darkMode });
+    },
+  },
 };
 </script>

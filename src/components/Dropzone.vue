@@ -84,6 +84,7 @@ export default {
   name: "Dropzone",
   props: ["items", "dragUpload", "darkMode"],
   mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob],
+
   data: () => ({
     isDragOver: false,
   }),

@@ -31,25 +31,36 @@ function skyidCallback(message) {
   }
 }
 
+const defaultUserSettings = {
+  volume: 1,
+  diashow: false,
+  darkMode: true,
+  showInfo: false,
+  recentVisits: [],
+  recentCreated: [],
+};
+
 const store = new Vuex.Store({
   state: {
     loggedInUser: null,
-    recentVisits: JSON.parse(localStorage.getItem("recentVisits")) ?? [],
-    recentCreated: JSON.parse(localStorage.getItem("recentCreated")) ?? [],
+    userSettings:
+      JSON.parse(localStorage.getItem("userSettings")) ?? defaultUserSettings,
   },
   mutations: {
     setLoggedInUser: (state, payload) => {
       state.loggedInUser = payload;
     },
 
-    setRecentVisits: (state, payload) => {
-      state.recentVisits = payload;
-      localStorage.recentVisits = JSON.stringify(payload);
-    },
+    setUserSettings(state, payload) {
+      const newUserSettings = {
+        ...defaultUserSettings,
+        ...state.userSettings,
+        ...payload,
+      };
 
-    setRecentCreated: (state, payload) => {
-      state.recentCreated = payload;
-      localStorage.recentCreated = JSON.stringify(payload);
+      state.userSettings = newUserSettings;
+      localStorage.userSettings = JSON.stringify(newUserSettings);
+      if (state.loggedInUser) skyid.setJSON("userSettings", newUserSettings);
     },
   },
   actions: {
@@ -61,65 +72,41 @@ const store = new Vuex.Store({
       skyid.sessionDestroy();
     },
 
-    getProfile({ commit, dispatch }) {
+    getProfile({ commit }) {
       skyid.getProfile((data) => {
         if (data) {
           commit("setLoggedInUser", JSON.parse(data));
         } else {
           console.error("error getting profile");
         }
-        dispatch("getRecentVisit");
-        dispatch("getRecentCreated");
+      });
+    },
+
+    getUserSettings({ commit }) {
+      skyid.getJSON("userSettings", (data) => {
+        if (data) commit("setUserSettings", data);
       });
     },
 
     addRecentVisit({ commit, state }, payload) {
-      commit(
-        "setRecentVisits",
-        state.recentVisits.filter((item) => item.id !== payload.id)
-      );
-
-      commit("setRecentVisits", [
-        {
-          id: payload.id,
-          time: Date.now(),
-          title: payload.title,
-        },
-        ...state.recentVisits,
-      ]);
-
-      // save to SkyDB using SkyID
-      if (state.loggedInUser)
-        skyid.setJSON("recentVisits.json", state.recentVisits);
-    },
-
-    getRecentVisit({ commit, state }) {
-      if (!state.loggedInUser) return;
-      skyid.getJSON("recentVisits.json", (data) => {
-        if (data) commit("setRecentVisits", data);
+      let recentVisits = state.userSettings.recentVisits;
+      recentVisits = recentVisits.filter((item) => item.id !== payload.id);
+      recentVisits.unshift({
+        id: payload.id,
+        time: Date.now(),
+        title: payload.title,
       });
+      commit("setUserSettings", { recentVisits });
     },
 
     addRecentCreated({ commit, state }, payload) {
-      commit("setRecentCreated", [
-        {
-          id: payload.id,
-          time: Date.now(),
-          title: payload.title,
-        },
-        ...state.recentCreated,
-      ]);
-
-      // save to SkyDB using SkyID
-      if (state.loggedInUser)
-        skyid.setJSON("recentCreated.json", state.recentCreated);
-    },
-
-    getRecentCreated({ commit, state }) {
-      if (!state.loggedInUser) return;
-      skyid.getJSON("recentCreated.json", (data) => {
-        if (data) commit("recentCreated", data);
+      const recentCreated = state.userSettings.recentCreated;
+      recentCreated.unshift({
+        id: payload.id,
+        time: Date.now(),
+        title: payload.title,
       });
+      commit("setUserSettings", { recentCreated });
     },
   },
   modules: {},
