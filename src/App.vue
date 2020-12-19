@@ -160,6 +160,7 @@ export default {
   beforeMount() {
     this.isEmbed = inIframe();
     this.$vuetify.theme.dark = this.darkMode;
+    this.$store.dispatch("getProfile");
   },
 };
 </script>

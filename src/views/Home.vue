@@ -44,6 +44,13 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col cols="12" v-if="!loggedInUser">
+        <v-btn outlined @click="loginUser">
+          Login with SkyID
+          <v-icon right>account_circle</v-icon>
+        </v-btn>
+        <p class="my-2 text-body-1">to save your data</p>
+      </v-col>
       <v-col cols="12" md="6" v-if="recentVisits.length > 0">
         <h1 class="text-left subtitle-1 ma-2">Recently visited albums</h1>
         <RecentAlbumTable :items="recentVisits" headerText="Visited" />
@@ -51,6 +58,12 @@
       <v-col cols="12" md="6" v-if="recentCreated.length > 0">
         <h1 class="text-left subtitle-1 ma-2">Newly created albums</h1>
         <RecentAlbumTable :items="recentCreated" headerText="Creation date" />
+      </v-col>
+      <v-col cols="12" v-if="loggedInUser">
+        <p class="my-2 text-body-1">
+          Welcome back {{ loggedInUser.username }}. Your data is saved with
+          SkyDB.
+        </p>
       </v-col>
     </v-row>
   </v-container>
@@ -95,6 +108,18 @@ export default {
         ? ""
         : "mb-16";
     },
+
+    loggedInUser() {
+      return this.$store.state.loggedInUser;
+    },
+
+    recentVisits() {
+      return this.$store.state.recentVisits;
+    },
+
+    recentCreated() {
+      return this.$store.state.recentCreated;
+    },
   },
 
   methods: {
@@ -126,6 +151,10 @@ export default {
     dragoverHandler(event) {
       if (event.dataTransfer && event.dataTransfer.files)
         this.$router.push("/new");
+    },
+
+    loginUser() {
+      this.$store.dispatch("logInUser");
     },
   },
 

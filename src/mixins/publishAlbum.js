@@ -33,7 +33,10 @@ export const publishAlbum = {
       )
         .then((skylink) => {
           this.loading = false;
-          this.addRecentCreated(skylink, this.albumTitle);
+          this.$store.dispatch("addRecentCreated", {
+            id: skylink,
+            title: this.albumTitle,
+          });
           setTimeout(() => {
             this.$router.push("/a/" + skylink);
           }, 50);
