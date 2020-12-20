@@ -21,6 +21,7 @@ function skyidCallback(message) {
       break;
     case "login_success":
       store.dispatch("getProfile");
+      store.dispatch("getUserSettings");
       break;
     case "destroy":
       store.commit("setLoggedInUser", null);
@@ -52,6 +53,8 @@ const store = new Vuex.Store({
     },
 
     setUserSettings(state, payload) {
+      const skipSkyDB = payload.skipSkyDB;
+      delete payload.skipSkyDB;
       const newUserSettings = {
         ...defaultUserSettings,
         ...state.userSettings,
@@ -60,7 +63,7 @@ const store = new Vuex.Store({
 
       state.userSettings = newUserSettings;
       localStorage.userSettings = JSON.stringify(newUserSettings);
-      if (state.loggedInUser) skyid.setJSON("userSettings", newUserSettings);
+      if (!skipSkyDB) skyid.setJSON("userSettings", newUserSettings);
     },
   },
   actions: {
@@ -84,7 +87,9 @@ const store = new Vuex.Store({
 
     getUserSettings({ commit }) {
       skyid.getJSON("userSettings", (data) => {
-        if (data) commit("setUserSettings", data);
+        if (data) {
+          commit("setUserSettings", { ...data, skipSkyDB: true });
+        }
       });
     },
 
