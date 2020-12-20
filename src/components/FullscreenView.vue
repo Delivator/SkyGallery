@@ -252,6 +252,7 @@ export default {
         down: () => this.closeFullscreen(),
       },
       diashowTimeout: null,
+      volumeTimeout: null,
     };
   },
 
@@ -363,7 +364,10 @@ export default {
     },
 
     volumechange(event) {
-      this.$store.commit("setUserSettings", { volume: event.target.volume });
+      if (this.volumeTimeout) clearTimeout(this.volumeTimeout);
+      this.volumeTimeout = setTimeout(() => {
+        this.$store.commit("setUserSettings", { volume: event.target.volume });
+      }, 500);
     },
 
     videoCanplay(event) {

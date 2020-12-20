@@ -21,7 +21,6 @@ function skyidCallback(message) {
       break;
     case "login_success":
       store.dispatch("getProfile");
-      store.dispatch("getUserSettings");
       break;
     case "destroy":
       store.commit("setLoggedInUser", null);
@@ -63,7 +62,8 @@ const store = new Vuex.Store({
 
       state.userSettings = newUserSettings;
       localStorage.userSettings = JSON.stringify(newUserSettings);
-      if (!skipSkyDB) skyid.setJSON("userSettings", newUserSettings);
+      if (!skipSkyDB && !!state.loggedInUser)
+        skyid.setJSON("userSettings", newUserSettings);
     },
   },
   actions: {
@@ -79,17 +79,17 @@ const store = new Vuex.Store({
       skyid.getProfile((data) => {
         if (data) {
           commit("setLoggedInUser", JSON.parse(data));
+          store.dispatch("getUserSettings");
         } else {
           console.error("error getting profile");
         }
       });
     },
 
-    getUserSettings({ commit }) {
+    getUserSettings({ commit, state }) {
+      if (!state.loggedInUser) return;
       skyid.getJSON("userSettings", (data) => {
-        if (data) {
-          commit("setUserSettings", { ...data, skipSkyDB: true });
-        }
+        if (data) commit("setUserSettings", { ...data, skipSkyDB: true });
       });
     },
 
