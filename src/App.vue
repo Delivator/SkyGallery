@@ -158,6 +158,7 @@ export default {
     this.isEmbed = inIframe();
     this.$store.dispatch("getProfile");
     this.$store.dispatch("getUserSettings");
+    this.$vuetify.theme.dark = this.darkMode;
   },
 };
 </script>
