@@ -70,4 +70,26 @@ export const utils = {
       });
     },
   },
+
+  mounted() {
+    // handle old SkyGallery localStorage settings
+    const oldRecentVisits = JSON.parse(localStorage.getItem("recentVisits"));
+    if (oldRecentVisits) {
+      const combined = [
+        ...oldRecentVisits,
+        this.$store.state.userSettings.recentVisits,
+      ].sort((a, b) => a.time < b.time);
+      this.$store.commit("setUserSettings", { recentVisits: combined });
+      localStorage.removeItem("recentVisits");
+    }
+    const oldRecentCreated = JSON.parse(localStorage.getItem("recentCreated"));
+    if (oldRecentCreated) {
+      const combined = [
+        ...oldRecentCreated,
+        this.$store.state.userSettings.recentCreated,
+      ].sort((a, b) => a.time < b.time);
+      this.$store.commit("setUserSettings", { recentCreated: combined });
+      localStorage.removeItem("recentCreated");
+    }
+  },
 };
