@@ -12,7 +12,7 @@ const skyidOptions = {
     window.location.protocol == "file:",
 };
 
-const skyid = new SkyID("my-testapp", skyidCallback, skyidOptions);
+const skyid = new SkyID("SkyGallery", skyidCallback, skyidOptions);
 
 function skyidCallback(message) {
   switch (message) {
