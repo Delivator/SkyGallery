@@ -141,6 +141,12 @@ export default {
     },
   },
 
+  watch: {
+    darkMode(val) {
+      this.$vuetify.theme.dark = val;
+    },
+  },
+
   methods: {
     openAlbum() {
       let win = window.open(window.location);
@@ -150,7 +156,6 @@ export default {
 
   beforeMount() {
     this.isEmbed = inIframe();
-    this.$vuetify.theme.dark = this.darkMode;
     this.$store.dispatch("getProfile");
     this.$store.dispatch("getUserSettings");
   },
