@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "browser-image-compression": "^1.0.13",
-    "core-js": "^3.8.1",
+    "core-js": "^3.9.0",
     "crypto-js": "^4.0.0",
     "exifr": "^6.0.0",
     "skyid": "0.0.5",
