@@ -47,7 +47,7 @@
     "vue-cli-plugin-skynet": "~1.0.4",
     "vue-cli-plugin-vuetify": "~2.1.0",
     "vue-template-compiler": "^2.6.12",
-    "vuetify-loader": "^1.6.0"
+    "vuetify-loader": "^1.7.2"
   },
   "bugs": {
     "url": "https://github.com/Delivator/SkyGallery/issues"
