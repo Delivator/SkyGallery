@@ -21,7 +21,7 @@
     "skyid": "0.0.5",
     "vue": "^2.6.12",
     "vue-observe-visibility": "^1.0.0",
-    "vue-router": "^3.4.9",
+    "vue-router": "^3.5.1",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.3.21",
     "vuex": "^3.4.0"
