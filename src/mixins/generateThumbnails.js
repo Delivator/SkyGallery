@@ -19,6 +19,7 @@ export const generateThumbnails = {
 
       let options = {
         maxWidthOrHeight: 500,
+        useWebWorker: true,
       };
 
       if (item.type === "image") {
