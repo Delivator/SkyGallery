@@ -31,7 +31,7 @@
       </v-row>
     </v-footer>
     <v-footer v-if="!isEmbed">
-      <v-row justify="center">
+      <v-row justify="center" class="row-margin">
         <v-col class="py-3 text-center" cols="12">
           Made with 💚 by
           <a
@@ -77,6 +77,10 @@
 <style scoped>
 .version-tag {
   font-family: monospace;
+}
+
+.row-margin {
+  margin: 0;
 }
 </style>
 

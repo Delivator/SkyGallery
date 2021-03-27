@@ -48,6 +48,7 @@
 
 <script>
 // https://stackoverflow.com/a/2450976/6287225
+// eslint-disable-next-line no-unused-vars
 function shuffleArray(array) {
   var currentIndex = array.length,
     temporaryValue,
@@ -77,6 +78,10 @@ export default {
         name: "SiaSky.net",
         link: "https://siasky.net",
       },
+      {
+        name: "SkyPortal.xyz",
+        link: "https://skyportal.xyz",
+      },
     ],
   }),
 
@@ -104,28 +109,35 @@ export default {
   },
 
   beforeMount() {
-    const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
+    // const trustedPortals = "https://siastats.info/dbs/skynet_current.json";
+    const portalHost = document.location.hostname.replace(
+      "skygallery.hns.",
+      ""
+    );
 
-    fetch(trustedPortals)
-      .then((response) => {
-        if (response.status === 200) return response.json();
-      })
-      .then((data) => {
-        if (!data || data.length < 1 || !data[0].name || !data[0].link)
-          return false;
-        data = shuffleArray(data);
-        data.forEach((portal, index) => {
-          if (portal.link.includes(document.location.hostname)) {
-            data[index].disabled = portal.link.includes(
-              document.location.hostname
-            );
-            data.unshift(data[index]);
-            data.splice(index + 1, 1);
-          }
-        });
-        this.portals = data;
-      })
-      .catch((error) => this.alertBox.send("error", error));
+    // fetch(trustedPortals)
+    //   .then((response) => {
+    //     if (response.status === 200) return response.json();
+    //   })
+    //   .then((data) => {
+    //     if (!data || data.length < 1 || !data[0].name || !data[0].link)
+    //       return false;
+    //     data = shuffleArray(data);
+    //     data.forEach((portal, index) => {
+    //       if (portal.link.includes(portalHost)) {
+    //         data[index].disabled = portal.link.includes(
+    //           portalHost
+    //         );
+    //         data.unshift(data[index]);
+    //         data.splice(index + 1, 1);
+    //       }
+    //     });
+    //     this.portals = data;
+    //   })
+    //   .catch((error) => this.alertBox.send("error", error));
+    this.portals.forEach((portal, index) => {
+      this.portals[index].disabled = portal.link.includes(portalHost);
+    });
   },
 };
 </script>
