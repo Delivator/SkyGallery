@@ -39,7 +39,7 @@
     "base64-js": "^1.5.1",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-vue": "^7.6.0",
+    "eslint-plugin-vue": "^7.9.0",
     "node-fetch": "^2.6.1",
     "prettier": "^2.2.1",
     "sass": "^1.32.8",
