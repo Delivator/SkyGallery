@@ -18,7 +18,6 @@
     "core-js": "^3.9.1",
     "crypto-js": "^4.0.0",
     "exifr": "^6.0.0",
-    "skyid": "0.0.5",
     "vue": "^2.6.12",
     "vue-observe-visibility": "^1.0.0",
     "vue-router": "^3.5.1",

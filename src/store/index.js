@@ -1,18 +1,47 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import SkyID from "skyid";
-
 Vue.use(Vuex);
 
-const skyidOptions = {
-  disableLoadingScreen: true,
-  devMode:
-    window.location.hostname == "idtest.local" ||
-    window.location.hostname == "localhost" ||
-    window.location.protocol == "file:",
-};
+// get portal url from response header
+fetch("", { method: "HEAD" })
+  .then((response) => response.headers)
+  .then((headers) => {
+    let portal = headers.get("skynet-portal-api");
+    if (!portal) {
+      // if no header, default to siasky.net
+      portal = "https://siasky.net";
+    }
 
-const skyid = new SkyID("SkyGallery", skyidCallback, skyidOptions);
+    let portalNoProtocol = portal.replace(/^https?:\/\//i, "");
+
+    // path for sky-id, easier than subdomain logic
+    let path = "https://sky-id.hns." + portalNoProtocol;
+
+    // create script tag
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = path + "/skyid.js";
+    script.onload = () => {
+      initSkyID(path);
+    }; //once loaded, call method to run code that relies on it
+    document.head.appendChild(script);
+  });
+
+let skyid;
+
+function initSkyID(path) {
+  // var skyid = new SkyID("App Name", null, { customSkyidUrl: path });
+  const skyidOptions = {
+    customSkyidUrl: path,
+    disableLoadingScreen: true,
+    devMode:
+      window.location.hostname == "idtest.local" ||
+      window.location.hostname == "localhost" ||
+      window.location.protocol == "file:",
+  };
+
+  skyid = new window.SkyID("SkyGallery", skyidCallback, skyidOptions);
+}
 
 function skyidCallback(message) {
   switch (message) {
