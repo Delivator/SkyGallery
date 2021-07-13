@@ -9,21 +9,21 @@
     <title>SkyGallery - Media Gallery powered by Skynet</title>
     <meta name="title" content="SkyGallery - Media Gallery powered by Skynet">
     <meta name="description" content="Image and video gallery powered by the decentralized web using Sia Skynet.">
-    <link rel="icon" type="image/png" href="/KAC5-Zd0m_-tabKRcdqllwy09VHLbveQKPib6_VYXx0tMg">
+    <link rel="icon" type="image/png" href="https://siasky.net/AAB8DPd5Mc-ZlX4l0xOJzYHMPjMmR542Bj4Ewpe1t5vVOQ">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://skygallery.xyz/">
     <meta property="og:title" content="SkyGallery - Media Gallery powered by Skynet">
     <meta property="og:description" content="Image and video gallery powered by the decentralized web using Sia Skynet.">
-    <meta property="og:image" content="/dABDEeIz7NgFXTY0YUxentQvFftqiK9RcmHKlUSqwB0BWQ">
+    <meta property="og:image" content="https://siasky.net/dAAx6L6SKk4lHxoW4Gp6cintEUIuwZTvkI70UdPw2Zu-VQ">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://skygallery.xyz/">
     <meta property="twitter:title" content="SkyGallery - Media Gallery powered by Skynet">
     <meta property="twitter:description" content="Image and video gallery powered by the decentralized web using Sia Skynet.">
-    <meta property="twitter:image" content="/dABDEeIz7NgFXTY0YUxentQvFftqiK9RcmHKlUSqwB0BWQ">
+    <meta property="twitter:image" content="https://siasky.net/dAAx6L6SKk4lHxoW4Gp6cintEUIuwZTvkI70UdPw2Zu-VQ">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
@@ -34,5 +34,14 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script>
+      window.PORTAL = new URL(localStorage.getItem("skynet-portal-api") ?? "https://siasky.net");
+      fetch("", { method: "HEAD" })
+        .then((response) => response.headers)
+        .then((headers) => {
+          window.PORTAL = new URL(headers.get("skynet-portal-api") ?? "https://siasky.net");
+          localStorage.setItem("skynet-portal-api", window.PORTAL.origin)
+        });
+    </script>
   </body>
 </html>

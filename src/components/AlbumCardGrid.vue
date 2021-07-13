@@ -5,7 +5,7 @@
       <v-col cols="12">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[0].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[0].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
     </v-row>
@@ -13,13 +13,13 @@
       <v-col cols="6">
         <v-img
           :aspect-ratio="2 / 3"
-          :src="`/${items[0].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[0].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="6">
         <v-img
           :aspect-ratio="2 / 3"
-          :src="`/${items[1].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[1].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
     </v-row>
@@ -27,19 +27,19 @@
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[0].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[0].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[1].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[1].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="12">
         <v-img
           :aspect-ratio="8 / 3"
-          :src="`/${items[2].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[2].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
     </v-row>
@@ -47,25 +47,25 @@
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[0].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[0].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[1].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[1].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[2].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[2].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[3].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[3].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
     </v-row>
@@ -73,13 +73,13 @@
       <v-col cols="12">
         <v-img
           :aspect-ratio="8 / 3"
-          :src="`/${items[0].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[0].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="12">
         <v-img
           :aspect-ratio="8 / 3"
-          :src="`/${items[1].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[1].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
     </v-row>
@@ -87,19 +87,19 @@
       <v-col cols="12">
         <v-img
           :aspect-ratio="8 / 3"
-          :src="`/${items[0].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[0].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[1].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[1].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
       <v-col cols="6">
         <v-img
           :aspect-ratio="4 / 3"
-          :src="`/${items[2].skylinks.thumbnail}`"
+          :src="portalSrc(`${items[2].skylinks.thumbnail}`)"
         ></v-img>
       </v-col>
     </v-row>

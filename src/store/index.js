@@ -2,35 +2,21 @@ import Vue from "vue";
 import Vuex from "vuex";
 Vue.use(Vuex);
 
-// get portal url from response header
-fetch("", { method: "HEAD" })
-  .then((response) => response.headers)
-  .then((headers) => {
-    let portal = headers.get("skynet-portal-api");
-    if (!portal) {
-      // if no header, default to siasky.net
-      portal = "https://siasky.net";
-    }
+// path for sky-id, easier than subdomain logic
+let path = "https://sky-id.hns." + window.PORTAL.hostname;
 
-    let portalNoProtocol = portal.replace(/^https?:\/\//i, "");
-
-    // path for sky-id, easier than subdomain logic
-    let path = "https://sky-id.hns." + portalNoProtocol;
-
-    // create script tag
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = path + "/skyid.js";
-    script.onload = () => {
-      initSkyID(path);
-    }; //once loaded, call method to run code that relies on it
-    document.head.appendChild(script);
-  });
+// create script tag
+var script = document.createElement("script");
+script.type = "text/javascript";
+script.src = path + "/skyid.js";
+script.onload = () => {
+  initSkyID(path);
+}; //once loaded, call method to run code that relies on it
+document.head.appendChild(script);
 
 let skyid;
 
 function initSkyID(path) {
-  // var skyid = new SkyID("App Name", null, { customSkyidUrl: path });
   const skyidOptions = {
     customSkyidUrl: path,
     disableLoadingScreen: true,

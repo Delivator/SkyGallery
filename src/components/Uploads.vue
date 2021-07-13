@@ -287,7 +287,7 @@ export default {
       if (item.status === "editthumbnail") return "";
       let url = item.thumbnail;
       if (this.skylinkRegex.test(url)) {
-        return `/${url}`;
+        return window.PORTAL + url;
       } else {
         return url;
       }

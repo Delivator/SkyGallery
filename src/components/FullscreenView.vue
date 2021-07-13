@@ -25,7 +25,7 @@
       v-if="item.type === 'image'"
       class="fullscreen-img translate-center"
       :class="showinfoClass()"
-      :src="`/${item.skylinks.source}`"
+      :src="portalSrc(`${item.skylinks.source}`)"
       :alt="item.name"
       @load="imgLoad"
       :id="item.id"
@@ -35,7 +35,7 @@
       class="fullscreen-video translate-center"
       :class="showinfoClass()"
       v-if="item.type === 'video'"
-      :src="`/${item.skylinks.source}`"
+      :src="portalSrc(`${item.skylinks.source}`)"
       controls
       autoplay
       @ended="videoEnded"
@@ -98,7 +98,7 @@
               </v-list-item-action>
             </v-list-item>
             <v-list-item
-              :href="`/${item.skylinks.source}`"
+              :href="portalSrc(`${item.skylinks.source}`)"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -108,7 +108,7 @@
               </v-list-item-icon>
             </v-list-item>
             <v-list-item
-              :href="`/${item.skylinks.thumbnail}`"
+              :href="portalSrc(`${item.skylinks.thumbnail}`)"
               target="_blank"
               rel="noopener noreferrer"
             >

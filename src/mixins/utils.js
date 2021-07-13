@@ -14,16 +14,16 @@ export const utils = {
 
     checkValidAlbum(albumId) {
       return new Promise((resolve, reject) => {
-        fetch(`/${albumId}`, { method: "HEAD" })
-          .then((res) => {
-            if (res.ok && res.headers.has("skynet-file-metadata")) {
-              let data = JSON.parse(res.headers.get("skynet-file-metadata"));
-              if (this.albumFileRegex.test(data.filename)) resolve(data);
+        fetch(`${window.PORTAL}skynet/metadata/${albumId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (this.albumFileRegex.test(data.filename)) {
+              resolve(data);
             } else {
               reject();
             }
           })
-          .catch((err) => reject(err));
+          .catch(reject);
       });
     },
 
@@ -31,7 +31,7 @@ export const utils = {
       return new Promise((resolve, reject) => {
         this.checkValidAlbum(albumId)
           .then(() => {
-            fetch(`/${albumId}`)
+            fetch(window.PORTAL + albumId)
               .then((res) => res.json())
               .then(resolve)
               .catch(reject);
@@ -68,6 +68,10 @@ export const utils = {
         month: "2-digit",
         year: "numeric",
       });
+    },
+
+    portalSrc(src) {
+      return window.PORTAL + src;
     },
   },
 

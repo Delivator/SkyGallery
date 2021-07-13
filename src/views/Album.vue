@@ -142,10 +142,10 @@
           v-else
           @click="openFull($event, index)"
           :class="cardClass(index)"
-          :href="`/${item.skylinks.source}`"
+          :href="portalSrc(`${item.skylinks.source}`)"
         >
           <v-img
-            :src="`/${item.skylinks.thumbnail}`"
+            :src="portalSrc(`${item.skylinks.thumbnail}`)"
             :aspect-ratio="4 / 3"
             class="align-end"
           >
@@ -197,6 +197,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  user-select: text;
   -webkit-user-select: text;
 }
 
@@ -312,6 +313,7 @@ export default {
         });
       } catch (error) {
         this.alertBox.send("error", "Error getting album data");
+        this.$router.push("/");
       }
     },
 

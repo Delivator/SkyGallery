@@ -6,7 +6,7 @@ export const uploadBlob = {
       return new Promise((resolve, reject) => {
         const formData = new FormData();
         formData.append("file", blob, fileName);
-        fetch("/skynet/skyfile", {
+        fetch(window.PORTAL + "skynet/skyfile", {
           method: "POST",
           body: formData,
         })
@@ -26,7 +26,7 @@ export const uploadBlob = {
         for (const file of Object.values(files))
           formData.append("files[]", file[0], file[1]);
         axios
-          .post("/skynet/skyfile?filename=" + id, formData, {
+          .post(window.PORTAL + "skynet/skyfile?filename=" + id, formData, {
             onUploadProgress: ({ loaded, total }) => {
               item.progress = loaded / total;
               item.status = item.progress === 1 ? "uploaded" : "uploading";
