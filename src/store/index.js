@@ -91,9 +91,10 @@ const store = new Vuex.Store({
     },
 
     getProfile({ commit }) {
+      if (!skyid) return;
       skyid.getProfile((data) => {
         if (data) {
-          commit("setLoggedInUser", JSON.parse(data));
+          commit("setLoggedInUser", data);
           store.dispatch("getUserSettings");
         } else {
           console.error("error getting profile");
