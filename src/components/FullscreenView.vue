@@ -39,7 +39,7 @@
       controls
       autoplay
       @ended="videoEnded"
-      @volumechange="volumechange"
+      @volumechange="volumeChange"
       @canplay="videoCanplay"
       v-touch="touchOptions"
     ></video>
@@ -363,7 +363,8 @@ export default {
       }
     },
 
-    volumechange(event) {
+    volumeChange(event) {
+      if (this.$vuetify.breakpoint.mobile) return;
       if (this.volumeTimeout) clearTimeout(this.volumeTimeout);
       this.volumeTimeout = setTimeout(() => {
         this.$store.commit("setUserSettings", { volume: event.target.volume });
@@ -371,7 +372,7 @@ export default {
     },
 
     videoCanplay(event) {
-      event.target.volume = this.volume;
+      if (!this.$vuetify.breakpoint.mobile) event.target.volume = this.volume;
       this.item.width = event.target.videoWidth;
       this.item.height = event.target.videoHeight;
       this.$refs.infoPanel.$forceUpdate();
