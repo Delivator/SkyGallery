@@ -20,11 +20,11 @@ const routes = [
     name: "Album",
     component: () => import("../views/Album.vue"),
   },
-  {
-    path: "/a*",
-    name: "Album",
-    component: () => import("../views/Album.vue"),
-  },
+  // {
+  //   path: "/a*",
+  //   name: "Album",
+  //   component: () => import("../views/Album.vue"),
+  // },
   {
     path: "/edit/:id",
     name: "Edit",

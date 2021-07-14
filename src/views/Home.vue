@@ -45,11 +45,11 @@
     </v-row>
     <v-row>
       <v-col cols="12" v-if="!loggedInUser">
-        <v-btn outlined @click="loginUser">
+        <v-btn outlined @click="logInUser">
           Login with SkyID
           <v-icon right>account_circle</v-icon>
         </v-btn>
-        <p class="my-2 text-body-1">to save your data</p>
+        <p class="my-2 text-body-1">to synchronized your settings.</p>
       </v-col>
       <v-col cols="12" md="6" v-if="recentVisits.length > 0">
         <h1 class="text-left subtitle-1 ma-2">Recently visited albums</h1>
@@ -61,8 +61,12 @@
       </v-col>
       <v-col cols="12" v-if="loggedInUser">
         <p class="my-2 text-body-1">
-          Welcome back {{ loggedInUser.username }}. Your data is saved with
-          SkyDB.
+          Welcome back
+          <span class="font-weight-bold" v-text="loggedInUser.username"></span>.
+          <br />
+          Your settings are saved and synchronized with SkyDB.
+          <br />
+          <a @click="logOutUser" class="font-weight-bold">Log out</a>.
         </p>
       </v-col>
     </v-row>
@@ -83,7 +87,7 @@ let openAlbumTimeout = null;
 
 export default {
   name: "Home",
-  props: ["portals", "alertBox", "themedText"],
+  props: ["alertBox", "themedText"],
   components: { RecentAlbumTable },
   mixins: [utils],
   data: () => ({
@@ -122,6 +126,19 @@ export default {
     },
   },
 
+  watch: {
+    loggedInUser(newValue) {
+      if (newValue) {
+        this.alertBox.send(
+          "success",
+          `Succsessfully logged in with SkyID as ${newValue.username}.`
+        );
+      } else {
+        this.alertBox.send("info", "Logged out of SkyID");
+      }
+    },
+  },
+
   methods: {
     openAlbum() {
       if (openAlbumTimeout !== null) clearTimeout(openAlbumTimeout);
@@ -153,8 +170,12 @@ export default {
         this.$router.push("/new");
     },
 
-    loginUser() {
+    logInUser() {
       this.$store.dispatch("logInUser");
+    },
+
+    logOutUser() {
+      this.$store.dispatch("logOutUser");
     },
   },
 

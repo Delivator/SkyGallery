@@ -87,7 +87,7 @@
 <script>
 export default {
   name: "Footer",
-  props: ["themedText", "version"],
+  props: ["themedText", "version", "isEmbed"],
   computed: {
     darkMode() {
       return this.$store.state.userSettings.darkMode;

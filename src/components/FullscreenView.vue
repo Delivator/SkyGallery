@@ -265,6 +265,10 @@ export default {
       return this.$store.state.userSettings.volume;
     },
 
+    muted() {
+      return this.$store.state.userSettings.muted;
+    },
+
     diashow() {
       return this.$store.state.userSettings.diashow;
     },
@@ -364,15 +368,18 @@ export default {
     },
 
     volumeChange(event) {
-      if (this.$vuetify.breakpoint.mobile) return;
       if (this.volumeTimeout) clearTimeout(this.volumeTimeout);
       this.volumeTimeout = setTimeout(() => {
-        this.$store.commit("setUserSettings", { volume: event.target.volume });
+        this.$store.commit("setUserSettings", {
+          volume: event.target.volume,
+          muted: event.target.muted,
+        });
       }, 500);
     },
 
     videoCanplay(event) {
       if (!this.$vuetify.breakpoint.mobile) event.target.volume = this.volume;
+      event.target.muted = this.muted;
       this.item.width = event.target.videoWidth;
       this.item.height = event.target.videoHeight;
       this.$refs.infoPanel.$forceUpdate();

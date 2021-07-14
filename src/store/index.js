@@ -27,9 +27,13 @@ function initSkyID(path) {
   };
 
   skyid = new window.SkyID("SkyGallery", skyidCallback, skyidOptions);
+
+  if (localStorage.getItem("skyid") && !store.state.loggedInUser)
+    store.dispatch("getProfile");
 }
 
 function skyidCallback(message) {
+  console.log("skyidCallback", message);
   switch (message) {
     case "login_fail":
       console.log("Login failed");
@@ -48,6 +52,7 @@ function skyidCallback(message) {
 
 const defaultUserSettings = {
   volume: 1,
+  muted: false,
   diashow: false,
   darkMode: true,
   showInfo: false,
@@ -55,11 +60,15 @@ const defaultUserSettings = {
   recentCreated: [],
 };
 
+const localUserSettings = JSON.parse(localStorage.getItem("userSettings"));
+
 const store = new Vuex.Store({
   state: {
     loggedInUser: null,
-    userSettings:
-      JSON.parse(localStorage.getItem("userSettings")) ?? defaultUserSettings,
+    userSettings: {
+      ...defaultUserSettings,
+      ...(localUserSettings ?? defaultUserSettings),
+    },
   },
   mutations: {
     setLoggedInUser: (state, payload) => {

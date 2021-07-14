@@ -20,7 +20,6 @@
 
     <v-main>
       <router-view
-        :portals="portals"
         :version="version"
         :alertBox="alertBox"
         :isEmbed="isEmbed"
@@ -29,7 +28,7 @@
         :themedText="themedText"
       />
     </v-main>
-    <Footer :themedText="themedText" :version="version" />
+    <Footer :themedText="themedText" :version="version" :isEmbed="isEmbed" />
   </v-app>
 </template>
 

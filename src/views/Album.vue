@@ -337,10 +337,6 @@ export default {
     shortLink() {
       return `https://skygallery.xyz/a/${this.albumId}`;
     },
-
-    hnsLink() {
-      return `${location.origin}/hns/skygallery/#/a/${this.albumId}`;
-    },
   },
 
   beforeRouteLeave(to, from, next) {
