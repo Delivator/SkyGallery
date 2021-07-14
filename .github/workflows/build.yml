@@ -23,7 +23,7 @@ jobs:
       run: npm run build
     
     - name: Deploy to Skynet
-      uses: delivator/deploy-to-skynet-action@main
+      uses: delivator/deploy-to-skynet-action@feat/portal-url
       with:
         portal-url: https://skyportal.xyz
         upload-dir: dist
