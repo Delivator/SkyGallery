@@ -131,7 +131,8 @@ export default {
       if (newValue) {
         this.alertBox.send(
           "success",
-          `Succsessfully logged in with SkyID as ${newValue.username}.`
+          `Succsessfully logged in with SkyID as ${newValue.username}.`,
+          3000
         );
       } else {
         this.alertBox.send("info", "Logged out of SkyID");
