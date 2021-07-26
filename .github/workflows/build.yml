@@ -14,13 +14,15 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: 14.x
+        node-version: 16.x
         
     - name: Install dependencies
       run: npm install
     
     - name: Build
       run: npm run build
+      env:
+        APP_GIT_SHA: ${{ github.sha }}
     
     - name: Deploy to Skynet
       uses: delivator/deploy-to-skynet-action@feat/portal-url

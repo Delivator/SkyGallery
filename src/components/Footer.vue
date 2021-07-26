@@ -50,7 +50,16 @@
             >Source code</a
           >
           &ndash;
-          <span :class="themedText" class="version-tag">v{{ version }}</span>
+          <span :class="themedText" class="version-tag">
+            v{{ version }}
+            <a
+              :href="`https://github.com/Delivator/SkyGallery/commit/${gitSHA}`"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ({{ gitSHA.substr(0, 7) }})
+            </a>
+          </span>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -88,6 +97,11 @@
 export default {
   name: "Footer",
   props: ["themedText", "version", "isEmbed"],
+  data() {
+    return {
+      gitSHA: process.env.APP_GIT_SHA ?? "0",
+    };
+  },
   computed: {
     darkMode() {
       return this.$store.state.userSettings.darkMode;
