@@ -51,17 +51,15 @@
           >
           &ndash;
           <span :class="themedText" class="version-tag">
-            v{{ version }}(
-            <a
+            v{{ version }} (<a
               :class="themedText"
               :href="`https://github.com/Delivator/SkyGallery/commit/${gitSHA}`"
               target="_blank"
               rel="noopener noreferrer"
               v-if="gitSHA"
-            >
-              {{ gitSHA.substr(0, 7) }}
-            </a>
-            )
+              v-text="gitSHA.substr(0, 7)"
+            ></a
+            >)
           </span>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -102,7 +100,7 @@ export default {
   props: ["themedText", "version", "isEmbed"],
   data() {
     return {
-      gitSHA: process.env.VUE_APP_GITHUB_SHA,
+      gitSHA: process.env.VUE_APP_GITHUB_SHA ?? "0",
     };
   },
   computed: {
