@@ -56,6 +56,7 @@
               :href="`https://github.com/Delivator/SkyGallery/commit/${gitSHA}`"
               target="_blank"
               rel="noopener noreferrer"
+              v-if="gitSHA"
             >
               ({{ gitSHA.substr(0, 7) }})
             </a>
@@ -99,7 +100,7 @@ export default {
   props: ["themedText", "version", "isEmbed"],
   data() {
     return {
-      gitSHA: process.env.APP_GIT_SHA ?? "0",
+      gitSHA: process.env.GITHUB_SHA,
     };
   },
   computed: {
