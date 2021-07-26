@@ -100,7 +100,7 @@ export default {
   props: ["themedText", "version", "isEmbed"],
   data() {
     return {
-      gitSHA: process.env.GITHUB_SHA,
+      gitSHA: process.env.VUE_APP_GITHUB_SHA,
     };
   },
   computed: {

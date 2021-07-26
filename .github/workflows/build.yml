@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: npm run build
       env:
-        APP_GIT_SHA: ${{ github.sha }}
+        VUE_APP_GITHUB_SHA: ${{ github.sha }}
     
     - name: Deploy to Skynet
       uses: delivator/deploy-to-skynet-action@feat/portal-url
