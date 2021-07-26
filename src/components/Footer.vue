@@ -51,15 +51,17 @@
           >
           &ndash;
           <span :class="themedText" class="version-tag">
-            v{{ version }}
+            v{{ version }}(
             <a
+              :class="themedText"
               :href="`https://github.com/Delivator/SkyGallery/commit/${gitSHA}`"
               target="_blank"
               rel="noopener noreferrer"
               v-if="gitSHA"
             >
-              ({{ gitSHA.substr(0, 7) }})
+              {{ gitSHA.substr(0, 7) }}
             </a>
+            )
           </span>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
