@@ -25,9 +25,8 @@ jobs:
         VUE_APP_GITHUB_SHA: ${{ github.sha }}
     
     - name: Deploy to Skynet
-      uses: delivator/deploy-to-skynet-action@feat/portal-url
+      uses: SkynetLabs/deploy-to-skynet-action@v2
       with:
-        portal-url: https://skyportal.xyz
         upload-dir: dist
         github-token: ${{ secrets.GITHUB_TOKEN }}
         registry-seed: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.REGISTRY_SEED || '' }}
