@@ -17,10 +17,10 @@
     "browser-image-compression": "^1.0.14",
     "core-js": "^3.9.1",
     "crypto-js": "^4.0.0",
-    "exifr": "^6.0.0",
+    "exifr": "^7.1.3",
     "vue": "^2.6.12",
     "vue-observe-visibility": "^1.0.0",
-    "vue-router": "^3.5.1",
+    "vue-router": "^3.5.2",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.5.8",
     "vuex": "^3.6.2"
