@@ -34,7 +34,7 @@
     "@vue/cli-service": "~4.5.13",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
-    "base32-encode": "^1.1.1",
+    "base32-encode": "^2.0.0",
     "base64-js": "^1.5.1",
     "eslint": "^7.32.0",
     "eslint-plugin-prettier": "^3.4.1",
