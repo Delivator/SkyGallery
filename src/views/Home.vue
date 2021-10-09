@@ -44,9 +44,9 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" v-if="!loggedInUser">
+      <v-col cols="12" v-if="!loggedIn">
         <v-btn outlined @click="logInUser">
-          Login with SkyID
+          Login with MySky
           <v-icon right>account_circle</v-icon>
         </v-btn>
         <p class="my-2 text-body-1">to synchronized your settings.</p>
@@ -59,10 +59,10 @@
         <h1 class="text-left subtitle-1 ma-2">Newly created albums</h1>
         <RecentAlbumTable :items="recentCreated" headerText="Creation date" />
       </v-col>
-      <v-col cols="12" v-if="loggedInUser">
+      <v-col cols="12" v-if="loggedIn">
         <p class="my-2 text-body-1">
           Welcome back
-          <span class="font-weight-bold" v-text="loggedInUser.username"></span>.
+          <span class="font-weight-bold" v-text="username"></span>.
           <br />
           Your settings are saved and synchronized with SkyDB.
           <br />
@@ -113,8 +113,8 @@ export default {
         : "mb-16";
     },
 
-    loggedInUser() {
-      return this.$store.state.loggedInUser;
+    loggedIn() {
+      return this.$store.state.loggedIn;
     },
 
     recentVisits() {
@@ -124,18 +124,30 @@ export default {
     recentCreated() {
       return this.$store.state.userSettings.recentCreated;
     },
+
+    mySkyProfile() {
+      return this.$store.state.profile;
+    },
+
+    username() {
+      if (!this.loggedIn || !this.$store.state.userID) return null;
+      return (
+        this.mySkyProfile?.username ??
+        `${this.$store.state.userID.substr(0, 10)}...`
+      );
+    },
   },
 
   watch: {
-    loggedInUser(newValue) {
+    loggedIn(newValue) {
       if (newValue) {
         this.alertBox.send(
           "success",
-          `Succsessfully logged in with SkyID as ${newValue.username}.`,
+          "Succsessfully logged in with MySky.",
           3000
         );
       } else {
-        this.alertBox.send("info", "Logged out of SkyID");
+        this.alertBox.send("info", "Logged out of MySky");
       }
     },
   },

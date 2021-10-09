@@ -1,54 +1,46 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { SkynetClient } from "skynet-js";
+import { UserProfileDAC } from "@skynethub/userprofile-library";
 Vue.use(Vuex);
 
-// path for sky-id, easier than subdomain logic
-let path = "https://sky-id.hns." + window.PORTAL.hostname;
+const client = new SkynetClient(window.PORTAL.origin);
 
-// create script tag
-var script = document.createElement("script");
-script.type = "text/javascript";
-script.src = path + "/skyid.js";
-script.onload = () => {
-  initSkyID(path);
-}; //once loaded, call method to run code that relies on it
-document.head.appendChild(script);
+const dataDomain =
+  window.location.hostname === "localhost" ? "localhost" : "skygallery.hns";
 
-let skyid;
+const userProfileDAC = new UserProfileDAC();
 
-function initSkyID(path) {
-  const skyidOptions = {
-    customSkyidUrl: path,
-    disableLoadingScreen: true,
-    devMode:
-      window.location.hostname == "idtest.local" ||
-      window.location.hostname == "localhost" ||
-      window.location.protocol == "file:",
-  };
+// define async setup function
+async function initMySky() {
+  try {
+    // load invisible iframe and define app's data domain
+    // needed for permissions write
+    const mySky = await client.loadMySky(dataDomain);
 
-  skyid = new window.SkyID("SkyGallery", skyidCallback, skyidOptions);
+    // load necessary DACs and permissions
+    await mySky.loadDacs(userProfileDAC);
 
-  if (localStorage.getItem("skyid") && !store.state.loggedInUser)
-    store.dispatch("getProfile");
-}
+    // check if user is already logged in with permissions
+    const loggedIn = await mySky.checkLogin();
 
-function skyidCallback(message) {
-  console.log("skyidCallback", message);
-  switch (message) {
-    case "login_fail":
-      console.log("Login failed");
-      break;
-    case "login_success":
+    // set react state for login status and
+    // to access mySky in rest of app
+    store.commit("setMySky", mySky);
+    store.commit("setLoggedIn", loggedIn);
+    if (loggedIn) {
+      console.log(await mySky.userID());
+      store.commit("setUserID", await mySky.userID());
+      store.dispatch("getUserSettings");
       store.dispatch("getProfile");
-      break;
-    case "destroy":
-      store.commit("setLoggedInUser", null);
-      break;
-    default:
-      console.log(message);
-      break;
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
+
+// call async setup function
+initMySky();
 
 const defaultUserSettings = {
   volume: 1,
@@ -64,20 +56,34 @@ const localUserSettings = JSON.parse(localStorage.getItem("userSettings"));
 
 const store = new Vuex.Store({
   state: {
-    loggedInUser: null,
+    mySky: null,
+    userID: null,
+    profile: null,
+    loggedIn: false,
     userSettings: {
       ...defaultUserSettings,
       ...(localUserSettings ?? defaultUserSettings),
     },
   },
   mutations: {
-    setLoggedInUser: (state, payload) => {
-      state.loggedInUser = payload;
+    setMySky: (state, payload) => {
+      state.mySky = payload;
+    },
+    setUserID: (state, payload) => {
+      state.userID = payload;
+    },
+
+    setLoggedIn: (state, payload) => {
+      state.loggedIn = payload;
+    },
+
+    setProfile: (state, payload) => {
+      state.profile = payload;
     },
 
     setUserSettings(state, payload) {
-      const skipSkyDB = payload.skipSkyDB;
-      delete payload.skipSkyDB;
+      const skipSync = payload.skipSync;
+      delete payload.skipSync;
       const newUserSettings = {
         ...defaultUserSettings,
         ...state.userSettings,
@@ -86,36 +92,64 @@ const store = new Vuex.Store({
 
       state.userSettings = newUserSettings;
       localStorage.userSettings = JSON.stringify(newUserSettings);
-      if (!skipSkyDB && !!state.loggedInUser)
-        skyid.setJSON("userSettings", newUserSettings);
+      if (!skipSync && !!state.loggedIn)
+        state.mySky.setJSONEncrypted(
+          `${dataDomain}/userSettings.json`,
+          newUserSettings
+        );
     },
   },
   actions: {
-    logInUser() {
-      skyid.sessionStart();
+    async logInUser() {
+      // Try login again, opening pop-up. Returns true if successful
+      const status = await store.state.mySky.requestLoginAccess();
+
+      store.commit("setLoggedIn", status);
+
+      if (status) {
+        store.commit("setUserID", await store.state.mySky.userID());
+        store.dispatch("getUserSettings");
+        store.dispatch("getProfile");
+      }
     },
 
-    logOutUser() {
-      skyid.sessionDestroy();
+    async logOutUser() {
+      // call logout to globally logout of mysky
+      await store.state.mySky.logout();
+
+      //set react state
+      store.commit("setLoggedIn", false);
+      store.commit("setUserID", null);
     },
 
-    getProfile({ commit }) {
-      if (!skyid) return;
-      skyid.getProfile((data) => {
-        if (data) {
-          commit("setLoggedInUser", data);
-          store.dispatch("getUserSettings");
-        } else {
-          console.error("error getting profile");
-        }
-      });
+    async getProfile({ commit, state }) {
+      if (!state.loggedIn) return;
+
+      try {
+        const userProfile = await userProfileDAC.getProfile(state.userID);
+        const userPreferences = await userProfileDAC.getPreferences(
+          state.userID
+        );
+
+        commit("setProfile", { ...userProfile, ...userPreferences });
+      } catch (error) {
+        console.error("error getting profile");
+        console.error(error);
+      }
     },
 
-    getUserSettings({ commit, state }) {
-      if (!state.loggedInUser) return;
-      skyid.getJSON("userSettings", (data) => {
-        if (data) commit("setUserSettings", { ...data, skipSkyDB: true });
-      });
+    async getUserSettings({ commit, state }) {
+      if (!state.loggedIn) return;
+
+      try {
+        const { data } = await state.mySky.getJSONEncrypted(
+          `${dataDomain}/userSettings.json`
+        );
+        console.log(data);
+        if (data) commit("setUserSettings", { ...data, skipSync: true });
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     addRecentVisit({ commit, state }, payload) {
