@@ -64,7 +64,7 @@
           Welcome back
           <span class="font-weight-bold" v-text="username"></span>.
           <br />
-          Your settings are saved and synchronized with SkyDB.
+          Your settings are saved and synchronized with MySky.
           <br />
           <a @click="logOutUser" class="font-weight-bold">Log out</a>.
         </p>
@@ -147,7 +147,7 @@ export default {
           3000
         );
       } else {
-        this.alertBox.send("info", "Logged out of MySky");
+        this.alertBox.send("info", "Logged out");
       }
     },
   },

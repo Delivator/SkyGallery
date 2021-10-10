@@ -29,7 +29,6 @@ async function initMySky() {
     store.commit("setMySky", mySky);
     store.commit("setLoggedIn", loggedIn);
     if (loggedIn) {
-      console.log(await mySky.userID());
       store.commit("setUserID", await mySky.userID());
       store.dispatch("getUserSettings");
       store.dispatch("getProfile");
@@ -42,6 +41,23 @@ async function initMySky() {
 // call async setup function
 initMySky();
 
+// rename id to skylink
+function migrateUserSettings(oldUserSettings) {
+  console.log("migrateUserSettings");
+  function mapCallback(item) {
+    if (!item.id) return;
+    item.skylink = item.id;
+    delete item.id;
+    return item;
+  }
+
+  let newUserSettings = { ...oldUserSettings };
+  newUserSettings.recentVisits = oldUserSettings.recentVisits.map(mapCallback);
+  newUserSettings.recentCreated =
+    oldUserSettings.recentCreated.map(mapCallback);
+  return newUserSettings;
+}
+
 const defaultUserSettings = {
   volume: 1,
   muted: false,
@@ -52,7 +68,13 @@ const defaultUserSettings = {
   recentCreated: [],
 };
 
-const localUserSettings = JSON.parse(localStorage.getItem("userSettings"));
+let localUserSettings = JSON.parse(localStorage.getItem("userSettings"));
+
+if (
+  localUserSettings?.recentCreated[0]?.id ||
+  localUserSettings?.recentVisits[0]?.id
+)
+  localUserSettings = migrateUserSettings(localUserSettings);
 
 const store = new Vuex.Store({
   state: {
@@ -69,6 +91,7 @@ const store = new Vuex.Store({
     setMySky: (state, payload) => {
       state.mySky = payload;
     },
+
     setUserID: (state, payload) => {
       state.userID = payload;
     },
@@ -142,10 +165,11 @@ const store = new Vuex.Store({
       if (!state.loggedIn) return;
 
       try {
-        const { data } = await state.mySky.getJSONEncrypted(
+        let { data } = await state.mySky.getJSONEncrypted(
           `${dataDomain}/userSettings.json`
         );
-        console.log(data);
+        if (data?.recentCreated[0]?.id || data?.recentVisits[0]?.id)
+          data = migrateUserSettings(data);
         if (data) commit("setUserSettings", { ...data, skipSync: true });
       } catch (error) {
         console.error(error);
@@ -154,9 +178,11 @@ const store = new Vuex.Store({
 
     addRecentVisit({ commit, state }, payload) {
       let recentVisits = state.userSettings.recentVisits;
-      recentVisits = recentVisits.filter((item) => item.id !== payload.id);
+      recentVisits = recentVisits.filter(
+        (item) => item.skylink !== payload.skylink
+      );
       recentVisits.unshift({
-        id: payload.id,
+        skylink: payload.skylink,
         time: Date.now(),
         title: payload.title,
       });
@@ -164,9 +190,12 @@ const store = new Vuex.Store({
     },
 
     addRecentCreated({ commit, state }, payload) {
-      const recentCreated = state.userSettings.recentCreated;
+      let recentCreated = state.userSettings.recentCreated;
+      recentCreated = recentCreated.filter(
+        (item) => item.skylink !== payload.skylink
+      );
       recentCreated.unshift({
-        id: payload.id,
+        skylink: payload.skylink,
         time: Date.now(),
         title: payload.title,
       });

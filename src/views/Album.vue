@@ -75,14 +75,14 @@
                 <template v-slot:activator="{ on }">
                   <v-list-item
                     v-on="on"
-                    @click="copyLink($event, `sia://${albumId}`)"
+                    @click="copyLink($event, `sia://${albumSkylink}`)"
                     @mouseover="selectLink"
                   >
                     <v-list-item-title
-                      @click="copyLink($event, `sia://${albumId}`)"
+                      @click="copyLink($event, `sia://${albumSkylink}`)"
                       >Sia Link:
-                      <a class="share-link" :href="`sia://${albumId}`"
-                        >sia://{{ albumId }}</a
+                      <a class="share-link" :href="`sia://${albumSkylink}`"
+                        >sia://{{ albumSkylink }}</a
                       ></v-list-item-title
                     >
                   </v-list-item>
@@ -165,7 +165,7 @@
       <v-col cols="12">
         <v-btn
           outlined
-          :to="`/edit/${albumId}`"
+          :to="`/edit/${albumSkylink}`"
           :loading="loading"
           class="upload-btn my-6"
         >
@@ -241,7 +241,7 @@ export default {
   components: { AlbumCardGrid, FullscreenView },
   mixins: [utils],
   data: () => ({
-    albumId: "",
+    albumSkylink: "",
     files: [],
     albumTitle: "Album Title",
     loading: true,
@@ -284,17 +284,17 @@ export default {
       this.$vuetify.goTo(`.img-${this.showFullIndex}`);
     },
 
-    async loadAlbum(albumId) {
-      if (!albumId) albumId = this.albumId;
-      if (!albumId) {
+    async loadAlbum(albumSkylink) {
+      if (!albumSkylink) albumSkylink = this.albumSkylink;
+      if (!albumSkylink) {
         this.$router.push("/");
         this.alertBox.send("info", "No album ID provided");
         return;
       }
-      this.albumId = albumId;
+      this.albumSkylink = albumSkylink;
       this.loading = true;
       try {
-        const data = await this.getAlbumData(albumId);
+        const data = await this.getAlbumData(albumSkylink);
         this.loading = false;
         this.showFullImg = false;
         this.files = data.files;
@@ -308,7 +308,7 @@ export default {
         this.$forceUpdate();
         this.$vuetify.goTo(".v-main__wrap");
         this.$store.dispatch("addRecentVisit", {
-          id: albumId,
+          skylink: albumSkylink,
           title: this.albumTitle,
         });
       } catch (error) {
@@ -335,7 +335,7 @@ export default {
 
   computed: {
     shortLink() {
-      return `https://skygallery.xyz/a/${this.albumId}`;
+      return `https://skygallery.xyz/a/${this.albumSkylink}`;
     },
   },
 
@@ -346,13 +346,14 @@ export default {
 
   beforeRouteUpdate(to, from, next) {
     const newSkylink = this.extractAlbumSkylink(to.path);
-    if (newSkylink && newSkylink !== this.albumId) this.loadAlbum(newSkylink);
+    if (newSkylink && newSkylink !== this.albumSkylink)
+      this.loadAlbum(newSkylink);
     next();
   },
 
   mounted() {
     if (this.$route.params && this.$route.params.id)
-      this.albumId = this.$route.params.id;
+      this.albumSkylink = this.$route.params.id;
     this.loadAlbum();
   },
 };

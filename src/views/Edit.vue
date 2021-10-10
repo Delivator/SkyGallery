@@ -89,7 +89,6 @@ import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
 import dropzone from "@/components/Dropzone.vue";
 import uploads from "@/components/Uploads.vue";
-import sha256 from "crypto-js/sha256";
 
 export default {
   name: "Edit",
@@ -97,13 +96,14 @@ export default {
   components: { uploads, dropzone, uploadDialog },
   mixins: [utils, publishAlbum, uploadBlob],
   data: () => ({
-    albumId: "",
+    albumSkylink: "",
     items: [],
     albumTitle: "Album Title",
     loading: true,
     isIntersecting: false,
     drag: false,
     unfinishedDialog: false,
+    albumID: null,
   }),
 
   methods: {
@@ -128,7 +128,7 @@ export default {
           this.unfinishedDialog = false;
           return;
         }
-        this.publishAlbum();
+        this.publishAlbum(this.albumID);
       }
       this.unfinishedDialog = unfinished.length > 0;
     },
@@ -136,14 +136,17 @@ export default {
 
   beforeMount() {
     if (this.$route.params && this.$route.params.id)
-      this.albumId = this.$route.params.id;
+      this.albumSkylink = this.$route.params.id;
 
-    this.getAlbumData(this.albumId)
+    this.getAlbumData(this.albumSkylink)
       .then((data) => {
         this.loading = false;
+        this.albumTitle = data.title;
+        this.albumID = data.albumID;
+
         data.files.forEach((file) => {
           let item = {
-            id: sha256(Math.random().toString()).toString(),
+            id: this.generateID(),
             filename: file.filename,
             status: "finished",
             type: file.type,
@@ -160,7 +163,6 @@ export default {
           if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;
           this.items.push(item);
         });
-        this.albumTitle = data.title;
 
         if (data.title.length > 31)
           data.title = `${data.title.substr(0, 32)}...`;

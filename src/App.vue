@@ -78,10 +78,10 @@ html.noscroll {
 </style>
 
 <script>
-import sha256 from "crypto-js/sha256";
 import version from "../package.json";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import { utils } from "./mixins/utils";
 
 function inIframe() {
   try {
@@ -93,6 +93,8 @@ function inIframe() {
 
 export default {
   name: "App",
+
+  mixins: [utils],
 
   components: { Footer, Header },
 
@@ -115,7 +117,7 @@ export default {
             console.error(message);
           }
 
-          let id = sha256(Math.random().toString()).toString();
+          let id = this.generateID();
 
           this.alerts.push({
             id,

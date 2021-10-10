@@ -17,12 +17,12 @@
       <template v-slot:item="{ item }">
         <tr>
           <td
-            @click="openAlbum(item.id)"
+            @click="openAlbum(item.skylink)"
             v-text="item.title"
             class="text-start"
           ></td>
           <td
-            @click="openAlbum(item.id)"
+            @click="openAlbum(item.skylink)"
             class="text-start"
             v-text="longDate(item.time)"
           ></td>
@@ -59,8 +59,8 @@ export default {
   },
 
   methods: {
-    openAlbum(id) {
-      this.$router.push(`a/${id}`);
+    openAlbum(skylink) {
+      this.$router.push(`a/${skylink}`);
     },
   },
 };

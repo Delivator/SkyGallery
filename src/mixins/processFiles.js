@@ -1,12 +1,10 @@
-import sha256 from "crypto-js/sha256";
-
 export const processFiles = {
   methods: {
     processFiles(files) {
       files.forEach((file) => {
         let item = {
           file,
-          id: sha256(Math.random().toString()).toString(),
+          id: this.generateID(),
           filename: file.name,
           status: "queued",
           log: "Added\n",

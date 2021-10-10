@@ -1,24 +1,27 @@
+import randomBytes from "randombytes";
+
 export const utils = {
   data: () => ({
     skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
     albumFileRegex: /^skygallery-([a-f0-9]{32}|[a-f0-9]{64}).json$/,
-    albumIdRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
+    albumSkylinkRegex: /(\/a\/|sia:\/\/)([a-zA-Z0-9-_]{46})/,
   }),
 
   methods: {
     extractAlbumSkylink(str) {
-      if (!this.albumIdRegex.test(str)) return false;
-      const skylink = str.match(this.albumIdRegex)[2];
+      if (!this.albumSkylinkRegex.test(str)) return false;
+      const skylink = str.match(this.albumSkylinkRegex)[2];
       return this.skylinkRegex.test(skylink) ? skylink : false;
     },
 
-    checkValidAlbum(albumId) {
+    checkValidAlbum(albumSkylink) {
       return new Promise((resolve, reject) => {
-        fetch(`${window.PORTAL}skynet/metadata/${albumId}`)
+        fetch(`${window.PORTAL}skynet/metadata/${albumSkylink}`)
           .then((res) => res.json())
           .then((data) => {
             if (this.albumFileRegex.test(data.filename)) {
-              resolve(data);
+              const albumID = data.filename.match(this.albumFileRegex)[1];
+              resolve(albumID);
             } else {
               reject();
             }
@@ -27,13 +30,15 @@ export const utils = {
       });
     },
 
-    getAlbumData(albumId) {
+    getAlbumData(albumSkylink) {
       return new Promise((resolve, reject) => {
-        this.checkValidAlbum(albumId)
-          .then(() => {
-            fetch(window.PORTAL + albumId)
+        this.checkValidAlbum(albumSkylink)
+          .then((albumID) => {
+            fetch(window.PORTAL + albumSkylink)
               .then((res) => res.json())
-              .then(resolve)
+              .then((json) => {
+                resolve({ ...json, albumID });
+              })
               .catch(reject);
           })
           .catch(reject);
@@ -72,6 +77,28 @@ export const utils = {
 
     portalSrc(src) {
       return window.PORTAL + src;
+    },
+
+    generateID() {
+      return [...new Uint8Array(randomBytes(32))]
+        .map((x) => x.toString(16).padStart(2, "0"))
+        .join("");
+    },
+
+    migrateUserSettings(oldUserSettings) {
+      function mapCallback(item) {
+        if (!item.id) return;
+        item.skylink = item.id;
+        delete item.id;
+        return item;
+      }
+
+      let newUserSettings = { ...oldUserSettings };
+      newUserSettings.recentVisits =
+        oldUserSettings.recentVisits.map(mapCallback);
+      newUserSettings.recentCreated =
+        oldUserSettings.recentCreated.map(mapCallback);
+      return newUserSettings;
     },
   },
 

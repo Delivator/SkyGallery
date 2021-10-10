@@ -79,11 +79,12 @@ import { generateThumbnails } from "../mixins/generateThumbnails";
 import { processFiles } from "../mixins/processFiles";
 import { uploadFiles } from "../mixins/uploadFiles";
 import { uploadBlob } from "../mixins/uploadBlob";
+import { utils } from "../mixins/utils";
 
 export default {
   name: "Dropzone",
   props: ["items", "dragUpload", "darkMode"],
-  mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob],
+  mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob, utils],
 
   data: () => ({
     isDragOver: false,
