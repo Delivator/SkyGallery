@@ -51,7 +51,6 @@ export const publishAlbum = {
 
       try {
         let { skylink } = await client.uploadFile(file);
-        console.log(this.albumID, skylink);
         if (this.loggedIn) {
           const seed = await this.mySky.getEncryptedFileSeed(
             `${dataDomain}/album/${this.albumID}`,

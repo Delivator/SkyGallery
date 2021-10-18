@@ -18,7 +18,8 @@
         <v-img
           :src="require('../assets/skynet-logo-animated.svg')"
           contain
-          height="400"
+          height="300"
+          max-height="50vw"
         />
       </v-col>
       <v-col cols="12" class="subtext">
@@ -36,8 +37,8 @@
           class="mt-2"
           autocomplete="off album-input"
           v-model="linkInput"
-          style="width: 15rem"
-          placeholder="Paste SkyGallery or sia:// link"
+          style="width: 11rem"
+          placeholder="Paste SkyGallery link"
           :loading="loading"
           :error-messages="inputError"
         ></v-text-field>
@@ -45,11 +46,10 @@
     </v-row>
     <v-row>
       <v-col cols="12" v-if="!loggedIn">
-        <v-btn outlined @click="logInUser">
-          Login with MySky
+        <v-btn outlined @click="logInUser" :disabled="!this.mySky">
+          {{ this.mySky ? "Login with MySky" : "Loading MySky..." }}
           <v-icon right>account_circle</v-icon>
         </v-btn>
-        <p class="my-2 text-body-1">to synchronized your settings.</p>
       </v-col>
       <v-col cols="12" md="6" v-if="recentVisits.length > 0">
         <h1 class="text-left subtitle-1 ma-2">Recently visited albums</h1>
@@ -63,8 +63,6 @@
         <p class="my-2 text-body-1">
           Welcome back
           <span class="font-weight-bold" v-text="username"></span>.
-          <br />
-          Your settings are saved and synchronized with MySky.
           <br />
           <a @click="logOutUser" class="font-weight-bold">Log out</a>.
         </p>
@@ -123,6 +121,10 @@ export default {
 
     recentCreated() {
       return this.$store.state.userSettings.recentCreated;
+    },
+
+    mySky() {
+      return this.$store.state.mySky;
     },
 
     mySkyProfile() {

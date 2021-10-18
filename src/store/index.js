@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { SkynetClient } from "skynet-js";
-import { UserProfileDAC } from "@skynethub/userprofile-library";
+// import { UserProfileDAC } from "@skynethub/userprofile-library";
 Vue.use(Vuex);
 
 const client = new SkynetClient(window.PORTAL.origin);
@@ -9,7 +9,7 @@ const client = new SkynetClient(window.PORTAL.origin);
 const dataDomain =
   window.location.hostname === "localhost" ? "localhost" : "skygallery.hns";
 
-const userProfileDAC = new UserProfileDAC();
+// const userProfileDAC = new UserProfileDAC();
 
 // define async setup function
 async function initMySky() {
@@ -19,7 +19,7 @@ async function initMySky() {
     const mySky = await client.loadMySky(dataDomain);
 
     // load necessary DACs and permissions
-    await mySky.loadDacs(userProfileDAC);
+    // await mySky.loadDacs(userProfileDAC);
 
     // check if user is already logged in with permissions
     const loggedIn = await mySky.checkLogin();
@@ -43,7 +43,6 @@ initMySky();
 
 // rename id to skylink
 function migrateUserSettings(oldUserSettings) {
-  console.log("migrateUserSettings");
   function mapCallback(item) {
     if (!item.id) return;
     item.skylink = item.id;
@@ -104,7 +103,7 @@ const store = new Vuex.Store({
       state.profile = payload;
     },
 
-    setUserSettings(state, payload) {
+    setUserSettings(state, payload = {}) {
       const skipSync = payload.skipSync;
       delete payload.skipSync;
       const newUserSettings = {
@@ -142,6 +141,7 @@ const store = new Vuex.Store({
 
       //set react state
       store.commit("setLoggedIn", false);
+      store.commit("setProfile", null);
       store.commit("setUserID", null);
     },
 
@@ -149,12 +149,17 @@ const store = new Vuex.Store({
       if (!state.loggedIn) return;
 
       try {
-        const userProfile = await userProfileDAC.getProfile(state.userID);
-        const userPreferences = await userProfileDAC.getPreferences(
-          state.userID
+        const userProfile = await state.mySky.getJSON(
+          "profile-dac.hns/profileIndex.json"
+        );
+        const userPreferences = await state.mySky.getJSON(
+          "profile-dac.hns/preferencesIndex.json"
         );
 
-        commit("setProfile", { ...userProfile, ...userPreferences });
+        commit("setProfile", {
+          ...userProfile.data.profile,
+          ...userPreferences?.data?.preferences,
+        });
       } catch (error) {
         console.error("error getting profile");
         console.error(error);
@@ -172,6 +177,7 @@ const store = new Vuex.Store({
           data = migrateUserSettings(data);
         if (data) commit("setUserSettings", { ...data, skipSync: true });
       } catch (error) {
+        console.error("error getting user settings");
         console.error(error);
       }
     },
@@ -200,6 +206,18 @@ const store = new Vuex.Store({
         title: payload.title,
       });
       commit("setUserSettings", { recentCreated });
+    },
+
+    removeRecentCreated({ commit, state }, skylink) {
+      let recentCreated = state.userSettings.recentCreated;
+      recentCreated = recentCreated.filter((item) => item.skylink !== skylink);
+      commit("setUserSettings", { recentCreated });
+    },
+
+    removeRecentVisit({ commit, state }, skylink) {
+      let recentVisits = state.userSettings.recentVisits;
+      recentVisits = recentVisits.filter((item) => item.skylink !== skylink);
+      commit("setUserSettings", { recentVisits });
     },
   },
   modules: {},
