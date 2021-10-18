@@ -259,7 +259,6 @@ import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
 import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
-import sha256 from "crypto-js/sha256";
 import draggable from "vuedraggable";
 
 let inputTimeout = null;
@@ -331,7 +330,7 @@ export default {
 
     addTitle() {
       this.items.push({
-        id: sha256(Math.random().toString()).toString(),
+        id: this.generateID(),
         type: "title",
         value: "New Title",
         status: "finished",
@@ -341,7 +340,7 @@ export default {
 
     addAlbumCard() {
       this.items.push({
-        id: sha256(Math.random().toString()).toString(),
+        id: this.generateID(),
         type: "album",
         skylink: "",
         layout: 0,

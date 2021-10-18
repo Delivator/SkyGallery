@@ -18,7 +18,8 @@
         <v-img
           :src="require('../assets/skynet-logo-animated.svg')"
           contain
-          height="400"
+          height="300"
+          max-height="50vw"
         />
       </v-col>
       <v-col cols="12" class="subtext">
@@ -36,20 +37,19 @@
           class="mt-2"
           autocomplete="off album-input"
           v-model="linkInput"
-          style="width: 15rem"
-          placeholder="Paste SkyGallery or sia:// link"
+          style="width: 11rem"
+          placeholder="Paste SkyGallery link"
           :loading="loading"
           :error-messages="inputError"
         ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" v-if="!loggedInUser">
-        <v-btn outlined @click="logInUser">
-          Login with SkyID
+      <v-col cols="12" v-if="!loggedIn">
+        <v-btn outlined @click="logInUser" :disabled="!this.mySky">
+          {{ this.mySky ? "Login with MySky" : "Loading MySky..." }}
           <v-icon right>account_circle</v-icon>
         </v-btn>
-        <p class="my-2 text-body-1">to synchronized your settings.</p>
       </v-col>
       <v-col cols="12" md="6" v-if="recentVisits.length > 0">
         <h1 class="text-left subtitle-1 ma-2">Recently visited albums</h1>
@@ -59,12 +59,10 @@
         <h1 class="text-left subtitle-1 ma-2">Newly created albums</h1>
         <RecentAlbumTable :items="recentCreated" headerText="Creation date" />
       </v-col>
-      <v-col cols="12" v-if="loggedInUser">
+      <v-col cols="12" v-if="loggedIn">
         <p class="my-2 text-body-1">
           Welcome back
-          <span class="font-weight-bold" v-text="loggedInUser.username"></span>.
-          <br />
-          Your settings are saved and synchronized with SkyDB.
+          <span class="font-weight-bold" v-text="username"></span>.
           <br />
           <a @click="logOutUser" class="font-weight-bold">Log out</a>.
         </p>
@@ -113,8 +111,8 @@ export default {
         : "mb-16";
     },
 
-    loggedInUser() {
-      return this.$store.state.loggedInUser;
+    loggedIn() {
+      return this.$store.state.loggedIn;
     },
 
     recentVisits() {
@@ -124,18 +122,34 @@ export default {
     recentCreated() {
       return this.$store.state.userSettings.recentCreated;
     },
+
+    mySky() {
+      return this.$store.state.mySky;
+    },
+
+    mySkyProfile() {
+      return this.$store.state.profile;
+    },
+
+    username() {
+      if (!this.loggedIn || !this.$store.state.userID) return null;
+      return (
+        this.mySkyProfile?.username ??
+        `${this.$store.state.userID.substr(0, 10)}...`
+      );
+    },
   },
 
   watch: {
-    loggedInUser(newValue) {
+    loggedIn(newValue) {
       if (newValue) {
         this.alertBox.send(
           "success",
-          `Succsessfully logged in with SkyID as ${newValue.username}.`,
+          "Succsessfully logged in with MySky.",
           3000
         );
       } else {
-        this.alertBox.send("info", "Logged out of SkyID");
+        this.alertBox.send("info", "Logged out");
       }
     },
   },

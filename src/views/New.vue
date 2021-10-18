@@ -86,14 +86,17 @@ export default {
   props: ["version", "alertBox", "darkMode"],
   components: { Uploads, Dropzone, UploadDialog },
   mixins: [publishAlbum, uploadBlob, utils],
-  data: () => ({
-    items: [],
-    albumTitle: "Untitled Album",
-    loading: false,
-    isIntersecting: true,
-    unfinishedDialog: false,
-    drag: false,
-  }),
+  data() {
+    return {
+      items: [],
+      albumTitle: "Untitled Album",
+      loading: false,
+      isIntersecting: true,
+      unfinishedDialog: false,
+      drag: false,
+      albumID: this.generateID(),
+    };
+  },
 
   methods: {
     setItems(newItems) {
@@ -117,7 +120,7 @@ export default {
           this.unfinishedDialog = false;
           return;
         }
-        this.publishAlbum();
+        this.publishAlbum(this.albumID);
       }
       this.unfinishedDialog = unfinished.length > 0;
     },
