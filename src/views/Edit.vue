@@ -159,7 +159,8 @@ export default {
             newTab: file.newTab,
           };
           if (file.skylinks) item.thumbnail = file.skylinks.thumbnail;
-          if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;
+          if (file.type === "video")
+            item.videoUrl = this.portalSrc(file.skylinks.source);
           this.items.push(item);
         });
 
