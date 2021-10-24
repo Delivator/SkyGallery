@@ -75,7 +75,6 @@
 
 <script>
 import { publishAlbum } from "../mixins/publishAlbum";
-import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
 import Uploads from "@/components/Uploads.vue";
 import Dropzone from "@/components/Dropzone.vue";
@@ -85,7 +84,7 @@ export default {
   name: "New",
   props: ["version", "alertBox", "darkMode"],
   components: { Uploads, Dropzone, UploadDialog },
-  mixins: [publishAlbum, uploadBlob, utils],
+  mixins: [publishAlbum, utils],
   data() {
     return {
       items: [],

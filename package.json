@@ -8,13 +8,12 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "vue-cli-service build && node deploy_skynet.js",
-    "publish": "node deploy_skynet.js"
+    "deploy": "vue-cli-service build && skydeploy dist",
+    "publish": "skydeploy dist"
   },
   "main": "src/main.js",
   "dependencies": {
     "@skynethub/userprofile-library": "^0.1.12-beta",
-    "axios": "^0.21.2",
     "browser-image-compression": "^1.0.16",
     "core-js": "^3.18.3",
     "exifr": "^7.1.3",

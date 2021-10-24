@@ -257,7 +257,6 @@ import AlbumCardDialog from "./AlbumCardDialog";
 import AlbumCardGrid from "./AlbumCardGrid";
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
-import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
 import draggable from "vuedraggable";
 
@@ -267,7 +266,7 @@ export default {
   name: "Uploads",
   props: ["myItems", "setItems", "drag"],
   components: { draggable, AlbumCardDialog, AlbumCardGrid },
-  mixins: [generateThumbnails, uploadFiles, uploadBlob, utils],
+  mixins: [generateThumbnails, uploadFiles, utils],
 
   data() {
     return {

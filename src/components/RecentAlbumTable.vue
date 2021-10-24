@@ -112,10 +112,8 @@ export default {
 
     deleteItem() {
       if (this.headerText === "Visited") {
-        console.log("removeRecentVisit", this.selectedSkylink);
         this.$store.dispatch("removeRecentVisit", this.selectedSkylink);
       } else {
-        console.log("removeRecentCreated", this.selectedSkylink);
         this.$store.dispatch("removeRecentCreated", this.selectedSkylink);
       }
       this.dialogDelete = false;

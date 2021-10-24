@@ -85,7 +85,6 @@
 <script>
 import uploadDialog from "@/components/UploadDialog.vue";
 import { publishAlbum } from "../mixins/publishAlbum";
-import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
 import dropzone from "@/components/Dropzone.vue";
 import uploads from "@/components/Uploads.vue";
@@ -94,7 +93,7 @@ export default {
   name: "Edit",
   props: ["alertBox", "pageTitle", "darkMode"],
   components: { uploads, dropzone, uploadDialog },
-  mixins: [utils, publishAlbum, uploadBlob],
+  mixins: [utils, publishAlbum],
   data: () => ({
     albumSkylink: "",
     items: [],
