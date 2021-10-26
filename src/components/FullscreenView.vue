@@ -68,6 +68,15 @@
           fab
           text
           small
+          color="white"
+          :href="portalSrc(`${item.skylinks.source}?attachment=true`)"
+        >
+          <v-icon>file_download</v-icon>
+        </v-btn>
+        <v-btn
+          fab
+          text
+          small
           :color="showInfo ? 'primary' : 'white'"
           @click="toggleInfoPanel"
         >
