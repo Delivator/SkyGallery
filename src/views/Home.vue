@@ -2,7 +2,7 @@
   <v-container class="text-center">
     <v-row>
       <v-col cols="12" :class="headerClass">
-        <h1 class="display-3">Welcome to SkyGallery</h1>
+        <h1 class="display-3 mt-8">Welcome to SkyGallery</h1>
         <span class="subtitle-1"
           >Powered by
           <a
@@ -60,7 +60,7 @@
         <RecentAlbumTable :items="recentCreated" headerText="Creation date" />
       </v-col>
       <v-col cols="12" v-if="loggedIn">
-        <p class="my-2 text-body-1">
+        <p class="my-4 text-body-1">
           Welcome back
           <span class="font-weight-bold" v-text="username"></span>.
           <br />

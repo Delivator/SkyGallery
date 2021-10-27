@@ -8,8 +8,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "vue-cli-service build && skydeploy dist",
-    "publish": "skydeploy dist"
+    "deploy": "vue-cli-service build && npm run publish",
+    "publish": "skydeploy dev"
   },
   "main": "src/main.js",
   "dependencies": {
