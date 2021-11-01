@@ -22,7 +22,7 @@
     "skynet-js": "^4.0.17-beta",
     "vue": "^2.6.14",
     "vue-observe-visibility": "^1.0.0",
-    "vue-router": "^3.5.2",
+    "vue-router": "^3.5.3",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.5.10",
     "vuex": "^3.6.2"
