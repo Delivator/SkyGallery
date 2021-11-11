@@ -1,10 +1,10 @@
 <template>
   <draggable
     v-model="items"
-    @start="$emit('update:drag', true)"
-    @end="endDrag"
     class="row justify-center"
     handle=".drag-handle, .v-input__icon--prepend"
+    @end="endDrag"
+    @start="$emit('update:drag', true)"
   >
     <v-col
       v-for="(item, index) in items"
@@ -175,8 +175,39 @@
           </v-list-item-icon>
           <v-list-item-title>Add Title</v-list-item-title>
         </v-list-item>
+        <v-list-item @click.stop="addFromURLDialog = true">
+          <v-list-item-icon>
+            <v-icon>public</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Load from URL</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
+    <v-dialog
+      transition="dialog-bottom-transition"
+      max-width="600"
+      :value="addFromURLDialog"
+      @click:outside="addFromURLDialog = false"
+    >
+      <template>
+        <v-card>
+          <v-toolbar color="primary" dark>
+            Load existing images and video from URLs
+          </v-toolbar>
+          <v-card-text>
+            <v-textarea
+              outlined
+              class="mt-4"
+              label="One link per line"
+              @input="addFromURLInput"
+            ></v-textarea>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn text @click="addFromURLDialog = false">Done</v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
   </draggable>
 </template>
 
@@ -258,6 +289,7 @@ import AlbumCardDialog from "./AlbumCardDialog";
 import AlbumCardGrid from "./AlbumCardGrid";
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
+import { importUrls } from "../mixins/importUrls";
 import { utils } from "../mixins/utils";
 import draggable from "vuedraggable";
 
@@ -267,11 +299,12 @@ export default {
   name: "Uploads",
   props: ["myItems", "setItems", "drag"],
   components: { draggable, AlbumCardDialog, AlbumCardGrid },
-  mixins: [generateThumbnails, uploadFiles, utils],
+  mixins: [generateThumbnails, uploadFiles, importUrls, utils],
 
   data() {
     return {
       items: this.myItems,
+      addFromURLDialog: false,
     };
   },
 
@@ -374,6 +407,14 @@ export default {
       const index = this.items.findIndex((item) => item.id == newItem.id);
       if (!index) return;
       this.items[index] = newItem;
+    },
+
+    addFromURLInput(input) {
+      const links = input
+        .split("\n")
+        .filter(this.isValidURL)
+        .map((link) => this.parseSkylink(link) || link);
+      this.importUrls(links);
     },
   },
 };

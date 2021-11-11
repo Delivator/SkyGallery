@@ -60,7 +60,7 @@
         <RecentAlbumTable :items="recentCreated" headerText="Creation date" />
       </v-col>
       <v-col cols="12" v-if="loggedIn">
-        <p class="my-4 text-body-1">
+        <p class="my-6 text-body-1">
           Welcome back
           <span class="font-weight-bold" v-text="username"></span>.
           <br />

@@ -262,6 +262,7 @@ export default {
       },
       diashowTimeout: null,
       volumeTimeout: null,
+      skipVolEvent: true,
     };
   },
 
@@ -377,13 +378,14 @@ export default {
     },
 
     volumeChange(event) {
+      if (this.skipVolEvent) return (this.skipVolEvent = false);
       if (this.volumeTimeout) clearTimeout(this.volumeTimeout);
       this.volumeTimeout = setTimeout(() => {
         this.$store.commit("setUserSettings", {
           volume: event.target.volume,
           muted: event.target.muted,
         });
-      }, 500);
+      }, 3000);
     },
 
     videoCanplay(event) {

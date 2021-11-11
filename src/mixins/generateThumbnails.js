@@ -26,17 +26,20 @@ export const generateThumbnails = {
         item.status = "processing";
         item.log += "Generating thumbnail... ";
 
-        imageCompression(item.file, options)
-          .then((blob) => {
-            item.thumbnailBlob = blob;
-            item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
-            item.status = "processed";
-            item.log += "done.\nUploading files... ";
-            this.$forceUpdate();
-            this.uploadFiles();
-            this.generateThumbnails();
-          })
-          .catch(console.error);
+        try {
+          const blob = await imageCompression(item.file, options);
+          item.thumbnailBlob = blob;
+          item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
+          item.status = "processed";
+          item.log += "done.\nUploading files... ";
+          this.$forceUpdate();
+          this.uploadFiles();
+          this.generateThumbnails();
+        } catch (error) {
+          item.log += "\nError while generating the thumbnail!";
+          item.status = "error";
+          console.error(error);
+        }
       } else if (item.type === "video") {
         const videoElement = document.querySelector(`#video-${item.id}`);
         if (!videoElement) return;

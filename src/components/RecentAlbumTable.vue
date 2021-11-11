@@ -20,8 +20,9 @@
       :headers="headers"
       :search="search"
       :items="items"
-      @click:row="openAlbum"
+      class="no-select"
       @click="openAlbum"
+      @click:row="openAlbum"
       @contextmenu:row="contextEvent"
     >
       <template v-slot:top>
@@ -48,6 +49,10 @@
 <style scoped>
 .v-data-table td {
   cursor: pointer;
+}
+
+.no-select {
+  user-select: none;
 }
 </style>
 

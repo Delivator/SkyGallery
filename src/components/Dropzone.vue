@@ -1,7 +1,7 @@
 <template>
   <div
     id="dropzone"
-    class="dropzone"
+    class="dropzone my-4"
     :class="`dragover-${isDragOver} dark-${darkMode}`"
     @drop="onDrop"
     @dragover="onDrag"

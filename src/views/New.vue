@@ -6,7 +6,7 @@
     />
     <v-row justify="center">
       <v-col cols="12" v-if="items.length < 1">
-        <h1 class="display-2">Create a new Album</h1>
+        <h1 class="display-2 my-6">Create a new Album</h1>
       </v-col>
       <v-col v-else xl="4" md="6" cols="12">
         <v-form @submit="publish">
@@ -42,8 +42,8 @@
         <Dropzone
           :items="items"
           :dragUpload="drag"
-          v-intersect="onIntersect"
           :darkMode="darkMode"
+          v-intersect="onIntersect"
         />
       </v-col>
     </v-row>
