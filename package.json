@@ -13,7 +13,6 @@
   },
   "main": "src/main.js",
   "dependencies": {
-    "@skynethub/userprofile-library": "^0.1.12-beta",
     "browser-image-compression": "^1.0.16",
     "core-js": "^3.18.3",
     "crypto-js": "^4.1.1",

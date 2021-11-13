@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { SkynetClient } from "skynet-js";
-// import { UserProfileDAC } from "@skynethub/userprofile-library";
 Vue.use(Vuex);
 
 const client = new SkynetClient(window.PORTAL.origin);
@@ -9,17 +8,12 @@ const client = new SkynetClient(window.PORTAL.origin);
 const dataDomain =
   window.location.hostname === "localhost" ? "localhost" : "skygallery.hns";
 
-// const userProfileDAC = new UserProfileDAC();
-
 // define async setup function
 async function initMySky() {
   try {
     // load invisible iframe and define app's data domain
     // needed for permissions write
     const mySky = await client.loadMySky(dataDomain);
-
-    // load necessary DACs and permissions
-    // await mySky.loadDacs(userProfileDAC);
 
     // check if user is already logged in with permissions
     const loggedIn = await mySky.checkLogin();

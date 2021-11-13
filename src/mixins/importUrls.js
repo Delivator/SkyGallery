@@ -2,34 +2,57 @@ import sha256 from "crypto-js/sha256";
 
 export const importUrls = {
   methods: {
-    importUrls(urls) {
-      urls.forEach(async (url) => {
+    async importUrls(urls) {
+      for (const url of urls) {
         const id = sha256(url).toString();
-        const filename = url.split("/").reverse()[0] ?? url;
 
-        if (this.items.find((item) => item.id === id)) return;
-
-        let item = {
-          id,
-          filename,
-          progress: 0.0,
-          log: "Added\n",
-          status: "queued",
-          newName: filename,
-          skylinks: {},
-        };
+        // skip already added urls
+        if (this.items.find((item) => item.id === id)) continue;
 
         const fetchURL = this.parseSkylink(url)
           ? this.portalSrc(this.parseSkylink(url))
           : url;
 
-        if (this.parseSkylink(url)) item.skylinks = { source: url };
+        let filename = url;
+        let logUrl = url;
 
-        const resp = await fetch(fetchURL, { method: "HEAD" });
-        if (!resp.headers.has("content-type")) return;
-        const contentType = resp.headers.get("content-type");
+        if (this.parseSkylink(url)) {
+          logUrl = `sia://${this.parseSkylink(url)}`;
+          try {
+            filename = await this.getSkylinkFilename(url);
+          } catch (error) {
+            console.error(error);
+          }
+        }
 
+        filename = filename.split("/").reverse()[0] ?? filename;
+
+        // push new item
+        const index = this.items.push({
+          id,
+          filename,
+          progress: 0.0,
+          log: "Importing ",
+          status: "downloading",
+          newName: this.stripFileEx(filename),
+          skylinks: this.parseSkylink(url) ? { source: url } : {},
+        });
+        const item = this.items[index - 1];
+
+        // print url in log
+        if (logUrl.length > 23) {
+          item.log += `${logUrl.substr(0, 23)}...\n`;
+        } else {
+          item.log += `${logUrl}\n`;
+        }
+
+        // download from url
         try {
+          item.log += "Downloading... ";
+          const resp = await fetch(fetchURL, { method: "HEAD" });
+          if (!resp.headers.has("content-type")) return;
+          const contentType = resp.headers.get("content-type");
+
           if (/^image\//.test(contentType)) {
             // always download images
             const response = await fetch(fetchURL);
@@ -45,12 +68,16 @@ export const importUrls = {
             item.type = "video";
             item.canplay = false;
           }
+          item.log += "done\n";
         } catch (error) {
-          return console.error(error);
+          item.status = "error";
+          item.log += "Error while importing!";
+          console.error(error);
+          continue;
         }
-        this.items.push(item);
+        item.status = "queued";
         this.generateThumbnails();
-      });
+      }
 
       return urls;
     },

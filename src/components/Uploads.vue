@@ -192,15 +192,18 @@
       <template>
         <v-card>
           <v-toolbar color="primary" dark>
-            Load existing images and video from URLs
+            Load existing images and video from URL
           </v-toolbar>
           <v-card-text>
             <v-textarea
               outlined
               class="mt-4"
-              label="One link per line"
+              label="One URL per line"
               @input="addFromURLInput"
             ></v-textarea>
+            <p v-if="totalImports > 0">
+              Imported {{ importedUrl }} / {{ totalImports }} URLs
+            </p>
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn text @click="addFromURLDialog = false">Done</v-btn>
@@ -305,6 +308,8 @@ export default {
     return {
       items: this.myItems,
       addFromURLDialog: false,
+      totalImports: 0,
+      importedUrl: 0,
     };
   },
 

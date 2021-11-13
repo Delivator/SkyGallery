@@ -16,35 +16,37 @@ export const uploadFiles = {
     },
 
     async uploadFiles() {
-      // Max ten uploads at once
+      // Max one upload at once
       if (
         this.items.filter((item) => /^(uploading|uploaded)$/.test(item.status))
-          .length > 9
+          .length > 0
       )
         return;
 
       const index = this.items.findIndex((item) => item.status === "processed");
       if (index < 0) return;
 
-      const id = this.items[index].id;
-      const currentItem = this.items.find((element) => element.id === id);
+      const item = this.items[index];
 
-      currentItem.status = "uploading";
-      currentItem.log += "progress";
+      item.status = "uploading";
+      item.log += `Uploading ${
+        item.skylinks.source ? "thumbnail" : "files"
+      }... progress`;
+
       let files = {};
 
-      if (currentItem.file && !currentItem.skylinks.source)
+      if (item.file && !item.skylinks.source)
         files.source = {
-          file: currentItem.file,
-          name: currentItem.filename,
+          file: item.file,
+          name: item.filename,
         };
 
-      if (currentItem.thumbnailBlob) {
-        let fileName = currentItem.filename.split(".").reverse();
+      if (item.thumbnailBlob) {
+        let fileName = item.filename.split(".").reverse();
         fileName[0] = "jpg";
         fileName[1] += "-thumbnail";
         files.thumbnail = {
-          file: currentItem.thumbnailBlob,
+          file: item.thumbnailBlob,
           name: fileName.reverse().join("."),
         };
       }
@@ -52,9 +54,9 @@ export const uploadFiles = {
       if (files.length < 1) return;
 
       const onUploadProgress = (progress) => {
-        currentItem.progress = progress;
-        currentItem.status =
-          currentItem.progress === 1 ? "uploaded" : "uploading";
+        item.progress = progress;
+        // currentItem.status =
+        //   currentItem.progress === 1 ? "uploaded" : "uploading";
       };
 
       let fileDirectory = {};
@@ -62,8 +64,7 @@ export const uploadFiles = {
       for (const file of Object.values(files))
         fileDirectory[file.name] = file.file;
 
-      const directoryName =
-        currentItem.filename ?? files.thumbnail.name ?? currentItem.id;
+      const directoryName = item.filename ?? files.thumbnail.name ?? item.id;
 
       try {
         const { skylink } = await client.uploadDirectory(
@@ -75,18 +76,18 @@ export const uploadFiles = {
         for (const [key, file] of Object.entries(files)) {
           links[key] = `${parseSkylink(skylink)}/${file.name}`;
         }
-        Object.assign(currentItem.skylinks, links);
-        if (links.thumbnail) currentItem.thumbnail = links.thumbnail;
-        currentItem.status = "finished";
-        currentItem.log = currentItem.log.replace("progress", "");
-        currentItem.log += "done.\n";
+        Object.assign(item.skylinks, links);
+        if (links.thumbnail) item.thumbnail = links.thumbnail;
+        item.status = "finished";
+        item.log = item.log.replace("progress", "");
+        item.log += "done\n";
         this.$forceUpdate();
         this.uploadFiles();
       } catch (error) {
         console.error(error);
-        currentItem.status = "error";
-        currentItem.log = currentItem.log.replace("progress", "");
-        currentItem.log += "Error.\n";
+        item.status = "error";
+        item.log = item.log.replace("progress", "");
+        item.log += "Error while uploading\n";
         this.uploadFiles();
       }
     },

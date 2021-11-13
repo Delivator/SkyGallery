@@ -1,3 +1,4 @@
+import { parseSkylink } from "skynet-js";
 import randomBytes from "randombytes";
 
 function isValidHttpURL(string) {
@@ -117,8 +118,39 @@ export const utils = {
       return this.parseSkylink(url) || isValidHttpURL(url);
     },
 
-    parseSkylink(string) {
-      return string.match(/^.*([a-zA-Z0-9-_]{46}(\/.*)?)$/)?.[1] ?? false;
+    parseSkylink(skylink) {
+      return skylink.match(/^.*([a-zA-Z0-9-_]{46}(\/.*)?)$/)?.[1] ?? false;
+    },
+
+    getSkylinkFilename(skylink) {
+      return new Promise((resolve, reject) => {
+        if (!skylink || !this.parseSkylink(skylink)) return reject(false);
+        const metadataURL = this.portalSrc(
+          `skynet/metadata/${parseSkylink(skylink)}`
+        );
+        fetch(metadataURL)
+          .then((response) => response.json())
+          .then((metadata) => {
+            let filename = metadata?.filename;
+            let splitSkylink = skylink.split("/");
+            if (splitSkylink.length > 2) {
+              let filepath = splitSkylink.slice(1).join("/");
+              filename = metadata?.subfiles?.[filepath]?.filename;
+            }
+            if (filename) {
+              resolve(filename);
+            } else {
+              reject(false);
+            }
+          })
+          .catch(reject);
+      });
+    },
+
+    stripFileEx(string) {
+      let splitString = string.split(".");
+      splitString.pop();
+      return splitString.join(".");
     },
   },
 
