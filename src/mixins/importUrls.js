@@ -2,7 +2,7 @@ import sha256 from "crypto-js/sha256";
 
 export const importUrls = {
   methods: {
-    async importUrls(urls) {
+    async importUrls(urls, callback) {
       for (const url of urls) {
         const id = sha256(url).toString();
 
@@ -15,17 +15,20 @@ export const importUrls = {
 
         let filename = url;
         let logUrl = url;
+        let contentType;
 
         if (this.parseSkylink(url)) {
           logUrl = `sia://${this.parseSkylink(url)}`;
-          try {
-            filename = await this.getSkylinkFilename(url);
-          } catch (error) {
-            console.error(error);
-          }
+          this.getSkylinkFilename(url)
+            .then((metadata) => {
+              filename = metadata.filename;
+              contentType = metadata.contentType;
+            })
+            .catch(console.error);
         }
 
         filename = filename.split("/").reverse()[0] ?? filename;
+        filename = filename.replace(/(\?|#).*/, "");
 
         // push new item
         const index = this.items.push({
@@ -49,13 +52,18 @@ export const importUrls = {
         // download from url
         try {
           item.log += "Downloading... ";
-          const resp = await fetch(fetchURL, { method: "HEAD" });
-          if (!resp.headers.has("content-type")) return;
-          const contentType = resp.headers.get("content-type");
+          if (!contentType) {
+            const resp = await fetch(fetchURL, {
+              method: "HEAD",
+            });
+            if (!resp.headers.has("content-type")) return;
+
+            contentType = resp.headers.get("content-type");
+          }
 
           if (/^image\//.test(contentType)) {
             // always download images
-            const response = await fetch(fetchURL);
+            const response = await fetch(fetchURL, { credentials: "include" });
             item.file = await response.blob();
             item.type = "image";
           } else if (/^video\//.test(contentType)) {
@@ -69,6 +77,7 @@ export const importUrls = {
             item.canplay = false;
           }
           item.log += "done\n";
+          callback();
         } catch (error) {
           item.status = "error";
           item.log += "Error while importing!";
@@ -78,8 +87,6 @@ export const importUrls = {
         item.status = "queued";
         this.generateThumbnails();
       }
-
-      return urls;
     },
   },
 };

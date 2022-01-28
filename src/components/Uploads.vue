@@ -126,7 +126,7 @@
               loop
               :id="`video-${item.id}`"
               @loadeddata="videoCanplay(item, $event)"
-              crossorigin="anonymous"
+              crossorigin="use-credentials"
             ></video>
             <v-card-title
               v-show="item.status !== 'editthumbnail'"
@@ -202,7 +202,7 @@
               @input="addFromURLInput"
             ></v-textarea>
             <p v-if="totalImports > 0">
-              Imported {{ importedUrl }} / {{ totalImports }} URLs
+              Imported {{ importedUrls }} / {{ totalImports }} URLs
             </p>
           </v-card-text>
           <v-card-actions class="justify-end">
@@ -309,7 +309,7 @@ export default {
       items: this.myItems,
       addFromURLDialog: false,
       totalImports: 0,
-      importedUrl: 0,
+      importedUrls: 0,
     };
   },
 
@@ -414,12 +414,17 @@ export default {
       this.items[index] = newItem;
     },
 
-    addFromURLInput(input) {
+    async addFromURLInput(input) {
       const links = input
         .split("\n")
         .filter(this.isValidURL)
         .map((link) => this.parseSkylink(link) || link);
-      this.importUrls(links);
+      this.totalImports = links.length;
+      this.importUrls(links, () => {
+        this.importedUrls++;
+        console.log(this.importedUrls);
+      });
+      console.log(this.totalImports);
     },
   },
 };

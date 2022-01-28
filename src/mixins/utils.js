@@ -29,11 +29,11 @@ export const utils = {
 
     checkValidAlbum(albumSkylink) {
       return new Promise((resolve, reject) => {
-        fetch(`${window.PORTAL}skynet/metadata/${albumSkylink}`)
-          .then((res) => res.json())
-          .then((data) => {
-            if (this.albumFileRegex.test(data.filename)) {
-              const albumID = data.filename.match(this.albumFileRegex)[1];
+        this.$store.state.skynetClient
+          .getMetadata(albumSkylink)
+          .then(({ metadata }) => {
+            if (this.albumFileRegex.test(metadata.filename)) {
+              const albumID = metadata.filename.match(this.albumFileRegex)[1];
               resolve(albumID);
             } else {
               reject();
@@ -47,7 +47,7 @@ export const utils = {
       return new Promise((resolve, reject) => {
         this.checkValidAlbum(albumSkylink)
           .then((albumID) => {
-            fetch(window.PORTAL + albumSkylink)
+            fetch(window.PORTAL + albumSkylink, { credentials: "include" })
               .then((res) => res.json())
               .then((json) => {
                 resolve({ ...json, albumID });
@@ -125,12 +125,9 @@ export const utils = {
     getSkylinkFilename(skylink) {
       return new Promise((resolve, reject) => {
         if (!skylink || !this.parseSkylink(skylink)) return reject(false);
-        const metadataURL = this.portalSrc(
-          `skynet/metadata/${parseSkylink(skylink)}`
-        );
-        fetch(metadataURL)
-          .then((response) => response.json())
-          .then((metadata) => {
+        this.$store.state.skynetClient
+          .getMetadata(parseSkylink(skylink))
+          .then(({ metadata, contentType }) => {
             let filename = metadata?.filename;
             let splitSkylink = skylink.split("/");
             if (splitSkylink.length > 2) {
@@ -138,7 +135,7 @@ export const utils = {
               filename = metadata?.subfiles?.[filepath]?.filename;
             }
             if (filename) {
-              resolve(filename);
+              resolve({ filename, contentType });
             } else {
               reject(false);
             }

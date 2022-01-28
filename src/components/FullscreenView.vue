@@ -385,7 +385,7 @@ export default {
           volume: event.target.volume,
           muted: event.target.muted,
         });
-      }, 3000);
+      }, 1500);
     },
 
     videoCanplay(event) {

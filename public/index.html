@@ -37,9 +37,8 @@
     <!-- built files will be auto injected -->
     <script>
       window.PORTAL = new URL(localStorage.getItem("skynet-portal-api") ?? "https://siasky.net");
-      fetch("", { method: "HEAD" })
-        .then((response) => response.headers)
-        .then((headers) => {
+      fetch("", { method: "HEAD", credentials: "include" })
+        .then(({ headers }) => {
           window.PORTAL = new URL(headers.get("skynet-portal-api") ?? "https://siasky.net");
           localStorage.setItem("skynet-portal-api", window.PORTAL.origin)
         });
