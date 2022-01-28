@@ -15,16 +15,14 @@ export const importUrls = {
 
         let filename = url;
         let logUrl = url;
-        let contentType;
 
         if (this.parseSkylink(url)) {
           logUrl = `sia://${this.parseSkylink(url)}`;
-          this.getSkylinkFilename(url)
-            .then((metadata) => {
-              filename = metadata.filename;
-              contentType = metadata.contentType;
-            })
-            .catch(console.error);
+          try {
+            filename = await this.getSkylinkFilename(url);
+          } catch (error) {
+            console.error(error);
+          }
         }
 
         filename = filename.split("/").reverse()[0] ?? filename;
@@ -52,14 +50,13 @@ export const importUrls = {
         // download from url
         try {
           item.log += "Downloading... ";
-          if (!contentType) {
-            const resp = await fetch(fetchURL, {
-              method: "HEAD",
-            });
-            if (!resp.headers.has("content-type")) return;
 
-            contentType = resp.headers.get("content-type");
-          }
+          const resp = await fetch(fetchURL, {
+            method: "HEAD",
+            credentials: this.parseSkylink(url) ? "include" : "omit",
+          });
+          if (!resp.headers.has("content-type")) return;
+          const contentType = resp.headers.get("content-type");
 
           if (/^image\//.test(contentType)) {
             // always download images

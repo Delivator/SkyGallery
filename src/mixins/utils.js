@@ -127,7 +127,7 @@ export const utils = {
         if (!skylink || !this.parseSkylink(skylink)) return reject(false);
         this.$store.state.skynetClient
           .getMetadata(parseSkylink(skylink))
-          .then(({ metadata, contentType }) => {
+          .then(({ metadata }) => {
             let filename = metadata?.filename;
             let splitSkylink = skylink.split("/");
             if (splitSkylink.length > 2) {
@@ -135,7 +135,7 @@ export const utils = {
               filename = metadata?.subfiles?.[filepath]?.filename;
             }
             if (filename) {
-              resolve({ filename, contentType });
+              resolve(filename);
             } else {
               reject(false);
             }
