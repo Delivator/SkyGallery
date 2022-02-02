@@ -14,8 +14,7 @@ export const generateThumbnails = {
 
       if (index < 0) return;
 
-      let id = this.items[index].id;
-      let item = this.items.find((item) => item.id === id);
+      let item = this.items[index];
 
       let options = {
         maxWidthOrHeight: 500,
@@ -26,24 +25,27 @@ export const generateThumbnails = {
         item.status = "processing";
         item.log += "Generating thumbnail... ";
 
-        imageCompression(item.file, options)
-          .then((blob) => {
-            item.thumbnailBlob = blob;
-            item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
-            item.status = "processed";
-            item.log += "done.\nUploading files... ";
-            this.$forceUpdate();
-            this.uploadFiles();
-            this.generateThumbnails();
-          })
-          .catch(console.error);
+        try {
+          const blob = await imageCompression(item.file, options);
+          item.thumbnailBlob = blob;
+          item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
+          item.status = "processed";
+          item.log += "done\n";
+          this.$forceUpdate();
+          this.uploadFiles();
+          this.generateThumbnails();
+        } catch (error) {
+          item.log += "\nError while generating the thumbnail!";
+          item.status = "error";
+          console.error(error);
+        }
       } else if (item.type === "video") {
         const videoElement = document.querySelector(`#video-${item.id}`);
         if (!videoElement) return;
         if (!item.canplay) return;
         item.status = "processing";
-        item.log = item.log.replace(/^Up.*thu.*\.(\n|$)/gm, "");
-        item.log = item.log.replace(/^Gen.*\.(\n|$)/gm, "");
+        item.log = item.log.replace(/^Up.*thu.*(\n|$)/gm, "");
+        item.log = item.log.replace(/^Gen.*(\n|$)/gm, "");
         item.log += "Generating thumbnail... ";
         const canvas = document.createElement("canvas");
         canvas.width = videoElement.videoWidth;
@@ -60,18 +62,13 @@ export const generateThumbnails = {
           let blob = await imageCompression(file, options);
           item.thumbnailBlob = blob;
           item.thumbnail = URL.createObjectURL(item.thumbnailBlob);
-          item.log += "done.\n";
-
+          item.log += "done\n";
           item.status = "processed";
-
-          if (item.skylinks.source) {
-            item.log += "Uploading thumbnail... ";
-          } else {
-            item.log += "Uploading files... ";
-          }
           this.uploadFiles();
           this.generateThumbnails();
         } catch (error) {
+          item.status = "error";
+          item.log += "Error generating thumbnail";
           console.error(error);
         }
       }

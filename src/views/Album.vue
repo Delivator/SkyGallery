@@ -37,7 +37,7 @@
               </v-btn>
             </template>
             <v-list class="link-list">
-              <v-tooltip top>
+              <v-tooltip top v-if="shortLink !== directLink()">
                 <template v-slot:activator="{ on }">
                   <v-list-item
                     v-on="on"
@@ -335,7 +335,7 @@ export default {
 
   computed: {
     shortLink() {
-      return `https://skygallery.xyz/a/${this.albumSkylink}`;
+      return `https://skynet.gallery/a/${this.albumSkylink}`;
     },
   },
 

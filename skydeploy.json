@@ -1,0 +1,12 @@
+{
+  "prod": {
+    "dir": "dist",
+    "datakey": "prod",
+    "tryFiles": ["/index.html"]
+  },
+  "dev": {
+    "dir": "dist",
+    "datakey": "dev",
+    "tryFiles": ["/index.html"]
+  }
+}

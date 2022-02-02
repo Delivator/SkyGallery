@@ -43,7 +43,7 @@
     </v-row>
     <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone
+        <Dropzone
           :items="items"
           :dragUpload="drag"
           v-intersect="onIntersect"
@@ -59,12 +59,12 @@
     />
     <v-row v-if="!loading && !isIntersecting" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
+        <Dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
       </v-col>
     </v-row>
     <v-row v-if="!loading && items.length > 0">
       <v-col cols="12">
-        <h1 class="headline bottom-text">Done editing?</h1>
+        <h1 class="headline bottom-text mt-6">Done editing?</h1>
         <v-btn
           large
           color="success"
@@ -85,16 +85,15 @@
 <script>
 import uploadDialog from "@/components/UploadDialog.vue";
 import { publishAlbum } from "../mixins/publishAlbum";
-import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
-import dropzone from "@/components/Dropzone.vue";
+import Dropzone from "@/components/Dropzone.vue";
 import uploads from "@/components/Uploads.vue";
 
 export default {
   name: "Edit",
   props: ["alertBox", "pageTitle", "darkMode"],
-  components: { uploads, dropzone, uploadDialog },
-  mixins: [utils, publishAlbum, uploadBlob],
+  components: { uploads, Dropzone, uploadDialog },
+  mixins: [utils, publishAlbum],
   data: () => ({
     albumSkylink: "",
     items: [],
@@ -160,7 +159,8 @@ export default {
             newTab: file.newTab,
           };
           if (file.skylinks) item.thumbnail = file.skylinks.thumbnail;
-          if (file.type === "video") item.videoUrl = `/${file.skylinks.source}`;
+          if (file.type === "video")
+            item.videoUrl = this.portalSrc(file.skylinks.source);
           this.items.push(item);
         });
 

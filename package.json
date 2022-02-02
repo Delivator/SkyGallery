@@ -1,6 +1,6 @@
 {
   "name": "skygallery",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "description": "## Project setup ``` npm install ```",
   "author": "Delivator",
@@ -8,15 +8,14 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "vue-cli-service build && node deploy_skynet.js",
-    "publish": "node deploy_skynet.js"
+    "deploy": "vue-cli-service build && npm run publish",
+    "publish": "skydeploy dev"
   },
   "main": "src/main.js",
   "dependencies": {
-    "@skynethub/userprofile-library": "^0.1.12-beta",
-    "axios": "^0.21.2",
     "browser-image-compression": "^1.0.16",
     "core-js": "^3.18.3",
+    "crypto-js": "^4.1.1",
     "exifr": "^7.1.3",
     "randombytes": "^2.1.0",
     "skynet-js": "^4.0.17-beta",
@@ -28,7 +27,6 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@nebulous/skynet": "^2.0.1",
     "@vue/cli-plugin-babel": "~4.5.14",
     "@vue/cli-plugin-eslint": "~4.5.14",
     "@vue/cli-plugin-router": "~4.5.14",
@@ -45,7 +43,6 @@
     "prettier": "^2.4.1",
     "sass": "~1.32.12",
     "sass-loader": "^10.1.0",
-    "vue-cli-plugin-skynet": "~1.0.4",
     "vue-cli-plugin-vuetify": "~2.4.3",
     "vue-template-compiler": "^2.6.14",
     "vuetify-loader": "^1.7.3"

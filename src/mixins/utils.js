@@ -1,4 +1,17 @@
+import { parseSkylink } from "skynet-js";
 import randomBytes from "randombytes";
+
+function isValidHttpURL(string) {
+  let url;
+
+  try {
+    url = new URL(string);
+  } catch (error) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
 
 export const utils = {
   data: () => ({
@@ -16,11 +29,11 @@ export const utils = {
 
     checkValidAlbum(albumSkylink) {
       return new Promise((resolve, reject) => {
-        fetch(`${window.PORTAL}skynet/metadata/${albumSkylink}`)
-          .then((res) => res.json())
-          .then((data) => {
-            if (this.albumFileRegex.test(data.filename)) {
-              const albumID = data.filename.match(this.albumFileRegex)[1];
+        this.$store.state.skynetClient
+          .getMetadata(albumSkylink)
+          .then(({ metadata }) => {
+            if (this.albumFileRegex.test(metadata.filename)) {
+              const albumID = metadata.filename.match(this.albumFileRegex)[1];
               resolve(albumID);
             } else {
               reject();
@@ -34,7 +47,7 @@ export const utils = {
       return new Promise((resolve, reject) => {
         this.checkValidAlbum(albumSkylink)
           .then((albumID) => {
-            fetch(window.PORTAL + albumSkylink)
+            fetch(window.PORTAL + albumSkylink, { credentials: "include" })
               .then((res) => res.json())
               .then((json) => {
                 resolve({ ...json, albumID });
@@ -99,6 +112,42 @@ export const utils = {
       newUserSettings.recentCreated =
         oldUserSettings.recentCreated.map(mapCallback);
       return newUserSettings;
+    },
+
+    isValidURL(url) {
+      return this.parseSkylink(url) || isValidHttpURL(url);
+    },
+
+    parseSkylink(skylink) {
+      return skylink.match(/^.*([a-zA-Z0-9-_]{46}(\/.*)?)$/)?.[1] ?? false;
+    },
+
+    getSkylinkFilename(skylink) {
+      return new Promise((resolve, reject) => {
+        if (!skylink || !this.parseSkylink(skylink)) return reject(false);
+        this.$store.state.skynetClient
+          .getMetadata(parseSkylink(skylink))
+          .then(({ metadata }) => {
+            let filename = metadata?.filename;
+            let splitSkylink = skylink.split("/");
+            if (splitSkylink.length > 2) {
+              let filepath = splitSkylink.slice(1).join("/");
+              filename = metadata?.subfiles?.[filepath]?.filename;
+            }
+            if (filename) {
+              resolve(filename);
+            } else {
+              reject(false);
+            }
+          })
+          .catch(reject);
+      });
+    },
+
+    stripFileEx(string) {
+      let splitString = string.split(".");
+      splitString.pop();
+      return splitString.join(".");
     },
   },
 

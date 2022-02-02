@@ -1,7 +1,7 @@
 <template>
   <div
     id="dropzone"
-    class="dropzone"
+    class="dropzone my-4"
     :class="`dragover-${isDragOver} dark-${darkMode}`"
     @drop="onDrop"
     @dragover="onDrag"
@@ -34,6 +34,7 @@
   transition: background 100ms;
   display: grid;
   place-items: center;
+  margin-top: 0 !important;
 }
 
 .dark-true {
@@ -47,6 +48,7 @@
   top: 0;
   left: 0;
   z-index: 5;
+  border-width: 6px;
 }
 
 .dropzone:hover.dark-false,
@@ -78,13 +80,12 @@ input[type="file"] {
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { processFiles } from "../mixins/processFiles";
 import { uploadFiles } from "../mixins/uploadFiles";
-import { uploadBlob } from "../mixins/uploadBlob";
 import { utils } from "../mixins/utils";
 
 export default {
   name: "Dropzone",
   props: ["items", "dragUpload", "darkMode"],
-  mixins: [generateThumbnails, processFiles, uploadFiles, uploadBlob, utils],
+  mixins: [generateThumbnails, processFiles, uploadFiles, utils],
 
   data: () => ({
     isDragOver: false,

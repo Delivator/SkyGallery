@@ -25,8 +25,9 @@ jobs:
         VUE_APP_GITHUB_SHA: ${{ github.sha }}
     
     - name: Deploy to Skynet
-      uses: SkynetLabs/deploy-to-skynet-action@v2
+      uses: SkynetLabs/deploy-to-skynet-action@v2.0.2
       with:
         upload-dir: dist
         github-token: ${{ secrets.GITHUB_TOKEN }}
         registry-seed: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.REGISTRY_SEED || '' }}
+        try-files: /index.html

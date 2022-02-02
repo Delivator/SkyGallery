@@ -68,6 +68,15 @@
           fab
           text
           small
+          color="white"
+          :href="portalSrc(`${item.skylinks.source}?attachment=true`)"
+        >
+          <v-icon>file_download</v-icon>
+        </v-btn>
+        <v-btn
+          fab
+          text
+          small
           :color="showInfo ? 'primary' : 'white'"
           @click="toggleInfoPanel"
         >
@@ -253,6 +262,7 @@ export default {
       },
       diashowTimeout: null,
       volumeTimeout: null,
+      skipVolEvent: true,
     };
   },
 
@@ -368,13 +378,14 @@ export default {
     },
 
     volumeChange(event) {
+      if (this.skipVolEvent) return (this.skipVolEvent = false);
       if (this.volumeTimeout) clearTimeout(this.volumeTimeout);
       this.volumeTimeout = setTimeout(() => {
         this.$store.commit("setUserSettings", {
           volume: event.target.volume,
           muted: event.target.muted,
         });
-      }, 500);
+      }, 1500);
     },
 
     videoCanplay(event) {

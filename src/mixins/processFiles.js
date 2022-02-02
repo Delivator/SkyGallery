@@ -24,9 +24,7 @@ export const processFiles = {
         } else {
           return;
         }
-        item.newName = file.name.split(".");
-        item.newName.pop();
-        item.newName = item.newName.join(".");
+        item.newName = this.stripFileEx(file.name);
         this.items.push(item);
         this.generateThumbnails();
       });
