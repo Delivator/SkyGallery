@@ -34,6 +34,7 @@
   transition: background 100ms;
   display: grid;
   place-items: center;
+  margin-top: 0 !important;
 }
 
 .dark-true {
@@ -47,6 +48,7 @@
   top: 0;
   left: 0;
   z-index: 5;
+  border-width: 6px;
 }
 
 .dropzone:hover.dark-false,

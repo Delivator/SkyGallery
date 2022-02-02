@@ -126,7 +126,7 @@
               loop
               :id="`video-${item.id}`"
               @loadeddata="videoCanplay(item, $event)"
-              crossorigin="use-credentials"
+              crossorigin="anonymous"
             ></video>
             <v-card-title
               v-show="item.status !== 'editthumbnail'"
