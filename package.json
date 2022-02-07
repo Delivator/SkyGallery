@@ -13,7 +13,7 @@
   },
   "main": "src/main.js",
   "dependencies": {
-    "browser-image-compression": "^1.0.16",
+    "browser-image-compression": "^1.0.17",
     "core-js": "^3.18.3",
     "crypto-js": "^4.1.1",
     "exifr": "^7.1.3",
