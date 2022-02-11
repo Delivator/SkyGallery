@@ -64,14 +64,16 @@ export const importUrls = {
             item.file = await response.blob();
             item.type = "image";
           } else if (/^video\//.test(contentType)) {
+            item.type = "video";
+            item.canplay = false;
+            item.videoUrl = fetchURL;
+            item.crossorigin = "use-credentials";
             // only download non skynet videos
             if (!this.parseSkylink(url)) {
               const response = await fetch(fetchURL);
               item.file = await response.blob();
+              item.crossorigin = "anonymous";
             }
-            item.videoUrl = fetchURL;
-            item.type = "video";
-            item.canplay = false;
           }
           item.log += "done\n";
           callback();
