@@ -81,7 +81,7 @@
 import { publishAlbum } from "../mixins/publishAlbum";
 import { utils } from "../mixins/utils";
 import UploadedItems from "@/components/UploadedItems.vue";
-import DropZone from "@/components/Dropzone.vue";
+import DropZone from "@/components/DropZone.vue";
 import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
