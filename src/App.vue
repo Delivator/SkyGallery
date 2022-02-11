@@ -28,7 +28,7 @@
         :themedText="themedText"
       />
     </v-main>
-    <Footer :themedText="themedText" :version="version" :isEmbed="isEmbed" />
+    <AppFooter :themedText="themedText" :version="version" :isEmbed="isEmbed" />
   </v-app>
 </template>
 
@@ -79,7 +79,7 @@ html.noscroll {
 
 <script>
 import version from "../package.json";
-import Footer from "./components/Footer";
+import AppFooter from "./components/Footer";
 import Header from "./components/Header";
 import { utils } from "./mixins/utils";
 
@@ -96,7 +96,7 @@ export default {
 
   mixins: [utils],
 
-  components: { Footer, Header },
+  components: { AppFooter, Header },
 
   data() {
     return {
@@ -114,6 +114,7 @@ export default {
           if (!type || !/success|info|warning|error/.test(type)) type = "info";
           if (type === "error") {
             if (message instanceof Error) message = message.message;
+            // eslint-disable-next-line
             console.error(message);
           }
 

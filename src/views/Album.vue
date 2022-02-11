@@ -236,7 +236,6 @@ function selectTextRange(node) {
 }
 
 export default {
-  name: "Album",
   props: ["alertBox", "isEmbed", "pageTitle", "darkMode"],
   components: { AlbumCardGrid, FullscreenView },
   mixins: [utils],

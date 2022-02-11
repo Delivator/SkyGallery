@@ -1,6 +1,6 @@
 <template>
   <v-container fluid :class="loading ? 'fill-height' : ''" class="text-center">
-    <uploadDialog
+    <UploadDialog
       :unfinishedDialog.sync="unfinishedDialog"
       :publish="publish"
     />
@@ -51,7 +51,7 @@
         />
       </v-col>
     </v-row>
-    <uploads
+    <UploadedItems
       v-if="!loading"
       :myItems.sync="items"
       :setItems="setItems"
@@ -83,16 +83,15 @@
 </template>
 
 <script>
-import uploadDialog from "@/components/UploadDialog.vue";
+import UploadDialog from "@/components/UploadDialog.vue";
 import { publishAlbum } from "../mixins/publishAlbum";
 import { utils } from "../mixins/utils";
 import Dropzone from "@/components/Dropzone.vue";
-import uploads from "@/components/Uploads.vue";
+import UploadedItems from "@/components/UploadedItems.vue";
 
 export default {
-  name: "Edit",
   props: ["alertBox", "pageTitle", "darkMode"],
-  components: { uploads, Dropzone, uploadDialog },
+  components: { UploadedItems, Dropzone, UploadDialog },
   mixins: [utils, publishAlbum],
   data: () => ({
     albumSkylink: "",

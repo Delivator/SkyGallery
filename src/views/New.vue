@@ -39,7 +39,7 @@
     </v-row>
     <v-row justify="center">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone
+        <DropZone
           :items="items"
           :dragUpload="drag"
           :darkMode="darkMode"
@@ -47,10 +47,14 @@
         />
       </v-col>
     </v-row>
-    <Uploads :myItems.sync="items" :setItems="setItems" :drag.sync="drag" />
+    <UploadedItems
+      :myItems.sync="items"
+      :setItems="setItems"
+      :drag.sync="drag"
+    />
     <v-row justify="center" v-if="!isIntersecting">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
+        <DropZone :items="items" :dragUpload="drag" :darkMode="darkMode" />
       </v-col>
     </v-row>
     <v-row v-if="items.length > 0">
@@ -76,14 +80,13 @@
 <script>
 import { publishAlbum } from "../mixins/publishAlbum";
 import { utils } from "../mixins/utils";
-import Uploads from "@/components/Uploads.vue";
-import Dropzone from "@/components/Dropzone.vue";
+import UploadedItems from "@/components/UploadedItems.vue";
+import DropZone from "@/components/Dropzone.vue";
 import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
-  name: "New",
   props: ["version", "alertBox", "darkMode"],
-  components: { Uploads, Dropzone, UploadDialog },
+  components: { UploadedItems, DropZone, UploadDialog },
   mixins: [publishAlbum, utils],
   data() {
     return {

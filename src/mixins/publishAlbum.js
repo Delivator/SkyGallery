@@ -34,9 +34,9 @@ export const publishAlbum = {
         .forEach((file) => {
           jsonData.files.push({
             type: file.type,
-            skylinks: file.skylinks,
             name: file.newName,
             filename: file.filename,
+            skylinks: file.skylinks,
             value: file.value,
             layout: file.layout,
             skylink: file.skylink,

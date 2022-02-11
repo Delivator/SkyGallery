@@ -299,7 +299,7 @@ import draggable from "vuedraggable";
 let inputTimeout = null;
 
 export default {
-  name: "Uploads",
+  name: "UploadedItems",
   props: ["myItems", "setItems", "drag"],
   components: { draggable, AlbumCardDialog, AlbumCardGrid },
   mixins: [generateThumbnails, uploadFiles, importUrls, utils],
@@ -422,9 +422,7 @@ export default {
       this.totalImports = links.length;
       this.importUrls(links, () => {
         this.importedUrls++;
-        console.log(this.importedUrls);
       });
-      console.log(this.totalImports);
     },
   },
 };
