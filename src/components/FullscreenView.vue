@@ -14,9 +14,9 @@
       :toggleInfoPanel="toggleInfoPanel"
     />
     <v-progress-circular
-      indeterminate="true"
       v-if="imgloading && item.type === 'image'"
       class="imgloading translate-center"
+      indeterminate="true"
       color="primary"
       size="100"
       width="7"
@@ -27,8 +27,8 @@
       :class="showinfoClass()"
       :src="portalSrc(`${item.skylinks.source}`)"
       :alt="item.name"
-      @load="imgLoad"
       :id="item.id"
+      @load="imgLoad"
       v-touch="touchOptions"
     />
     <video
@@ -102,6 +102,18 @@
                 <v-switch @change="diashowSwitch" v-model="diashow">
                   <template v-slot:label>
                     <p class="ml-4 mb-0">Diashow/Autoplay</p>
+                  </template>
+                </v-switch>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item v-if="diashow">
+              <v-list-item-action>
+                <v-switch
+                  @change="diashowShuffleSwitch"
+                  v-model="diashowShuffle"
+                >
+                  <template v-slot:label>
+                    <p class="ml-4 mb-0">Diashow Shuffle</p>
                   </template>
                 </v-switch>
               </v-list-item-action>
@@ -286,6 +298,10 @@ export default {
     showInfo() {
       return this.$store.state.userSettings.showInfo;
     },
+
+    diashowShuffle() {
+      return this.$store.state.userSettings.diashowShuffle;
+    },
   },
 
   methods: {
@@ -307,7 +323,10 @@ export default {
       if (this.files.length < 2) return;
       let newIndex = this.showFullIndex;
       do {
-        newIndex = (newIndex + 1) % this.files.length;
+        const indexOffset = this.diashowShuffle
+          ? Math.floor(Math.random() * this.files.length) + 1
+          : 1;
+        newIndex = (newIndex + indexOffset) % this.files.length;
       } while (!/^(image|video)$/.test(this.files[newIndex].type));
       this.$emit("update:showFullIndex", newIndex);
       this.$emit("set-imgloading");
@@ -367,6 +386,10 @@ export default {
     diashowSwitch(event) {
       this.$store.commit("setUserSettings", { diashow: !!event });
       this.startDiashow();
+    },
+
+    diashowShuffleSwitch(event) {
+      this.$store.commit("setUserSettings", { diashowShuffle: !!event });
     },
 
     videoEnded(event) {

@@ -57,6 +57,7 @@ const defaultUserSettings = {
   diashow: false,
   darkMode: true,
   showInfo: false,
+  diashowShuffle: false,
   recentVisits: [],
   recentCreated: [],
 };
