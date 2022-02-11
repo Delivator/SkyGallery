@@ -84,6 +84,7 @@ import { utils } from "../mixins/utils";
 let openAlbumTimeout = null;
 
 export default {
+  name: "HomeView",
   props: ["alertBox", "themedText"],
   components: { RecentAlbumTable },
   mixins: [utils],

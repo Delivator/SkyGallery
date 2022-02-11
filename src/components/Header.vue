@@ -68,7 +68,7 @@ function shuffleArray(array) {
 }
 
 export default {
-  name: "Header",
+  name: "AppHeader",
 
   props: ["themedText"],
 

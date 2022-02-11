@@ -85,6 +85,7 @@ import DropZone from "@/components/Dropzone.vue";
 import UploadDialog from "@/components/UploadDialog.vue";
 
 export default {
+  name: "NewView",
   props: ["version", "alertBox", "darkMode"],
   components: { UploadedItems, DropZone, UploadDialog },
   mixins: [publishAlbum, utils],

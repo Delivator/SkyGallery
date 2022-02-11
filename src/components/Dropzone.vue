@@ -83,7 +83,7 @@ import { uploadFiles } from "../mixins/uploadFiles";
 import { utils } from "../mixins/utils";
 
 export default {
-  name: "Dropzone",
+  name: "DropZone",
   props: ["items", "dragUpload", "darkMode"],
   mixins: [generateThumbnails, processFiles, uploadFiles, utils],
 

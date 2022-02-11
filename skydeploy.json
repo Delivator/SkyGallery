@@ -1,12 +1,12 @@
 {
   "prod": {
     "dir": "dist",
-    "datakey": "prod",
+    "datakey": "skygallery-prod",
     "tryFiles": ["/index.html"]
   },
   "dev": {
     "dir": "dist",
-    "datakey": "dev",
+    "datakey": "skygallery-dev",
     "tryFiles": ["/index.html"]
   }
 }

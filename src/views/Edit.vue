@@ -43,7 +43,7 @@
     </v-row>
     <v-row v-if="!loading" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone
+        <DropZone
           :items="items"
           :dragUpload="drag"
           v-intersect="onIntersect"
@@ -59,7 +59,7 @@
     />
     <v-row v-if="!loading && !isIntersecting" justify="center">
       <v-col lg="4" md="6" cols="12">
-        <Dropzone :items="items" :dragUpload="drag" :darkMode="darkMode" />
+        <DropZone :items="items" :dragUpload="drag" :darkMode="darkMode" />
       </v-col>
     </v-row>
     <v-row v-if="!loading && items.length > 0">
@@ -86,12 +86,13 @@
 import UploadDialog from "@/components/UploadDialog.vue";
 import { publishAlbum } from "../mixins/publishAlbum";
 import { utils } from "../mixins/utils";
-import Dropzone from "@/components/Dropzone.vue";
+import DropZone from "@/components/DropZone.vue";
 import UploadedItems from "@/components/UploadedItems.vue";
 
 export default {
+  name: "EditView",
   props: ["alertBox", "pageTitle", "darkMode"],
-  components: { UploadedItems, Dropzone, UploadDialog },
+  components: { UploadedItems, DropZone, UploadDialog },
   mixins: [utils, publishAlbum],
   data: () => ({
     albumSkylink: "",

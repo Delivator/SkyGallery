@@ -96,7 +96,7 @@
 
 <script>
 export default {
-  name: "Footer",
+  name: "AppFooter",
   props: ["themedText", "version", "isEmbed"],
   data() {
     return {
