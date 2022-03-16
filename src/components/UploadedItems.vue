@@ -175,38 +175,36 @@
           </v-list-item-icon>
           <v-list-item-title>Add Title</v-list-item-title>
         </v-list-item>
-        <v-list-item @click.stop="addFromURLDialog = true">
+        <v-list-item @click.stop="importSkylinksDialog = true">
           <v-list-item-icon>
             <v-icon>public</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Load from URL</v-list-item-title>
+          <v-list-item-title>Import Skylinks</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
     <v-dialog
       transition="dialog-bottom-transition"
       max-width="600"
-      :value="addFromURLDialog"
-      @click:outside="addFromURLDialog = false"
+      :value="importSkylinksDialog"
+      @click:outside="importSkylinksDialog = false"
     >
       <template>
         <v-card>
-          <v-toolbar color="primary" dark>
-            Load existing images and video from URL
-          </v-toolbar>
+          <v-toolbar color="primary" dark>Import Skylinks</v-toolbar>
           <v-card-text>
             <v-textarea
               outlined
               class="mt-4"
-              label="One URL per line"
-              @input="addFromURLInput"
+              label="One Skylink per line"
+              @input="importSkylinksInput"
             ></v-textarea>
             <p v-if="totalImports > 0">
-              Imported {{ importedUrls }} / {{ totalImports }} URLs
+              Imported {{ importedSkylinks }} / {{ totalImports }} skylinks
             </p>
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn text @click="addFromURLDialog = false">Done</v-btn>
+            <v-btn text @click="importSkylinksDialog = false">Done</v-btn>
           </v-card-actions>
         </v-card>
       </template>
@@ -292,7 +290,7 @@ import AlbumCardDialog from "./AlbumCardDialog";
 import AlbumCardGrid from "./AlbumCardGrid";
 import { generateThumbnails } from "../mixins/generateThumbnails";
 import { uploadFiles } from "../mixins/uploadFiles";
-import { importUrls } from "../mixins/importUrls";
+import { importSkylinks } from "../mixins/importSkylinks";
 import { utils } from "../mixins/utils";
 import draggable from "vuedraggable";
 
@@ -302,14 +300,14 @@ export default {
   name: "UploadedItems",
   props: ["myItems", "setItems", "drag"],
   components: { draggable, AlbumCardDialog, AlbumCardGrid },
-  mixins: [generateThumbnails, uploadFiles, importUrls, utils],
+  mixins: [generateThumbnails, uploadFiles, importSkylinks, utils],
 
   data() {
     return {
       items: this.myItems,
-      addFromURLDialog: false,
+      importSkylinksDialog: false,
+      importedSkylinks: 0,
       totalImports: 0,
-      importedUrls: 0,
     };
   },
 
@@ -414,14 +412,14 @@ export default {
       this.items[index] = newItem;
     },
 
-    async addFromURLInput(input) {
+    async importSkylinksInput(input) {
       const links = input
         .split("\n")
-        .filter(this.isValidURL)
+        .filter(this.isValidSkylink)
         .map((link) => this.parseSkylink(link) || link);
       this.totalImports = links.length;
-      this.importUrls(links, () => {
-        this.importedUrls++;
+      this.importSkylinks(links, () => {
+        this.importedSkylinks++;
       });
     },
   },

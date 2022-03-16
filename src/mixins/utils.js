@@ -1,18 +1,6 @@
 import { parseSkylink } from "skynet-js";
 import randomBytes from "randombytes";
 
-function isValidHttpURL(string) {
-  let url;
-
-  try {
-    url = new URL(string);
-  } catch (error) {
-    return false;
-  }
-
-  return url.protocol === "http:" || url.protocol === "https:";
-}
-
 export const utils = {
   data: () => ({
     skylinkRegex: /^([a-zA-Z0-9-_]{46}(\/.*)?)$/,
@@ -112,10 +100,6 @@ export const utils = {
       newUserSettings.recentCreated =
         oldUserSettings.recentCreated.map(mapCallback);
       return newUserSettings;
-    },
-
-    isValidURL(url) {
-      return this.parseSkylink(url) || isValidHttpURL(url);
     },
 
     parseSkylink(skylink) {
