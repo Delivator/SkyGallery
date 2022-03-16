@@ -323,9 +323,10 @@ export default {
       if (this.files.length < 2) return;
       let newIndex = this.showFullIndex;
       do {
-        const indexOffset = this.diashowShuffle
-          ? Math.floor(Math.random() * this.files.length) + 1
-          : 1;
+        const indexOffset =
+          this.diashow && this.diashowShuffle
+            ? Math.floor(Math.random() * this.files.length) + 1
+            : 1;
         newIndex = (newIndex + indexOffset) % this.files.length;
       } while (!/^(image|video)$/.test(this.files[newIndex].type));
       this.$emit("update:showFullIndex", newIndex);
