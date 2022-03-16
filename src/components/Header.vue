@@ -79,8 +79,16 @@ export default {
         link: "https://siasky.net",
       },
       {
-        name: "SkyPortal.xyz",
-        link: "https://skyportal.xyz",
+        name: "SkynetPro.net",
+        link: "https://skynetpro.net",
+      },
+      {
+        name: "SkynetFree.net",
+        link: "https://skynetfree.net",
+      },
+      {
+        name: "FilePortal.org",
+        link: "https://fileportal.org",
       },
     ],
   }),
