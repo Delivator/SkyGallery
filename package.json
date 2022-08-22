@@ -9,7 +9,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "deploy": "vue-cli-service build && npm run publish",
-    "publish": "skydeploy dev"
+    "publish": "skydeploy prod"
   },
   "main": "src/main.js",
   "dependencies": {

@@ -16,10 +16,10 @@ export const uploadFiles = {
     },
 
     async uploadFiles() {
-      // Max one upload at once
+      // Max three uploads at once
       if (
         this.items.filter((item) => /^(uploading|uploaded)$/.test(item.status))
-          .length > 0
+          .length > 2
       )
         return;
 
