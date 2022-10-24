@@ -36,7 +36,7 @@
     "babel-eslint": "^10.1.0",
     "base32-encode": "^2.0.0",
     "base64-js": "^1.5.1",
-    "eslint": "^7.32.0",
+    "eslint": "^8.26.0",
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-vue": "^7.20.0",
     "node-fetch": "^3.0.0",
